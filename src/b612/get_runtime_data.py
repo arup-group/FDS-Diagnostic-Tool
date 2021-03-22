@@ -11,11 +11,13 @@ import time
 import json
 import os
 
+
 start_time = time.time()
 
-doc_file_path = r"C:\work\fds_diagnostics\docs\paisley\Fire_Scenario_4_VentOption1.out"
-fds_file = r"C:\work\fds_diagnostics\docs\paisley\Fire_Scenario_4_VentOption1.fds"
-output_loc = r'C:\work\fds_diagnostics\src\outputs\paisley'
+doc_file_path = r"C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3\Fire_Scenario_1_VentOption3_Ru.out"
+fds_file = r"C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3\Fire_Scenario_1_VentOption3_Run1.fds"
+mesh_data_file = r"C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\data\mesh_data.json" # TODO REMOVE THIS
+output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\runtime_tests'
 
 # Mesh setup
 cycle_check = {}
@@ -53,6 +55,11 @@ cpu_tot_lst = list()
 lagrange_lst = list()
 
 i = 0
+
+# Load mesh data dict
+with open(mesh_data_file) as f:
+    mesh_data = json.load(f)
+
 
 with open(doc_file_path, "r") as file:
     for line in file:
@@ -113,7 +120,7 @@ with open(doc_file_path, "r") as file:
         # Populate ts_dict
         fx_to_use2 = [key for key in ts_dict.keys() if ts_dict[key] is None]
         for fx in fx_to_use2:  # BREAK OUT
-            scr.scrape(fx, line, ts_dict, mesh_info=proj_data_dict['mesh_info'])
+            scr.scrape(fx, line, ts_dict, mesh_info = mesh_data['mesh_info'])
 
         current_mesh, mesh_line = scr.mesh_n(line, current_mesh, mesh_line)
 
@@ -123,7 +130,7 @@ with open(doc_file_path, "r") as file:
             if m_line_str in scr.mesh_param_order.keys():
                 for fx in scr.mesh_param_order[m_line_str]:
                     success_line = scr.scrape_succs(fx, line, mesh_dicts, success_line, n_mesh=current_mesh,
-                                                    mesh_info=proj_data_dict['mesh_info'])
+                                                    mesh_info=mesh_data['mesh_info'])
 
                     if success_line == True:
                         break
@@ -198,3 +205,4 @@ with open(os.path.join(output_loc, 'data.json'), 'w') as fp:
     json.dump(proj_data_dict, fp, indent=4)
 
 print(time.time() - start_time)
+print('asd')
