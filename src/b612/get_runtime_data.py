@@ -12,18 +12,71 @@ import json
 import os
 
 
+def setup_analysis(config):
+    ''' Creates save locations and defines analysis setup as per config file '''
+
+    # Valid analysis setup for this build
+    PER_CYCLE_SETUP = ['ts', 'compl_time', 'press_itr', 'vel_err', 'log_time', 'cycles']
+    PER_MESH_SETUP = ['max_div', 'min_div', 'vn', 'cfl', 'lagr', 'hrr', 'nrg_loss', 'cpu_step']
+
+    per_mesh_info = {}
+    per_cycle_info = {}
+
+    per_mesh_info['dict'] = {}
+    per_mesh_info['lst'] = {}
+    per_mesh_info['fx'] = []
+    per_cycle_info['dict'] = {}
+    per_cycle_info['lst'] = {}
+    per_cycle_info['fx'] = []
+
+    # Proj info is core and no further configurations are proposed for this stage
+    sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
+
+    # Setup save structure as per each configuration
+
+    for j in config['log_data']:
+
+        if config['log_data'][j] == True and j in PER_CYCLE_SETUP:
+            per_cycle_info['fx'].append(j)
+            per_cycle_info['dict'][j] = {}
+            per_cycle_info['lst'][j] = []
+
+        if config['log_data'][j] == True and j in PER_MESH_SETUP:
+            per_mesh_info['fx'].append(j)
+            if j == 'cpu_step':
+                per_mesh_info['dict']['cpu_step'] = {}
+                per_mesh_info['lst']['cpu_step'] = []
+                per_mesh_info['dict']['cpu_tot'] = {}
+                per_mesh_info['lst']['cpu_tot'] = []
+            else:
+                per_mesh_info['dict'][j] = {}
+                per_mesh_info['lst'][j] = []
+
+    return sim_info, per_mesh_info, per_cycle_info
+
+
 start_time = time.time()
 
 doc_file_path = r"C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3\Fire_Scenario_1_VentOption3_Ru.out"
 fds_file = r"C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3\Fire_Scenario_1_VentOption3_Run1.fds"
 mesh_data_file = r"C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\data\mesh_data.json" # TODO REMOVE THIS
+config_filepath = r"C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\config.json" # TODO REMOVE THIS
 output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\runtime_tests'
+
+# Load mesh data dict
+with open(mesh_data_file) as f:
+    mesh_data = json.load(f)
+
+with open(config_filepath) as f:
+    config = json.load(f)
+
+sim_info, per_mesh_info, per_cycle_info = setup_analysis(config)
 
 # Mesh setup
 cycle_check = {}
 
 # Mesh setup - TODO Add end condition,
-proj_data_dict = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
+sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
 
 # ts_dict setup
 ts_dict = dict.fromkeys(['time_step', 'compl_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
@@ -56,18 +109,16 @@ lagrange_lst = list()
 
 i = 0
 
-# Load mesh data dict
-with open(mesh_data_file) as f:
-    mesh_data = json.load(f)
+
 
 
 with open(doc_file_path, "r") as file:
     for line in file:
 
         # Populate data dict - KEEP
-        fx_to_use = [key for key in proj_data_dict.keys() if proj_data_dict[key] is None]
+        fx_to_use = [key for key in sim_info.keys() if sim_info[key] is None]
         for fx in fx_to_use:
-            scr.scrape(fx, line, proj_data_dict)
+            scr.scrape(fx, line, sim_info)
 
         # Populate mesh dicts
         scr.scrape('itr_date', line, cycle_check)
@@ -200,9 +251,9 @@ cpu_step_pd.to_csv(os.path.join(output_loc, 'cpu_step.csv'), index=False)
 cpu_tot_pd.to_csv(os.path.join(output_loc, 'cpu_tot.csv'), index=False)
 ts_pd.to_csv(os.path.join(output_loc, 'ts.csv'), index=False)
 lagrange_pd.to_csv(os.path.join(output_loc, 'lagrange.csv'), index=False)
-proj_data_dict['date_start'] = proj_data_dict['date_start'].strftime("%B %d, %Y %H:%M:%S")
+sim_info['date_start'] = sim_info['date_start'].strftime("%B %d, %Y %H:%M:%S")
 with open(os.path.join(output_loc, 'data.json'), 'w') as fp:
-    json.dump(proj_data_dict, fp, indent=4)
+    json.dump(sim_info, fp, indent=4)
 
 print(time.time() - start_time)
 print('asd')

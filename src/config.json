@@ -4,14 +4,21 @@
         "last_loc_pts": 25
     },
     "log_data": {
-        "ts_data": true,
+        "ts": true,
+		"compl_time" : true,
+		"press_itr" : true,
+		"vel_err" : true,
+		"press_err": true,
+		"log_time" : true,
+		"cycles" : true,		
         "max_div": true,
         "min_div": true,
         "vn": true,
         "cfl": true,
         "lagr": true,
         "hrr": true,
-        "nrg_loss": true
+        "nrg_loss": true,
+		"cpu_step" : true
     },
     "plots": {
         "mesh_plots": true,
@@ -25,9 +32,9 @@
         "press_err_loc": true
     },
     "util": {
-        "mesh_als": 25,
         "hrr_als": true,
         "sprinkler_als": true,
         "extract_als": true
     }
 }
+
