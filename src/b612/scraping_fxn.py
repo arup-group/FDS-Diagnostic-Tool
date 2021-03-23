@@ -127,7 +127,7 @@ def time_step(input_str, out_dict, **kwargs):
     return out_dict
 
 
-def compl_time(input_str, out_dict, **kwargs):
+def sim_time(input_str, out_dict, **kwargs):
     pattern = r'Total\stime:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)'
     result = re.search(pattern, input_str)
 
@@ -343,7 +343,7 @@ basic_param = {
     'tot_elp_time': tot_elp_time,
     'itr_date': itr_date,
     'time_step': time_step,
-    'compl_time': compl_time,
+    'sim_time': sim_time,
     'press_itr': press_itr,
     'm_error': m_error,
     'cfl_n': cfl_n,

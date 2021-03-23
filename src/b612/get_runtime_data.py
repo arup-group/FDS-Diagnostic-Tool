@@ -13,11 +13,13 @@ import os
 
 
 def setup_analysis(config):
-    ''' Creates save locations and defines analysis setup as per config file '''
+    '''Creates save locations and defines analysis setup as per config file '''
 
     # Valid analysis setup for this build
-    PER_CYCLE_SETUP = ['ts', 'compl_time', 'press_itr', 'vel_err', 'log_time', 'cycles']
+    PER_CYCLE_SETUP = ['ts', 'sim_time', 'press_itr', 'vel_err', 'log_time', 'cycles']
     PER_MESH_SETUP = ['max_div', 'min_div', 'vn', 'cfl', 'lagr', 'hrr', 'nrg_loss', 'cpu_step']
+
+    PER_CYCLE_CONSTANTS = ['sim_time', 'log_time']
 
     per_mesh_info = {}
     per_cycle_info = {}
@@ -31,6 +33,14 @@ def setup_analysis(config):
 
     # Proj info is core and no further configurations are proposed for this stage
     sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
+
+    # Add per cycle constants
+
+    for j in PER_CYCLE_CONSTANTS:
+        per_cycle_info['fx'].append(j)
+        per_cycle_info['dict'][j] = {}
+        per_cycle_info['lst'][j] = []
+
 
     # Setup save structure as per each configuration
 
@@ -79,7 +89,7 @@ cycle_check = {}
 sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
 
 # ts_dict setup
-ts_dict = dict.fromkeys(['time_step', 'compl_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
+ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
 ts_lst = list()
 
 current_mesh = None
@@ -164,7 +174,7 @@ with open(doc_file_path, "r") as file:
 
             if all(value != None for value in ts_dict.values()):
                 ts_lst.append(ts_dict)
-                ts_dict = dict.fromkeys(['time_step', 'compl_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
+                ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
 
             cycle_check = {}
 
@@ -196,47 +206,47 @@ ts_pd = pd.DataFrame(ts_lst)
 
 cfl_lst.append(mesh_dicts['cfl_dict'])
 cfl_pd = pd.DataFrame(cfl_lst)
-cfl_pd['compl_time'] = ts_pd['compl_time']
+cfl_pd['sim_time'] = ts_pd['sim_time']
 cfl_pd['log_time'] = ts_pd['log_time']
 
 max_div_lst.append(mesh_dicts['max_div_dict'])
 max_div_pd = pd.DataFrame(max_div_lst)
-max_div_pd['compl_time'] = ts_pd['compl_time']
+max_div_pd['sim_time'] = ts_pd['sim_time']
 max_div_pd['log_time'] = ts_pd['log_time']
 
 min_div_lst.append(mesh_dicts['min_div_dict'])
 min_div_pd = pd.DataFrame(min_div_lst)
-min_div_pd['compl_time'] = ts_pd['compl_time']
+min_div_pd['sim_time'] = ts_pd['sim_time']
 min_div_pd['log_time'] = ts_pd['log_time']
 
 hrr_lst.append(mesh_dicts['hrr_dict'])
 hrr_pd = pd.DataFrame(hrr_lst)
-hrr_pd['compl_time'] = ts_pd['compl_time']
+hrr_pd['sim_time'] = ts_pd['sim_time']
 hrr_pd['log_time'] = ts_pd['log_time']
 
 loss_lst.append(mesh_dicts['loss_dict'])
 loss_pd = pd.DataFrame(loss_lst)
-loss_pd['compl_time'] = ts_pd['compl_time']
+loss_pd['sim_time'] = ts_pd['sim_time']
 loss_pd['log_time'] = ts_pd['log_time']
 
 vn_lst.append(mesh_dicts['vn_dict'])
 vn_pd = pd.DataFrame(vn_lst)
-vn_pd['compl_time'] = ts_pd['compl_time']
+vn_pd['sim_time'] = ts_pd['sim_time']
 vn_pd['log_time'] = ts_pd['log_time']
 
 cpu_step_lst.append(mesh_dicts['cpu_step_dict'])
 cpu_step_pd = pd.DataFrame(cpu_step_lst)
-cpu_step_pd['compl_time'] = ts_pd['compl_time']
+cpu_step_pd['sim_time'] = ts_pd['sim_time']
 cpu_step_pd['log_time'] = ts_pd['log_time']
 
 cpu_tot_lst.append(mesh_dicts['cpu_tot_dict'])
 cpu_tot_pd = pd.DataFrame(cpu_tot_lst)
-cpu_tot_pd['compl_time'] = ts_pd['compl_time']
+cpu_tot_pd['sim_time'] = ts_pd['sim_time']
 cpu_tot_pd['log_time'] = ts_pd['log_time']
 
 lagrange_lst.append(mesh_dicts['lagrange_dict'])
 lagrange_pd = pd.DataFrame(lagrange_lst)
-lagrange_pd['compl_time'] = ts_pd['compl_time']
+lagrange_pd['sim_time'] = ts_pd['sim_time']
 lagrange_pd['log_time'] = ts_pd['log_time']
 
 print(i)
