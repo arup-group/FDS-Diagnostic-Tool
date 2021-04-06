@@ -15,8 +15,8 @@ import os
 def setup_analysis(config):
     '''Creates save locations and defines analysis setup as per config file '''
 
-    # Valid analysis setup for this build
-    PER_CYCLE_SETUP = ['ts', 'sim_time', 'press_itr', 'vel_err', 'log_time', 'cycles']
+    # Valid analysis setup for this version build
+    PER_CYCLE_SETUP = ['ts', 'press_itr', 'vel_err', 'cycles']
     PER_MESH_SETUP = ['max_div', 'min_div', 'vn', 'cfl', 'lagr', 'hrr', 'nrg_loss', 'cpu_step']
 
     PER_CYCLE_CONSTANTS = ['sim_time', 'log_time']
@@ -28,7 +28,7 @@ def setup_analysis(config):
     per_mesh_info['lst'] = {}
     per_mesh_info['fx'] = []
     per_cycle_info['dict'] = {}
-    per_cycle_info['lst'] = {}
+    per_cycle_info['lst'] = []
     per_cycle_info['fx'] = []
 
     # Proj info is core and no further configurations are proposed for this stage
@@ -38,8 +38,7 @@ def setup_analysis(config):
 
     for j in PER_CYCLE_CONSTANTS:
         per_cycle_info['fx'].append(j)
-        per_cycle_info['dict'][j] = {}
-        per_cycle_info['lst'][j] = []
+        per_cycle_info['dict'][j] = None
 
 
     # Setup save structure as per each configuration
@@ -48,8 +47,7 @@ def setup_analysis(config):
 
         if config['log_data'][j] == True and j in PER_CYCLE_SETUP:
             per_cycle_info['fx'].append(j)
-            per_cycle_info['dict'][j] = {}
-            per_cycle_info['lst'][j] = []
+            per_cycle_info['dict'][j] = None
 
         if config['log_data'][j] == True and j in PER_MESH_SETUP:
             per_mesh_info['fx'].append(j)
@@ -80,17 +78,18 @@ with open(mesh_data_file) as f:
 with open(config_filepath) as f:
     config = json.load(f)
 
+# TODO add sim status feature for sim info
 sim_info, per_mesh_info, per_cycle_info = setup_analysis(config)
+
+# This is used to fill at every cycle turn
+per_cycle_dict = per_cycle_info['dict']
 
 # Mesh setup
 cycle_check = {}
 
-# Mesh setup - TODO Add end condition,
-sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
-
 # ts_dict setup
-ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
-ts_lst = list()
+# ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
+# ts_lst = list()
 
 current_mesh = None
 mesh_line = None
@@ -126,8 +125,8 @@ with open(doc_file_path, "r") as file:
     for line in file:
 
         # Populate data dict - KEEP
-        fx_to_use = [key for key in sim_info.keys() if sim_info[key] is None]
-        for fx in fx_to_use:
+        sim_info_fx_to_use = [key for key in sim_info.keys() if sim_info[key] is None]
+        for fx in sim_info_fx_to_use:
             scr.scrape(fx, line, sim_info)
 
         # Populate mesh dicts
@@ -135,53 +134,61 @@ with open(doc_file_path, "r") as file:
 
         if 'cycles' in cycle_check:
 
-            # TODO Rewrite this as a loop based on the input
-            if mesh_dicts['cfl_dict'] != {}:
-                cfl_lst.append(mesh_dicts['cfl_dict'])
-                mesh_dicts['cfl_dict'] = {}
+            for i in per_mesh_info['dict']:
+                if per_mesh_info['dict'][i] != {}:
+                    per_mesh_info['lst'][i].append(per_mesh_info['dict'][i])
+                    per_mesh_info['dict'][i] = {}
 
-            if mesh_dicts['cpu_step_dict'] != {}:
-                cpu_step_lst.append(mesh_dicts['cpu_step_dict'])
-                mesh_dicts['cpu_step_dict'] = {}
+            if all(value != None for value in per_cycle_dict.values()):
+                per_cycle_info['lst'].append(per_cycle_dict)
+                per_cycle_dict = per_cycle_info['dict']
 
-            if mesh_dicts['cpu_tot_dict'] != {}:
-                cpu_tot_lst.append(mesh_dicts['cpu_tot_dict'])
-                mesh_dicts['cpu_tot_dict'] = {}
-
-            if mesh_dicts['vn_dict'] != {}:
-                vn_lst.append(mesh_dicts['vn_dict'])
-                mesh_dicts['vn_dict'] = {}
-
-            if mesh_dicts['max_div_dict'] != {}:
-                max_div_lst.append(mesh_dicts['max_div_dict'])
-                mesh_dicts['max_div_dict'] = {}
-
-            if mesh_dicts['min_div_dict'] != {}:
-                min_div_lst.append(mesh_dicts['min_div_dict'])
-                mesh_dicts['min_div_dict'] = {}
-
-            if mesh_dicts['hrr_dict'] != {}:
-                hrr_lst.append(mesh_dicts['hrr_dict'])
-                mesh_dicts['hrr_dict'] = {}
-
-            if mesh_dicts['loss_dict'] != {}:
-                loss_lst.append(mesh_dicts['loss_dict'])
-                mesh_dicts['loss_dict'] = {}
-
-            if mesh_dicts['lagrange_dict'] != {}:
-                lagrange_lst.append(mesh_dicts['lagrange_dict'])
-                mesh_dicts['lagrange_dict'] = {}
-
-            if all(value != None for value in ts_dict.values()):
-                ts_lst.append(ts_dict)
-                ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
+            # if mesh_dicts['cfl_dict'] != {}:
+            #     cfl_lst.append(mesh_dicts['cfl_dict'])
+            #     mesh_dicts['cfl_dict'] = {}
+            #
+            # if mesh_dicts['cpu_step_dict'] != {}:
+            #     cpu_step_lst.append(mesh_dicts['cpu_step_dict'])
+            #     mesh_dicts['cpu_step_dict'] = {}
+            #
+            # if mesh_dicts['cpu_tot_dict'] != {}:
+            #     cpu_tot_lst.append(mesh_dicts['cpu_tot_dict'])
+            #     mesh_dicts['cpu_tot_dict'] = {}
+            #
+            # if mesh_dicts['vn_dict'] != {}:
+            #     vn_lst.append(mesh_dicts['vn_dict'])
+            #     mesh_dicts['vn_dict'] = {}
+            #
+            # if mesh_dicts['max_div_dict'] != {}:
+            #     max_div_lst.append(mesh_dicts['max_div_dict'])
+            #     mesh_dicts['max_div_dict'] = {}
+            #
+            # if mesh_dicts['min_div_dict'] != {}:
+            #     min_div_lst.append(mesh_dicts['min_div_dict'])
+            #     mesh_dicts['min_div_dict'] = {}
+            #
+            # if mesh_dicts['hrr_dict'] != {}:
+            #     hrr_lst.append(mesh_dicts['hrr_dict'])
+            #     mesh_dicts['hrr_dict'] = {}
+            #
+            # if mesh_dicts['loss_dict'] != {}:
+            #     loss_lst.append(mesh_dicts['loss_dict'])
+            #     mesh_dicts['loss_dict'] = {}
+            #
+            # if mesh_dicts['lagrange_dict'] != {}:
+            #     lagrange_lst.append(mesh_dicts['lagrange_dict'])
+            #     mesh_dicts['lagrange_dict'] = {}
+            #
+            # if all(value != None for value in ts_dict.values()):
+            #     ts_lst.append(ts_dict)
+            #     ts_dict = dict.fromkeys(['time_step', 'sim_time', 'press_itr', 'm_error', 'log_time', 'cycles'])
 
             cycle_check = {}
 
-        # Populate ts_dict
-        fx_to_use2 = [key for key in ts_dict.keys() if ts_dict[key] is None]
-        for fx in fx_to_use2:  # BREAK OUT
-            scr.scrape(fx, line, ts_dict, mesh_info = mesh_data['mesh_info'])
+        # Populate per cycle data
+        cycle_fx_to_use = [key for key in per_cycle_dict.keys() if per_cycle_dict[key] is None]
+        for fx in cycle_fx_to_use:
+            scr.scrape(fx, line, per_cycle_dict, mesh_info = mesh_data['mesh_info'])
 
         current_mesh, mesh_line = scr.mesh_n(line, current_mesh, mesh_line)
 
@@ -190,15 +197,20 @@ with open(doc_file_path, "r") as file:
 
             if m_line_str in scr.mesh_param_order.keys():
                 for fx in scr.mesh_param_order[m_line_str]:
-                    success_line = scr.scrape_succs(fx, line, mesh_dicts, success_line, n_mesh=current_mesh,
-                                                    mesh_info=mesh_data['mesh_info'])
 
-                    if success_line == True:
+                    #TODO check dictionary names in scrapping functions
+                    if fx in per_mesh_info['fx']:
+                        success_line = scr.scrape_succs(fx, line, per_mesh_info['dict'], success_line,
+                                                        n_mesh=current_mesh, mesh_info=mesh_data['mesh_info'])
+
+                    if success_line:
                         break
 
             mesh_line = mesh_line + 1
 
         i = i + 1
+
+#TODO - Write this as loops for each type of data
 
 # Print last line
 ts_lst.append(ts_dict)

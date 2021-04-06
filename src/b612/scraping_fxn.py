@@ -174,6 +174,9 @@ def mesh_n(input_str, n, mesh_line):
     if result is not None:
         n = int(result.group(1))
         mesh_line = 0
+    else:
+        n = None
+        mesh_line = None
 
     return n, mesh_line
 
