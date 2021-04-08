@@ -15,6 +15,7 @@ with open('config.json') as config_js:
 for sim in submit_data:
 
     sim_output_loc = os.path.join(config['settings']['output_loc'], sim)
+    print(sim_output_loc)
 
     # Create diagnostic output folder structure (works once)
     utils.create_diag_dirs(sim_output_loc)
@@ -41,7 +42,7 @@ for sim in submit_data:
 
     # Import correct module
     if ver == 'FDS 6.1.2':
-        from b612 import mesh_tools
+        from b612 import mesh_tools, runtime_data
 
     # START PROCESSING SERVICES
 
@@ -50,11 +51,15 @@ for sim in submit_data:
         mesh_data = mesh_tools.mesh_als(inpt_f_loc['fds_f_loc'])
         with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json'), 'w') as f:
             json.dump(mesh_data, f, indent=4)
+    else:
+        with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json')) as f:
+            mesh_data = json.load(f)
 
     # Get fire curve info (only first time)
 
     # Create images (only forst time)
 
-    # Process data
+    # Get runtime data
+    runtime_data.get_data(inpt_f_loc['out_f_loc'], sim_output_loc, config, mesh_data)
 
     # Plot results

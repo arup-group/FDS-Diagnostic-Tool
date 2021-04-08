@@ -116,5 +116,3 @@ def mesh_als(fds_path):
     mesh_data = get_model_range(mesh_data)
 
     return mesh_data
-
-anf.test()

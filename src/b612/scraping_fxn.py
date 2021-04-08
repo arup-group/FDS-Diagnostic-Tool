@@ -7,7 +7,7 @@ Created on Wed Dec 25 17:01:01 2019
 
 import re
 import datetime
-from analysis_fxn import calc_loc
+from b612.analysis_fxn import calc_loc
 
 
 def ver(input_str, out_dict):
@@ -122,7 +122,7 @@ def time_step(input_str, out_dict, **kwargs):
     result = re.search(pattern, input_str)
 
     if result is not None:
-        out_dict['time_step'] = float(result.group(1))
+        out_dict['ts'] = float(result.group(1))
 
     return out_dict
 
@@ -132,7 +132,7 @@ def sim_time(input_str, out_dict, **kwargs):
     result = re.search(pattern, input_str)
 
     if result is not None:
-        out_dict['compl_time'] = float(result.group(1))
+        out_dict['sim_time'] = float(result.group(1))
 
     return out_dict
 
@@ -147,22 +147,22 @@ def press_itr(input_str, out_dict, **kwargs):
     return out_dict
 
 
-def m_error(input_str, out_dict, mesh_info=None, **kwargs):
+def vel_err(input_str, out_dict, mesh_info=None, **kwargs):
     pattern = r'Error:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-Z\s]+\s+(\d+)[a-z\s]+\((?:\s+)?(\d+,?\s+\d+,?\s+\d+)'
     result = re.search(pattern, input_str)
 
     pattern_split = r'[\s,]+'
 
     if result is not None:
-        out_dict['m_error'] = float(result.group(1))
-        out_dict['m_error_mesh'] = int(result.group(2))
+        out_dict['vel_err'] = float(result.group(1))
+        out_dict['vel_err_m'] = int(result.group(2))
 
         m_error_loc = [int(i) for i in re.split(pattern_split, result.group(3))]
 
         if mesh_info is not None:
-            out_dict['m_error_loc'] = calc_loc(m_error_loc, mesh_info, out_dict['m_error_mesh'])
+            out_dict['vel_err_loc'] = calc_loc(m_error_loc, mesh_info, out_dict['vel_err_m'])
         else:
-            out_dict['m_error_loc'] = m_error_loc
+            out_dict['vel_err_loc'] = m_error_loc
 
     return out_dict
 
@@ -174,9 +174,6 @@ def mesh_n(input_str, n, mesh_line):
     if result is not None:
         n = int(result.group(1))
         mesh_line = 0
-    else:
-        n = None
-        mesh_line = None
 
     return n, mesh_line
 
@@ -190,12 +187,12 @@ def cfl_n(input_str, out_dict, outcome, n_mesh, mesh_info=None, **kwargs):
 
         outcome = True
         cfl_loc = [int(i) for i in re.split(pattern_split, result.group(2))]
-        out_dict['cfl_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['cfl']['m{}'.format(n_mesh)] = float(result.group(1))
 
         if mesh_info is not None:
-            out_dict['cfl_dict']['m{}_loc'.format(n_mesh)] = calc_loc(cfl_loc, mesh_info, n_mesh)
+            out_dict['cfl']['m{}_loc'.format(n_mesh)] = calc_loc(cfl_loc, mesh_info, n_mesh)
         else:
-            out_dict['cfl_dict']['m{}_loc'.format(n_mesh)] = cfl_loc
+            out_dict['cfl']['m{}_loc'.format(n_mesh)] = cfl_loc
 
     else:
         outcome = False
@@ -212,12 +209,12 @@ def max_div(input_str, out_dict, outcome, n_mesh, mesh_info=None, **kwargs):
 
         outcome = True
         max_div_loc = [int(i) for i in re.split(pattern_split, result.group(2))]
-        out_dict['max_div_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['max_div']['m{}'.format(n_mesh)] = float(result.group(1))
 
         if mesh_info is not None:
-            out_dict['max_div_dict']['m{}_loc'.format(n_mesh)] = calc_loc(max_div_loc, mesh_info, n_mesh)
+            out_dict['max_div']['m{}_loc'.format(n_mesh)] = calc_loc(max_div_loc, mesh_info, n_mesh)
         else:
-            out_dict['max_div_dict']['m{}_loc'.format(n_mesh)] = max_div_loc
+            out_dict['max_div']['m{}_loc'.format(n_mesh)] = max_div_loc
 
     else:
         outcome = False
@@ -234,12 +231,12 @@ def min_div(input_str, out_dict, outcome, n_mesh, mesh_info=None, **kwargs):
 
         outcome = True
         min_div_loc = [int(i) for i in re.split(pattern_split, result.group(2))]
-        out_dict['min_div_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['min_div']['m{}'.format(n_mesh)] = float(result.group(1))
 
         if mesh_info is not None:
-            out_dict['min_div_dict']['m{}_loc'.format(n_mesh)] = calc_loc(min_div_loc, mesh_info, n_mesh)
+            out_dict['min_div']['m{}_loc'.format(n_mesh)] = calc_loc(min_div_loc, mesh_info, n_mesh)
         else:
-            out_dict['min_div_dict']['m{}_loc'.format(n_mesh)] = min_div_loc
+            out_dict['min_div']['m{}_loc'.format(n_mesh)] = min_div_loc
 
     else:
         outcome = False
@@ -253,9 +250,11 @@ def loss_bound(input_str, out_dict, outcome, n_mesh, **kwargs):
 
     if result is not None:
         outcome = True
-        out_dict['loss_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['nrg_loss']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['nrg_loss']['ctrl'] = 1
 
     else:
+        out_dict['nrg_loss']['ctrl'] = 0
         outcome = False
 
     return out_dict, outcome
@@ -267,10 +266,11 @@ def hrr(input_str, out_dict, outcome, n_mesh, **kwargs):
 
     if result is not None:
         outcome = True
-        out_dict['hrr_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['hrr']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['hrr']['ctrl'] = 1
 
     else:
-        out_dict['hrr_dict']['ctrl'] = 0
+        out_dict['hrr']['ctrl'] = 0
         outcome = False
 
     return out_dict, outcome
@@ -282,10 +282,11 @@ def lagrange(input_str, out_dict, outcome, n_mesh, **kwargs):
 
     if result is not None:
         outcome = True
-        out_dict['lagrange_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['lagr']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['lagr']['ctrl'] = 1
 
     else:
-        out_dict['lagrange_dict']['ctrl'] = 0
+        out_dict['lagr']['ctrl'] = 0
         outcome = False
 
     return out_dict, outcome
@@ -300,12 +301,12 @@ def vn_n(input_str, out_dict, outcome, n_mesh, mesh_info=None, **kwargs):
 
         outcome = True
         vn_loc = [int(i) for i in re.split(pattern_split, result.group(2))]
-        out_dict['vn_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['vn']['m{}'.format(n_mesh)] = float(result.group(1))
 
         if mesh_info is not None:
-            out_dict['vn_dict']['m{}_loc'.format(n_mesh)] = calc_loc(vn_loc, mesh_info, n_mesh)
+            out_dict['vn']['m{}_loc'.format(n_mesh)] = calc_loc(vn_loc, mesh_info, n_mesh)
         else:
-            out_dict['vn_dict']['m{}_loc'.format(n_mesh)] = vn_loc
+            out_dict['vn']['m{}_loc'.format(n_mesh)] = vn_loc
 
     else:
         outcome = False
@@ -313,24 +314,24 @@ def vn_n(input_str, out_dict, outcome, n_mesh, mesh_info=None, **kwargs):
     return out_dict, outcome
 
 
-def cpu(input_str, out_dict, outcome, n_mesh, **kwargs):
+def cpu_step(input_str, out_dict, outcome, n_mesh, **kwargs):
     pattern = r'CPU\/step:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-z,\s]+CPU:\s+([-+]?[0-9]*\.?[0-9]+)\s+(\w{1,3})'
     result = re.search(pattern, input_str)
 
     if result is not None:
 
         outcome = True
-        out_dict['cpu_step_dict']['m{}'.format(n_mesh)] = float(result.group(1))
+        out_dict['cpu_step']['m{}'.format(n_mesh)] = float(result.group(1))
         #        out_dict['cpu_tot_m{}'.format(n_mesh)] = float(result.group(2))
 
         if result.group(3) == 's':
-            out_dict['cpu_tot_dict']['m{}'.format(n_mesh)] = float(result.group(2))
+            out_dict['cpu_tot']['m{}'.format(n_mesh)] = float(result.group(2))
 
         elif result.group(3) == 'min':
-            out_dict['cpu_tot_dict']['m{}'.format(n_mesh)] = float(result.group(2)) * 60
+            out_dict['cpu_tot']['m{}'.format(n_mesh)] = float(result.group(2)) * 60
 
         elif result.group(3) == 'hr':
-            out_dict['cpu_tot_dict']['m{}'.format(n_mesh)] = float(result.group(2)) * 3600
+            out_dict['cpu_tot']['m{}'.format(n_mesh)] = float(result.group(2)) * 3600
 
     else:
         outcome = False
@@ -345,30 +346,30 @@ basic_param = {
     'cores_n': cores_n,
     'tot_elp_time': tot_elp_time,
     'itr_date': itr_date,
-    'time_step': time_step,
+    'ts': time_step,
     'sim_time': sim_time,
     'press_itr': press_itr,
-    'm_error': m_error,
-    'cfl_n': cfl_n,
+    'vel_err': vel_err,
+    'cfl': cfl_n,
     'max_div': max_div,
     'min_div': min_div,
-    'loss_bound': loss_bound,
+    'nrg_loss': loss_bound,
     'hrr': hrr,
-    'vn_n': vn_n,
-    'cpu': cpu,
+    'vn': vn_n,
+    'cpu_step': cpu_step,
     'log_time': log_time,
     'cycles': cycles,
-    'lagrange': lagrange}
+    'lagr': lagrange}
 
-mesh_param_order = {'1': ['cpu', 'cfl_n', 'max_div', 'min_div', 'vn_n', 'loss_bound', 'hrr', 'lagrange'],
-                    '3': ['cfl_n', 'cpu', 'max_div', 'min_div', 'vn_n', 'loss_bound', 'hrr', 'lagrange'],
-                    '4': ['max_div', 'cpu', 'cfl_n', 'min_div', 'vn_n', 'loss_bound', 'hrr', 'lagrange'],
-                    '5': ['min_div', 'cpu', 'cfl_n', 'max_div', 'vn_n', 'loss_bound', 'hrr', 'lagrange'],
-                    '6': ['vn_n', 'cpu', 'cfl_n', 'max_div', 'min_div', 'loss_bound', 'hrr', 'lagrange'],
-                    '7': ['lagrange', 'hrr', 'loss_bound', 'cfl_n', 'max_div', 'min_div', 'vn_n', 'cpu'],
-                    '8': ['hrr', 'loss_bound', 'cfl_n', 'max_div', 'min_div', 'vn_n', 'cpu', 'lagrange'],
-                    '9': ['loss_bound', 'hrr', 'cfl_n', 'max_div', 'min_div', 'vn_n', 'cpu', 'lagrange'],
-                    '10': ['loss_bound', 'hrr', 'cfl_n', 'max_div', 'min_div', 'vn_n', 'cpu', 'lagrange']}
+per_mesh_run_order = {'1': ['cpu_step', 'cfl', 'max_div', 'min_div', 'vn', 'nrg_loss', 'hrr', 'lagr'],
+                     '3': ['cfl', 'cpu_step', 'max_div', 'min_div', 'vn', 'nrg_loss', 'hrr', 'lagr'],
+                     '4': ['max_div', 'cpu_step', 'cfl', 'min_div', 'vn', 'nrg_loss', 'hrr', 'lagr'],
+                     '5': ['min_div', 'cpu_step', 'cfl', 'max_div', 'vn', 'nrg_loss', 'hrr', 'lagr'],
+                     '6': ['vn', 'cpu_step', 'cfl', 'max_div', 'min_div', 'nrg_loss', 'hrr', 'lagr'],
+                     '7': ['lagr', 'hrr', 'nrg_loss', 'cfl', 'max_div', 'min_div', 'vn', 'cpu_step'],
+                     '8': ['hrr', 'nrg_loss', 'cfl', 'max_div', 'min_div', 'vn', 'cpu_step', 'lagr'],
+                     '9': ['nrg_loss', 'hrr', 'cfl', 'max_div', 'min_div', 'vn', 'cpu_step', 'lagr'],
+                     '10': ['nrg_loss', 'hrr', 'cfl', 'max_div', 'min_div', 'vn', 'cpu_step', 'lagr']}
 
 
 def scrape(name, input_str, out_dict, **kwargs):

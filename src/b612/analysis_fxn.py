@@ -146,6 +146,3 @@ def scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True):
         obst_pd['z'] = obst_pd['z'] - (obst_pd['z'] * 10 % (10 * n)) / 10
 
     return obst_pd
-
-def test():
-    print('TEST')

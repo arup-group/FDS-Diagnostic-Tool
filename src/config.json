@@ -5,11 +5,9 @@
     },
     "log_data": {
         "ts": true,
-		"compl_time" : true,
 		"press_itr" : true,
 		"vel_err" : true,
 		"press_err": true,
-		"log_time" : true,
 		"cycles" : true,		
         "max_div": true,
         "min_div": true,
