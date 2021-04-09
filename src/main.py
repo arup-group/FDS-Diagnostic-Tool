@@ -1,7 +1,9 @@
+from builds import builds_control
 import utils
 import json
 import os
 from shutil import copyfile
+import importlib
 
 #Results for testing only TODO - to be reomved later
 results = {}
@@ -39,12 +41,12 @@ for sim in submit_data:
             config = json.load(config_js)
         print('sim config copied and loaded')
 
-    # Get version (only first time)
+    # Get version
     ver = utils.get_version(inpt_f_loc['out_f_loc'])
 
     # Import correct module
-    if ver == 'FDS 6.1.2':
-        from b612 import mesh_tools, runtime_data
+    mesh_tools = importlib.import_module(f'{builds_control[ver]}.mesh_tools')
+    runtime_data = importlib.import_module(f'{builds_control[ver]}.runtime_data')
 
     # START PROCESSING SERVICES
 

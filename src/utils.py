@@ -75,7 +75,7 @@ def create_runtime_dict(sim_loc):
 
 
 def get_version(filepath):
-    ver_ptn = r'(?:[Vv]ersion|[Rr]evision)[\s:]+(.+)'
+    ver_ptn = r'(?:[Vv]ersion|[Rr]evision)[\s:A-Za-z]+(\d+\.\d+\.\d+)'
 
     with open(filepath, "r", errors='ignore') as file:
         for line in file:

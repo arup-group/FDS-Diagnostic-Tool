@@ -155,5 +155,9 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
     with open(os.path.join(output_loc, 'data', 'sim_info.json'), 'w') as fp:
         json.dump(sim_info, fp, indent=4)
 
-    print(time.time() - start_time)
+    # Get some information for logging
+    dt = time.time() - start_time
+    data_sizes = {k : per_mesh_info['lst'][k].shape for k in per_mesh_info['lst']}
+    data_sizes['cycle_info'] = per_cycle_info['lst'].shape
 
+    print(f'Time : {dt} Output: {data_sizes}')
