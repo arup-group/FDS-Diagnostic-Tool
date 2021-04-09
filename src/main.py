@@ -3,6 +3,8 @@ import json
 import os
 from shutil import copyfile
 
+#Results for testing only TODO - to be reomved later
+results = {}
 
 # Process submit queue
 submit_data = utils.prcs_submit_file('submit_sim.txt')
@@ -57,9 +59,11 @@ for sim in submit_data:
 
     # Get fire curve info (only first time)
 
-    # Create images (only forst time)
+    # Create images (only first time)
 
     # Get runtime data
     runtime_data.get_data(inpt_f_loc['out_f_loc'], sim_output_loc, config, mesh_data)
+    results[sim] = utils.load_results(os.path.join(sim_output_loc, 'data'))
 
     # Plot results
+print('end here')

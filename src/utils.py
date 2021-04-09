@@ -1,6 +1,8 @@
 import os
 import glob
 import re
+import pandas as pd
+import json
 
 
 def prcs_submit_file(submit_file):
@@ -81,3 +83,23 @@ def get_version(filepath):
             if search_result is not None:
                 ver = search_result.group(1)
                 return ver
+
+def load_results(output_loc):
+    """Utility function that loads all results from the"""
+
+    loaded_res = {}
+
+    csv_files = glob.glob(os.path.join(output_loc, '*.csv'))
+    for file in csv_files:
+        base = os.path.basename(file)
+        loaded_res[os.path.splitext(base)[0]] = pd.read_csv(file)
+
+    json_files = glob.glob(os.path.join(output_loc, '*.json'))
+    for file in json_files:
+        base = os.path.basename(file)
+        with open(file) as f:
+            loaded_res[os.path.splitext(base)[0]] = json.load(f)
+
+    return loaded_res
+
+

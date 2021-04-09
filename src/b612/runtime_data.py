@@ -152,7 +152,7 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
         per_mesh_info['lst'][i].to_csv(os.path.join(output_loc, 'data', f'{i}.csv'), index=False)
 
     sim_info['date_start'] = sim_info['date_start'].strftime("%B %d, %Y %H:%M:%S")
-    with open(os.path.join(output_loc, 'sim_info.json'), 'w') as fp:
+    with open(os.path.join(output_loc, 'data', 'sim_info.json'), 'w') as fp:
         json.dump(sim_info, fp, indent=4)
 
     print(time.time() - start_time)
