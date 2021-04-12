@@ -19,6 +19,16 @@ def ver(input_str, out_dict):
 
     return out_dict
 
+def stop_cond(input_str, out_dict):
+
+    if 'completed successfully' in input_str:
+        out_dict['stop'] = 'completed'
+    elif 'stopped by user' in input_str:
+        out_dict['stop'] = 'user'
+    return out_dict
+
+
+    return out_dict
 
 def sim_end(input_str, out_dict):
     pattern = r'[Ee]nd\s+[Tt]ime\s+\(s\)\s+(([-+]?[0-9]*\.?[0-9]+)([eE]([-+])?([0-9]+))?)'
@@ -341,6 +351,7 @@ def cpu_step(input_str, out_dict, outcome, n_mesh, **kwargs):
 
 basic_param = {
     'ver': ver,
+    'stop_cond' : stop_cond,
     'sim_end': sim_end,
     'date_start': date_start,
     'cores_n': cores_n,

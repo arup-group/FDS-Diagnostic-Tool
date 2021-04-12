@@ -32,7 +32,7 @@ def setup_analysis(config):
     per_cycle_info['fx'] = []
 
     # Proj info is core and no further configurations are proposed for this stage
-    sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time'])
+    sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time', 'stop_cond'])
 
     # Add per cycle constants
 
@@ -160,4 +160,4 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
     data_sizes = {k : per_mesh_info['lst'][k].shape for k in per_mesh_info['lst']}
     data_sizes['cycle_info'] = per_cycle_info['lst'].shape
 
-    print(f'Time : {dt} Output: {data_sizes}')
+    print(f'Time : {dt:.2f} Output: {data_sizes}')
