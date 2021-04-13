@@ -102,4 +102,29 @@ def load_results(output_loc):
 
     return loaded_res
 
+def check_data_avaliability(output_loc):
+    "Checks the currently avaliable data before plotting"
+
+    files_check = {}
+    data_files ={'cfl': 'data/cfl.csv',
+                 'cycle_info' : 'data/cycle_info.csv',
+                 'hrr': 'data/hrr.csv',
+                 'lagr': 'data/lagr.csv',
+                 'max_div': 'data/max_div.csv',
+                 'min_div': 'data/min_div.csv',
+                 'vn': 'data/vn.csv',
+                 'nrg_loss': 'data/nrg_loss.csv',
+                 'mesh_data': 'data/mesh_data.json',
+                 'sim_info': 'data/sim_info.json',
+                 'img_xy': 'imgs/xy.png'}
+
+    for file in data_files:
+        if os.path.isfile(os.path.join(output_loc, data_files[file])):
+            files_check[file] = True
+        else:
+            files_check[file] = False
+
+    return files_check
+
+
 

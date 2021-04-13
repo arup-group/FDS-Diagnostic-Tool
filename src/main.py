@@ -66,6 +66,7 @@ for sim in submit_data:
     # Get runtime data
     runtime_data.get_data(inpt_f_loc['out_f_loc'], sim_output_loc, config, mesh_data)
     results[sim] = utils.load_results(os.path.join(sim_output_loc, 'data'))
+    files_check = utils.check_data_avaliability(sim_output_loc)
 
     # Plot results
 print('end here')
