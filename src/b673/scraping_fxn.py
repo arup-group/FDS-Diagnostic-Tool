@@ -11,7 +11,7 @@ from b673.analysis_fxn import calc_loc
 
 
 def ver(input_str, out_dict):
-    pattern = r'Version[\s:A-Za-z]+(\d+\.\d+\.\d+)'
+    pattern = r'(?:[Vv]ersion|[Rr]evision)[\s:]+(.+)'
     result = re.search(pattern, input_str)
 
     if result is not None:
@@ -22,9 +22,9 @@ def ver(input_str, out_dict):
 def stop_cond(input_str, out_dict):
 
     if 'completed successfully' in input_str:
-        out_dict['stop'] = 'completed'
+        out_dict['stop_cond'] = 'completed'
     elif 'stopped by user' in input_str:
-        out_dict['stop'] = 'user'
+        out_dict['stop_cond'] = 'user'
     return out_dict
 
 
@@ -128,7 +128,7 @@ def cycles(input_str, out_dict, **kwargs):
 
 
 def time_step(input_str, out_dict, **kwargs):
-    pattern = r'[Tt]ime\s[Ss]tep:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)'
+    pattern = r'[Ss]tep\s[Ss]ize:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)'
     result = re.search(pattern, input_str)
 
     if result is not None:
@@ -138,7 +138,7 @@ def time_step(input_str, out_dict, **kwargs):
 
 
 def sim_time(input_str, out_dict, **kwargs):
-    pattern = r'Total\stime:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)'
+    pattern = r'Total\s[Tt]ime:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)'
     result = re.search(pattern, input_str)
 
     if result is not None:
@@ -197,7 +197,7 @@ def press_err(input_str, out_dict, mesh_info=None, **kwargs):
 
 
 def mesh_n(input_str, n, mesh_line):
-    pattern = r'Mesh\s+(\d+)$'
+    pattern = r'^\s+Mesh\s+(\d+)$'
     result = re.search(pattern, input_str)
 
     if result is not None:

@@ -11,7 +11,7 @@ from b612.analysis_fxn import calc_loc
 
 
 def ver(input_str, out_dict):
-    pattern = r'Version[\s:A-Za-z]+(\d+\.\d+\.\d+)'
+    pattern = r'(?:[Vv]ersion|[Rr]evision)[\s:]+(.+)'
     result = re.search(pattern, input_str)
 
     if result is not None:
@@ -22,9 +22,9 @@ def ver(input_str, out_dict):
 def stop_cond(input_str, out_dict):
 
     if 'completed successfully' in input_str:
-        out_dict['stop'] = 'completed'
+        out_dict['stop_cond'] = 'completed'
     elif 'stopped by user' in input_str:
-        out_dict['stop'] = 'user'
+        out_dict['stop_cond'] = 'user'
     return out_dict
 
 

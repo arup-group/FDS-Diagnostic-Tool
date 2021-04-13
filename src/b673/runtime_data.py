@@ -11,6 +11,7 @@ import time
 import json
 import os
 
+ # TODO - update TS and sim time scrapping
 
 def setup_analysis(config):
     """Creates save locations and defines analysis setup as per config file"""

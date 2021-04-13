@@ -65,19 +65,6 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
 
     start_time = time.time()
 
-    # outfile_file_path = r"C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3\Fire_Scenario_1_VentOption3_Ru.out"
-    # mesh_data_file = r"C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\data\mesh_data.json"  # TODO REMOVE THIS
-    # config_filepath = r"C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\config.json"  # TODO REMOVE THIS
-    # output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\runtime_tests\data'
-    #
-    # # Load mesh data dict - TO BE REMOVED
-    # with open(mesh_data_file) as f:
-    #     mesh_data = json.load(f)
-    #
-    # with open(config_filepath) as f:
-    #     config = json.load(f)
-
-    # TODO add sim status feature for sim info
     sim_info, per_mesh_info, per_cycle_info = setup_analysis(config)
 
     # This is used to fill at every cycle turn
@@ -88,6 +75,8 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
     current_mesh = None
     mesh_line = None
     success_scrapping = False
+
+
 
 
     with open(outfile_file_path, "r") as file:
