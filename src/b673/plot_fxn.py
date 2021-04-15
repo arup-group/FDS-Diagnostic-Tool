@@ -114,11 +114,12 @@ def mesh_stats_plot(data_loc, data_type, subplot=False, ax=None):
         ax = plt.ylim([0, data['est'].mean() + 5 * data['est'].std()])
 
 
-def general_stats_plot(data_loc, data_type, subplot=False, ax=None):
+def cycle_stats_plot(data_loc, data_type, subplot=False, ax=None):
     # Function starts here
     plot_type = {'ts': ['Time step (s)', 'Simulation time (s)'],
-                 'vel_err': ['Mesh vel. error', 'Simulation time (s)'],
-                 'press_itr': ['Pressure', 'Simulation time (s)']}
+                 'vel_err': ['Velocity error', 'Simulation time (s)'],
+                 'press_itr': ['Pressure', 'Simulation time (s)'],
+                 'press_err': ['Pressure error', 'Simulation time (s)']}
 
     data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'))
 
@@ -130,7 +131,6 @@ def general_stats_plot(data_loc, data_type, subplot=False, ax=None):
     ax = plt.plot(data['sim_time'], data[data_type], '-', color=colors[0], label= data_type)
     ax = plt.xlabel(plot_type[data_type][1])
     ax = plt.ylabel(plot_type[data_type][0])
-    ax = plt.legend(loc=4)
     return data
 
 
@@ -190,3 +190,22 @@ def hrr_plot(data_loc):
     ax = plt.ylabel('Total HRR (KW)')
     ax = plt.xlabel('Simulation time (s)')
     ax = plt.legend()
+
+def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
+
+    """Time step/time plot derived from avaliable data - used for b673 built"""
+    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'))
+
+    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
+    data['time_diff'] = data['log_time'].diff().dt.total_seconds()
+    data['cycle_diff'] = data['cycles'].diff()
+    data['step_time'] = data['time_diff'] / data['cycle_diff']
+
+    if subplot == False:
+        fig, ax = plt.subplots(figsize=(15, 6))
+        sns.set()
+
+    ax = plt.plot(data['sim_time'], data['step_time'], '-', label='ts')
+    ax = plt.xlabel('Simulation time (s)')
+    ax = plt.ylabel('Time per time step (s)')
+

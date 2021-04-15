@@ -2,3 +2,5 @@ docs/*
 tests/*
 .idea/*
 *.pyc
+src/tests_fxns.py
+
