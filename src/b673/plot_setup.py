@@ -7,7 +7,7 @@ data_loc = r'C:\work\fds_tools\fds_diagnostics\tests\NTU_sc1_r3\data'
 
 sns.set()
 fig = plt.figure(figsize=(15,9))
-#plt.tight_layout()
+
 
 ax1 = plt.subplot(321)
 plf.cycle_stats_plot(data_loc, data_type='ts', subplot=True, ax=ax1)

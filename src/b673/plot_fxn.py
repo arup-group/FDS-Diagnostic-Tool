@@ -4,6 +4,98 @@ import os
 import re
 import numpy as np
 import seaborn as sns
+import matplotlib.dates as mdates
+from datetime import timedelta
+from matplotlib.ticker import AutoMinorLocator
+
+
+def day_rounder(date_min, type_round, h_intv):
+    ''''Rounds axis times when timedate objects are used'''
+
+    if type_round == 'd':
+        if date_min.hour < 12:
+            date_min = date_min.replace(second=0, microsecond=0, minute=0, hour=0)
+        else:
+            date_min = date_min.replace(second=0, microsecond=0, minute=0, hour=12)
+
+        date_max = date_min + timedelta(hours=int(h_intv) + 6)
+
+    elif type_round == 'h':
+        min_to_round = date_min.minute - date_min.minute % 10
+        date_min = date_min.replace(second=0, microsecond=0, minute=min_to_round)
+        date_max = date_min + timedelta(hours=int(h_intv) + 0.166)
+
+    return date_min, date_max
+
+
+def format_ax(data, ax, tdiff):
+    """Formats x- axis when datetime object is used"""
+    tdiff = str(tdiff)
+    print('line 37')
+    ax_data = {'1': {'ML_fxn': mdates.MinuteLocator,
+                     'itv': 10,
+                     'mL': 5,
+                     'fmt': '%H:%M',
+                     'rnd': 'h',
+                     'gr_sp': '2 min'},
+               '6': {'ML_fxn': mdates.MinuteLocator,
+                     'itv': 60,
+                     'mL': 4,
+                     'fmt': '%H:%M',
+                     'rnd': 'h',
+                     'gr_sp': '15 min'},
+               '24': {'ML_fxn': mdates.HourLocator,
+                      'itv': 6,
+                      'mL': 6,
+                      'fmt': '%d %Hh',
+                      'rnd': 'h',
+                      'gr_sp': '1 h'},
+               '96': {'ML_fxn': mdates.HourLocator,
+                      'itv': 8,
+                      'mL': 2,
+                      'fmt': '%d %Hh',
+                      'rnd': 'd',
+                      'gr_sp': '4 h'},
+               '192': {'ML_fxn': mdates.DayLocator,
+                       'itv': 1,
+                       'mL': 4,
+                       'fmt': '%d-%b',
+                       'rnd': 'd',
+                       'gr_sp': '6 h'},
+               '288': {'ML_fxn': mdates.DayLocator,
+                       'itv': 2,
+                       'mL': 4,
+                       'fmt': '%d-%b',
+                       'rnd': 'd',
+                       'gr_sp': '12 h'},
+               '384': {'ML_fxn': mdates.DayLocator,
+                       'itv': 2,
+                       'mL': 4,
+                       'fmt': '%d-%b',
+                       'rnd': 'd',
+                       'gr_sp': '12 d'},
+               '10000000': {'ML_fxn': mdates.DayLocator,
+                            'itv': 4,
+                            'mL': 4,
+                            'fmt': '%d-%b',
+                            'rnd': 'd',
+                            'gr_sp': '1 d'}
+               }
+
+    datemin, datemax = day_rounder(data['log_time'].iloc[0], ax_data[tdiff]['rnd'], tdiff)
+    ax.set_xlim(datemin, datemax)
+
+    # Set major ticks
+    fmt_x_axis = ax_data[tdiff]['ML_fxn'](interval=ax_data[tdiff]['itv'])
+    ax.xaxis.set_major_locator(fmt_x_axis)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter(ax_data[tdiff]['fmt']))
+
+    # Set minor ticks
+    ax.xaxis.set_minor_locator(AutoMinorLocator(ax_data[tdiff]['mL']))
+
+    # Set text
+    ax.text(0.98, 0.02, f"Grid scale: {ax_data[tdiff]['gr_sp']}",
+            ha='right', va='bottom', transform=ax.transAxes, size=11)
 
 
 def mesh_stats_plot(data_loc, data_type, subplot=False, ax=None):
@@ -128,7 +220,7 @@ def cycle_stats_plot(data_loc, data_type, subplot=False, ax=None):
         sns.set()
 
     colors = sns.color_palette()
-    ax = plt.plot(data['sim_time'], data[data_type], '-', color=colors[0], label= data_type)
+    ax = plt.plot(data['sim_time'], data[data_type], '-', color=colors[0], label=data_type)
     ax = plt.xlabel(plot_type[data_type][1])
     ax = plt.ylabel(plot_type[data_type][0])
     return data
@@ -191,8 +283,8 @@ def hrr_plot(data_loc):
     ax = plt.xlabel('Simulation time (s)')
     ax = plt.legend()
 
-def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
 
+def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
     """Time step/time plot derived from avaliable data - used for b673 built"""
     data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'))
 
@@ -209,3 +301,31 @@ def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
     ax = plt.xlabel('Simulation time (s)')
     ax = plt.ylabel('Time per time step (s)')
 
+
+def log_interval_plot(data_loc, subplot=False, ax=None):
+
+    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
+    data['time_diff'] = data['log_time'].diff().dt.total_seconds()
+    total_time_span = (data['log_time'].iloc[-1] - data['log_time'].iloc[0]).total_seconds()/3600
+
+
+    if subplot == False:
+        sns.set()
+        fig, ax = plt.subplots()
+
+
+    ax.plot(data['log_time'], data['time_diff']/60, '-')
+
+    # Format axis
+    format_ax(data, ax, total_time_span)
+
+    ax.grid(b=True, which='major', linewidth=1.6)
+    ax.grid(b=True, which='minor', linewidth=0.6)
+
+    plt.xlabel('Log time')
+    plt.ylabel('Log intervals (min)')
+    plt.xticks(rotation=30)
+    plt.tight_layout()
+
+    if subplot == False:
+        plt.show()
