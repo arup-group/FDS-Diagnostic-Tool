@@ -28,10 +28,8 @@ def day_rounder(date_min, type_round, h_intv):
     return date_min, date_max
 
 
-def format_ax(data, ax, tdiff):
-    """Formats x- axis when datetime object is used"""
-    tdiff = str(tdiff)
-    print('line 37')
+def format_ax(data, ax, total_time_span):
+
     ax_data = {'1': {'ML_fxn': mdates.MinuteLocator,
                      'itv': 10,
                      'mL': 5,
@@ -82,20 +80,26 @@ def format_ax(data, ax, tdiff):
                             'gr_sp': '1 d'}
                }
 
-    datemin, datemax = day_rounder(data['log_time'].iloc[0], ax_data[tdiff]['rnd'], tdiff)
-    ax.set_xlim(datemin, datemax)
+    for tdiff in [1, 6, 24, 96, 192, 288, 384, 10000000]:
+        if total_time_span < tdiff:
+            tdiff = str(tdiff)
 
-    # Set major ticks
-    fmt_x_axis = ax_data[tdiff]['ML_fxn'](interval=ax_data[tdiff]['itv'])
-    ax.xaxis.set_major_locator(fmt_x_axis)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter(ax_data[tdiff]['fmt']))
+            datemin, datemax = day_rounder(data['log_time'].iloc[0], ax_data[tdiff]['rnd'], tdiff)
+            ax.set_xlim(datemin, datemax)
 
-    # Set minor ticks
-    ax.xaxis.set_minor_locator(AutoMinorLocator(ax_data[tdiff]['mL']))
+            # Set major ticks
+            fmt_x_axis = ax_data[tdiff]['ML_fxn'](interval=ax_data[tdiff]['itv'])
+            ax.xaxis.set_major_locator(fmt_x_axis)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter(ax_data[tdiff]['fmt']))
 
-    # Set text
-    ax.text(0.98, 0.02, f"Grid scale: {ax_data[tdiff]['gr_sp']}",
-            ha='right', va='bottom', transform=ax.transAxes, size=11)
+            # Set minor ticks
+            ax.xaxis.set_minor_locator(AutoMinorLocator(ax_data[tdiff]['mL']))
+
+            # Set text
+            ax.text(0.98, 0.02, f"Grid scale: {ax_data[tdiff]['gr_sp']}",
+                    ha='right', va='bottom', transform=ax.transAxes, size=11)
+
+            break
 
 
 def mesh_stats_plot(data_loc, data_type, subplot=False, ax=None):
@@ -286,7 +290,6 @@ def hrr_plot(data_loc):
 
 def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
     """Time step/time plot derived from avaliable data - used for b673 built"""
-    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'))
 
     data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
     data['time_diff'] = data['log_time'].diff().dt.total_seconds()
@@ -302,10 +305,10 @@ def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
     ax = plt.ylabel('Time per time step (s)')
 
 
-def log_interval_plot(data_loc, subplot=False, ax=None):
+def log_interval_plot(data, subplot=False, ax=None):
 
-    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
     data['time_diff'] = data['log_time'].diff().dt.total_seconds()
+    data['sim_time_diff'] = data['sim_time'].diff()
     total_time_span = (data['log_time'].iloc[-1] - data['log_time'].iloc[0]).total_seconds()/3600
 
 
@@ -314,7 +317,44 @@ def log_interval_plot(data_loc, subplot=False, ax=None):
         fig, ax = plt.subplots()
 
 
-    ax.plot(data['log_time'], data['time_diff']/60, '-')
+    p1, = ax.plot(data['log_time'], data['time_diff']/60, '-', color = '#4C72B0', label='log interv.')
+    twin1 = ax.twinx()
+    p2, = twin1.plot(data['log_time'], data['sim_time_diff'], '-', color = '#DD8452', label= 'sim time incr.')
+
+    # Format axis
+    format_ax(data, ax, total_time_span)
+    # format_ax(data, twin1, total_time_span)
+
+    ax.set_xlabel('Log time')
+    ax.set_ylabel('Log intervals (min)')
+    twin1.set_ylabel('Sim time increments (s)')
+    ax.xaxis.set_tick_params(rotation=30)
+    twin1.grid(None)
+    ax.grid(b=True, which='major', linewidth=1.6)
+    ax.grid(b=True, which='minor', linewidth=0.6)
+
+    ax.legend(handles=[p1, p2])
+
+    plt.tight_layout()
+
+    if subplot == False:
+        plt.show()
+
+
+def comp_speed_plot(data, subplot=False, ax=None):
+
+    data['time_diff'] = data['log_time'].diff().dt.total_seconds()
+    data['sim_time_diff'] = data['sim_time'].diff()
+    data['sim_speed'] = data['sim_time_diff'] / data['time_diff'] * 3600 # sims/h
+    total_time_span = (data['log_time'].iloc[-1] - data['log_time'].iloc[0]).total_seconds()/3600
+
+
+    if subplot == False:
+        sns.set()
+        fig, ax = plt.subplots()
+
+
+    ax.plot(data['log_time'], data['sim_speed'], '-')
 
     # Format axis
     format_ax(data, ax, total_time_span)
@@ -323,9 +363,11 @@ def log_interval_plot(data_loc, subplot=False, ax=None):
     ax.grid(b=True, which='minor', linewidth=0.6)
 
     plt.xlabel('Log time')
-    plt.ylabel('Log intervals (min)')
+    plt.ylabel('Simulation speed (sph)')
     plt.xticks(rotation=30)
     plt.tight_layout()
+
+
 
     if subplot == False:
         plt.show()
