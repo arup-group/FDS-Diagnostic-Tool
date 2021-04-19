@@ -372,6 +372,7 @@ def comp_speed_plot(data, subplot=False, ax=None):
     if subplot == False:
         plt.show()
 
+
 def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=None):
 
     date_start = datetime.strptime(sim_info["date_start"], "%B %d, %Y %H:%M:%S")
@@ -402,6 +403,7 @@ def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=N
 
 
     ax.set_xlim([0, sim_info["sim_end"]+100])
+    ax.set_xticks(np.arange(0, sim_info["sim_end"] + 100, 100))
     ax.set_ylim([0.45, 1.55])
     ax.set_xlabel('Simulation time progress (s)')
     ax.set_yticks([])
