@@ -210,14 +210,13 @@ def mesh_stats_plot(data_loc, data_type, subplot=False, ax=None):
         ax = plt.ylim([0, data['est'].mean() + 5 * data['est'].std()])
 
 
-def cycle_stats_plot(data_loc, data_type, subplot=False, ax=None):
+def cycle_stats_plot(data, data_type, subplot=False, ax=None):
     # Function starts here
     plot_type = {'ts': ['Time step (s)', 'Simulation time (s)'],
                  'vel_err': ['Velocity error', 'Simulation time (s)'],
                  'press_itr': ['Pressure', 'Simulation time (s)'],
                  'press_err': ['Pressure error', 'Simulation time (s)']}
 
-    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'))
 
     if subplot == False:
         fig, ax = plt.subplots(figsize=(15, 6))
@@ -288,10 +287,9 @@ def hrr_plot(data_loc):
     ax = plt.legend()
 
 
-def derived_cpu_step_plot(data_loc, subplot=False, ax=None):
+def derived_cpu_step_plot(data, subplot=False, ax=None):
     """Time step/time plot derived from avaliable data - used for b673 built"""
 
-    data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
     data['time_diff'] = data['log_time'].diff().dt.total_seconds()
     data['cycle_diff'] = data['cycles'].diff()
     data['step_time'] = data['time_diff'] / data['cycle_diff']

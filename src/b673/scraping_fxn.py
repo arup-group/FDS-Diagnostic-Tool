@@ -165,12 +165,13 @@ def vel_err(input_str, out_dict, mesh_info=None, **kwargs):
 
     if result is not None:
         out_dict['vel_err'] = float(result.group(1))
-        out_dict['vel_err_m'] = int(result.group(2))
+        m_num = int(result.group(2))
+        out_dict['vel_err_m'] = f'm{m_num}'
 
         m_error_loc = [int(i) for i in re.split(pattern_split, result.group(3))]
 
         if mesh_info is not None:
-            out_dict['vel_err_loc'] = calc_loc(m_error_loc, mesh_info, out_dict['vel_err_m'])
+            out_dict['vel_err_loc'] = calc_loc(m_error_loc, mesh_info, m_num)
         else:
             out_dict['vel_err_loc'] = m_error_loc
 
@@ -184,12 +185,13 @@ def press_err(input_str, out_dict, mesh_info=None, **kwargs):
 
     if result is not None:
         out_dict['press_err'] = float(result.group(1))
-        out_dict['press_err_m'] = int(result.group(2))
+        m_num = int(result.group(2))
+        out_dict['press_err_m'] = f'm{m_num}'
 
         m_error_loc = [int(i) for i in re.split(pattern_split, result.group(3))]
 
         if mesh_info is not None:
-            out_dict['press_err_loc'] = calc_loc(m_error_loc, mesh_info, out_dict['vel_err_m'])
+            out_dict['press_err_loc'] = calc_loc(m_error_loc, mesh_info, m_num)
         else:
             out_dict['press_err_loc'] = m_error_loc
 

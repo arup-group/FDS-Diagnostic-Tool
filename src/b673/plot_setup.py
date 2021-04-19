@@ -9,13 +9,14 @@ from matplotlib import gridspec
 
 def mesh_plots(output_loc):
 
+    data_cycles = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'), parse_dates=['log_time'])
     data_loc = os.path.join(output_loc, 'data')
 
     sns.set()
     fig = plt.figure(figsize=(15,9))
 
     ax1 = plt.subplot(321)
-    plf.cycle_stats_plot(data_loc, data_type='ts', subplot=True, ax=ax1)
+    plf.cycle_stats_plot(data_cycles, data_type='ts', subplot=True, ax=ax1)
 
     ax2 = plt.subplot(323)
     plf.mesh_stats_plot(data_loc, data_type='cfl', subplot=True, ax=ax2)
@@ -27,7 +28,7 @@ def mesh_plots(output_loc):
     plf.mesh_stats_plot(data_loc, data_type = 'max_div', subplot = True, ax = ax4)
 
     ax5 = plt.subplot(325)
-    plf.derived_cpu_step_plot(data_loc, subplot=True, ax=ax5)
+    plf.derived_cpu_step_plot(data_cycles, subplot=True, ax=ax5)
 
     ax6 = plt.subplot(326, sharex=ax1)
     plf.mesh_stats_plot(data_loc, data_type='vn', subplot=True, ax=ax6)
@@ -91,6 +92,7 @@ mock_pred = [{'t': 400,
 analytics = {'status': 'Running', 'pred': mock_pred}
 
 sim_progress(output_loc, analytics)
+mesh_plots(output_loc)
 
 # plf.timestep_bar_plot(data_loc, 'cpu_tot')
 # plf.hrr_plot(data_loc)
