@@ -5,7 +5,7 @@ import re
 import numpy as np
 import seaborn as sns
 import matplotlib.dates as mdates
-from datetime import timedelta
+from datetime import timedelta, datetime
 from matplotlib.ticker import AutoMinorLocator
 
 
@@ -371,3 +371,54 @@ def comp_speed_plot(data, subplot=False, ax=None):
 
     if subplot == False:
         plt.show()
+
+def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=None):
+
+    date_start = datetime.strptime(sim_info["date_start"], "%B %d, %Y %H:%M:%S")
+
+    if subplot == False:
+        sns.set()
+        fig, ax = plt.subplots(figsize=(15,2))
+
+    # Plots
+    ax.barh(1, data['sim_time'].max(), height=1, align='center', alpha=0.4)
+    ax.barh(1, sim_info["sim_end"], height=1, edgecolor='#4C72B0', linewidth=1, fill=False, align='center')
+
+    #Plot start
+    ax.plot([1,1], [0.5, 1.5], color='#4C72B0', linewidth=4)
+    ax.text(10,1, f'Start\n{date_start.strftime("%d-%b %H:%M")}', va='center')
+
+    #Plot predictons
+    if t_predict:
+        for i in t_predict:
+            if i['end']:
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+                ax.text(i['t']+9, 1, f'Complete\n{i["pr"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+            else:
+                ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#DD8452', linewidth=2)
+                ax.text(i['t']+9, 1, f'{i["pr"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+
+
+
+
+    ax.set_xlim([0, sim_info["sim_end"]+100])
+    ax.set_ylim([0.45, 1.55])
+    ax.set_xlabel('Simulation time progress (s)')
+    ax.set_yticks([])
+    ax.grid(b=True, which='major', linewidth=1.6)
+
+    if subplot == False:
+        plt.show()
+
+    return
+
+
+import json
+
+
+# output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\NTU_sc1_r3'
+# data_loc = os.path.join(output_loc, 'data')
+# data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
+# data = data.iloc[0:1000]
+
+
