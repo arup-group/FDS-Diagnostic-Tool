@@ -17,15 +17,14 @@ with open('config.json') as config_js:
 
 # Start looping for each part of the queue
 for sim in submit_data:
+    print(f'*** START PROCESSING {sim} ***')
 
     sim_output_loc = os.path.join(config['settings']['output_loc'], sim)
-    print(sim_output_loc)
 
     # Create diagnostic output folder structure (works once)
     utils.create_diag_dirs(sim_output_loc)
 
     # Get relevant locations for each simulation
-
     inpt_f_loc = utils.get_inpt_files_loc(submit_data[sim])
 
     # Copy configuration settings (only first time) and reload it
@@ -33,13 +32,12 @@ for sim in submit_data:
     if os.path.isfile(config_sim_path):
         with open(config_sim_path) as config_js:
             config = json.load(config_js)
-        print('sim config loaded')
-
+        print('Sim config loaded.')
     else:
         copyfile('config.json', config_sim_path)
         with open(config_sim_path) as config_js:
             config = json.load(config_js)
-        print('sim config copied and loaded')
+        print('Sim config copied and loaded.')
 
     # Get version
     ver = utils.get_version(inpt_f_loc['out_f_loc'])
@@ -47,6 +45,7 @@ for sim in submit_data:
     # Import correct module
     mesh_tools = importlib.import_module(f'{builds_control[ver]}.mesh_tools')
     runtime_data = importlib.import_module(f'{builds_control[ver]}.runtime_data')
+    plot_setup = importlib.import_module(f'{builds_control[ver]}.plot_setup')
 
     # START PROCESSING SERVICES
 
@@ -55,18 +54,28 @@ for sim in submit_data:
         mesh_data = mesh_tools.mesh_als(inpt_f_loc['fds_f_loc'])
         with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json'), 'w') as f:
             json.dump(mesh_data, f, indent=4)
+        print('Mesh data processed.')
     else:
         with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json')) as f:
             mesh_data = json.load(f)
+        print('Mesh data loaded.')
 
     # Get fire curve info (only first time)
 
     # Create images (only first time)
 
     # Get runtime data
+    print(f'Start runtime data parsing using {builds_control[ver]}.')
     runtime_data.get_data(inpt_f_loc['out_f_loc'], sim_output_loc, config, mesh_data)
-    results[sim] = utils.load_results(os.path.join(sim_output_loc, 'data'))
     files_check = utils.check_data_avaliability(sim_output_loc)
 
+    #Run analytics
+
+
     # Plot results
+    print('Start plotting.')
+    plot_setup.plot(sim_output_loc, config['plots'])
+    print('Finish plotting.')
+    print(f'*** FINISHED PROCESSING {sim} ***')
+    # Call default plotting function
 print('end here')

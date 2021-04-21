@@ -519,12 +519,4 @@ def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=N
     return
 
 
-import json
-
-
-# output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\NTU_sc1_r3'
-# data_loc = os.path.join(output_loc, 'data')
-# data = pd.read_csv(os.path.join(data_loc, 'cycle_info.csv'), parse_dates=['log_time'])
-# data = data.iloc[0:1000]
-
 
