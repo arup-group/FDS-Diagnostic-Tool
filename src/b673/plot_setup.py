@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import b673.plot_fxn as plf
+import plot_fxn as plf
 import seaborn as sns
 import datetime
 import os
