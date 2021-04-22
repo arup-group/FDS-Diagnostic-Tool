@@ -123,7 +123,7 @@ def cycle_plots(output_loc, plots_config):
         plf.cycle_stats_pm_plot(data, data_type='press_err', subplot=True, ax=ax2)
     if plots_config['press_itr']:
         ax3 = fig.add_subplot(spec[1, 0], sharex=ax1)
-        plf.cycle_stats_plot(data, data_type='press_itr', subplot=True, ax=ax3)
+        plf.press_itr_plot(data, subplot=True, ax=ax3)
     if plots_config['hrr']:
         ax4 = fig.add_subplot(spec[1, 1], sharex=ax1)
         plf.hrr_plot(os.path.join(output_loc, 'data'), subplot=True, ax=ax4)

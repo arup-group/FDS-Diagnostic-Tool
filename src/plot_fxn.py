@@ -518,5 +518,18 @@ def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=N
 
     return
 
+def press_itr_plot(data, subplot=False, ax=None):
 
+    if subplot == False:
+        fig, ax = plt.subplots(figsize=(15, 6))
+        sns.set()
+
+    colors = sns.color_palette()
+    ax.fill_between(data['sim_time'], 0, data['press_itr'], color=colors[0])
+    ax.set_ylim(0, 10.5)
+    ax.set_yticks(np.arange(0, 10.5, 1))
+    ax = plt.xlabel('Simulation time (s)')
+    ax = plt.ylabel('Pressure iterations')
+
+    return data
 
