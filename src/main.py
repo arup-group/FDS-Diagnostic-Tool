@@ -45,7 +45,7 @@ for sim in submit_data:
     # Import correct module
     mesh_tools = importlib.import_module(f'{builds_control[ver]}.mesh_tools')
     runtime_data = importlib.import_module(f'{builds_control[ver]}.runtime_data')
-    plot_setup = importlib.import_module(f'{builds_control[ver]}.plot_setup')
+    plots_setup = importlib.import_module(f'{builds_control[ver]}.plots_setup')
 
     # START PROCESSING SERVICES
 
@@ -74,7 +74,7 @@ for sim in submit_data:
 
     # Plot results
     print('Start plotting.')
-    plot_setup.plot(sim_output_loc, config['plots'])
+    plots_setup.plot(sim_output_loc, config['plots'])
     print('Finish plotting.')
     print(f'*** FINISHED PROCESSING {sim} ***')
     # Call default plotting function

@@ -166,7 +166,7 @@ def vel_err(input_str, out_dict, mesh_info=None, **kwargs):
     if result is not None:
         out_dict['vel_err'] = float(result.group(1))
         m_num = int(result.group(2))
-        out_dict['vel_err_m'] = f'{m_num}'
+        out_dict['vel_err_m'] = f'm{m_num}'
 
         m_error_loc = [int(i) for i in re.split(pattern_split, result.group(3))]
 
