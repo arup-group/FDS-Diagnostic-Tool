@@ -385,6 +385,7 @@ def hrr_plot(data_loc, subplot=False, ax=None):
     except:
         pass
 
+    ax = plt.xlim(0, data_hrr['sim_time'].max() + 10)
     ax = plt.ylabel('Total energy (KW)')
     ax = plt.xlabel('Simulation time (s)')
     ax = plt.legend()
@@ -522,6 +523,7 @@ def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=N
         plt.show()
 
     return
+
 
 def press_itr_plot(data, subplot=False, ax=None):
 
