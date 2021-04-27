@@ -25,6 +25,8 @@ def stop_cond(input_str, out_dict):
         out_dict['stop_cond'] = 'completed'
     elif 'stopped by user' in input_str:
         out_dict['stop_cond'] = 'user'
+    elif 'Numerical Instability' in input_str:
+        out_dict['stop_cond'] = 'instability'
     return out_dict
 
 
