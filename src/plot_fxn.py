@@ -18,7 +18,7 @@ def day_rounder(date_min, type_round, h_intv):
         else:
             date_min = date_min.replace(second=0, microsecond=0, minute=0, hour=12)
 
-        date_max = date_min + timedelta(hours=int(h_intv) + 6)
+        date_max = date_min + timedelta(hours=int(h_intv) + 12)
 
     elif type_round == 'h':
         min_to_round = date_min.minute - date_min.minute % 10
@@ -380,8 +380,8 @@ def hrr_plot(data_loc, subplot=False, ax=None):
     ax = plt.plot(data_hrr['sim_time'], nrg_loss['est'].abs(), '-', color='#DD8452', label='Rad. loss')
 
     try:
-        fire_curve = pd.read_csv(os.path.join(data_loc, 'fire_curve.csv'))
-        ax = plt.plot(fire_curve['t'], fire_curve['tot'], '--', color='red', label='HRR definition')
+        fire_curve = pd.read_csv(os.path.join(data_loc, 'hrr_curve.csv'))
+        ax = plt.plot(fire_curve['t'], fire_curve['HRR'], '--', color='red', label='HRR definition')
     except:
         pass
 
@@ -465,6 +465,11 @@ def comp_speed_plot(data, subplot=False, ax=None):
 
     ax.grid(b=True, which='major', linewidth=1.6)
     ax.grid(b=True, which='minor', linewidth=0.6)
+
+    y_max = data['sim_speed'].mean() + 3 * data['sim_speed'].std()
+    if y_max > data['sim_speed'].max() + 10:
+        y_max = data['sim_speed'].max() + 10
+    ax.set_ylim(0, y_max)
 
     plt.xlabel('Log time')
     plt.ylabel('Simulation speed (sph)')

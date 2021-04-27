@@ -1,2 +1,2 @@
-C:\work\fds_tools\fds_diagnostics\docs\paisley\FC1_VO3
+C:\work\fds_tools\fds_diagnostics\docs\braehead\sc2_new
 C:\work\fds_tools\fds_diagnostics\docs\NTU\sc1_r3

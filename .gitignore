@@ -3,4 +3,5 @@ tests/*
 .idea/*
 *.pyc
 src/tests_fxns.py
+src/delete_tests.py
 

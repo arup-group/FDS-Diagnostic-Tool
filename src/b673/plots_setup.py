@@ -6,10 +6,6 @@ import datetime
 import os
 import json
 
-#TODO Update graph requirements as per key file
-#TODO write main graph function
-#TODO loc plots
-#TODO main function controllin plots
 
 mock_pred = [{'t': 400,
               'pr': '02-Apr 14:52',

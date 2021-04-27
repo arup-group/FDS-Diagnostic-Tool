@@ -44,23 +44,31 @@ for sim in submit_data:
 
     # Import correct module
     mesh_tools = importlib.import_module(f'{builds_control[ver]}.mesh_tools')
+    hrr_tools = importlib.import_module(f'{builds_control[ver]}.hrr_tools')
     runtime_data = importlib.import_module(f'{builds_control[ver]}.runtime_data')
     plots_setup = importlib.import_module(f'{builds_control[ver]}.plots_setup')
 
     # START PROCESSING SERVICES
 
     # Get mesh info (only first time)
-    if os.path.isfile(os.path.join(sim_output_loc, 'data', 'mesh_data.json')) == False :
+    if os.path.isfile(os.path.join(sim_output_loc, 'data', 'mesh_data.json')):
+        with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json')) as f:
+            mesh_data = json.load(f)
+        print('Mesh data loaded.')
+    else:
         mesh_data = mesh_tools.mesh_als(inpt_f_loc['fds_f_loc'])
         with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json'), 'w') as f:
             json.dump(mesh_data, f, indent=4)
         print('Mesh data processed.')
-    else:
-        with open(os.path.join(sim_output_loc, 'data', 'mesh_data.json')) as f:
-            mesh_data = json.load(f)
-        print('Mesh data loaded.')
+
 
     # Get fire curve info (only first time)
+    if os.path.isfile(os.path.join(sim_output_loc, 'data', 'hrr_data.json')) == False:
+        hrr_tools.get_hrr_data(inpt_f_loc['fds_f_loc'], sim_output_loc, hrr_curve_sampling_rate=1)
+        print('HRR data processed.')
+    else:
+        print('HRR data available.')
+
 
     # Create images (only first time)
 
