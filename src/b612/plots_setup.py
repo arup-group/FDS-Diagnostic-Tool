@@ -78,24 +78,30 @@ def sim_progress(output_loc, analytics_res):
     with open(os.path.join(output_loc, 'data', 'sim_info.json')) as f:
         sim_info = json.load(f)
     data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'), parse_dates=['log_time'])
-    # data = data.iloc[0:1000]
 
     sns.set()
     fig = plt.figure(figsize=(15,9))
 
-    widths = [1,0.02, 1]
-    heights = [1, 0.01, 4]
-    spec = fig.add_gridspec(ncols=3, nrows=3, width_ratios=widths, height_ratios=heights)
+    widths = [1, 0.02, 1]
+    heights = [0.01, 1, 0.005, 4]
+    spec = fig.add_gridspec(ncols=3, nrows=4, width_ratios=widths, height_ratios=heights)
 
-    ax1 = fig.add_subplot(spec[0, :])
-    plf.timeprogress_bar_plot(data, sim_info, t_predict=analytics_res["pred"], subplot=True, ax=ax1)
-    ax2 = fig.add_subplot(spec[2, 0])
+    ax1 = fig.add_subplot(spec[1, :])
+    plf.timeprogress_bar_plot(data, sim_info, t_predict=analytics_res["runtime_pred"], subplot=True, ax=ax1)
+    ax2 = fig.add_subplot(spec[3, 0])
     plf.log_interval_plot(data, subplot=True, ax=ax2)
-    ax3 = fig.add_subplot(spec[2, 2], sharex=ax2)
+    ax3 = fig.add_subplot(spec[3, 2], sharex=ax2)
     plf.comp_speed_plot(data, subplot=True, ax=ax3)
 
-    fig.suptitle(f'Sim Status: {analytics_res["status"]}\nLast Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}',
-                 fontsize=12, va='top')
+    fig.suptitle(f'{analytics_res["sim_status"]["stat"]}',
+                 color=analytics_res["sim_status"]["color"],
+                 fontsize=14,
+                 va='top')
+
+    plt.gcf().text(0.5, 0.94,
+                   f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                   fontsize=12,
+                   ha='center', va='top',)
 
     plt.tight_layout()
     plt.savefig(os.path.join(output_loc, 'time_progress.png'), bbox_inches="tight")
@@ -130,20 +136,8 @@ def cycle_plots(output_loc, plots_config):
     plt.savefig(os.path.join(output_loc, 'cycle_plots.png'), bbox_inches="tight")
     plt.show()
 
-def plot(output_loc, plots_config, analytics_res=analytics):
+
+def plot(output_loc, plots_config, analytics_res):
     sim_progress(output_loc, analytics_res)
     mesh_plots(output_loc, plots_config)
     cycle_plots(output_loc, plots_config)
-
-# PARAMETERS
-# output_loc = r'C:\work\fds_tools\fds_diagnostics\tests\NTU_sc1_r3'
-
-
-# sim_progress(output_loc, analytics)
-# mesh_plots(output_loc)
-# cycle_plots(output_loc)
-
-# plf.timestep_bar_plot(data_loc, 'cpu_tot')
-# plf.hrr_plot(data_loc)
-# plf.general_stats_plot(data_loc, 'm_error')
-# plf.general_stats_plot(data_loc, 'press_itr')

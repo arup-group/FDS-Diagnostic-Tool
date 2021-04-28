@@ -1,4 +1,5 @@
 from builds import builds_control
+import analytical_models.process_models as prm
 import utils
 import json
 import os
@@ -78,11 +79,14 @@ for sim in submit_data:
     files_check = utils.check_data_avaliability(sim_output_loc)
 
     #Run analytics
+    als_res = prm.prm_main(sim_output_loc)
+    print('Analytical models processed.')
+    print(als_res['sim_status'])
 
 
     # Plot results
     print('Start plotting.')
-    plots_setup.plot(sim_output_loc, config['plots'])
+    plots_setup.plot(sim_output_loc, config['plots'], als_res)
     print('Finish plotting.')
     print(f'*** FINISHED PROCESSING {sim} ***')
     # Call default plotting function
