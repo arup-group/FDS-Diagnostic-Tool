@@ -41,6 +41,9 @@ def analyse_run_status(data, sim_info, cur_time):
 
             run_status['delay'] = run_status['delay']/60
 
+    run_status['lst_sim_time'] = data['sim_time'].iloc[-1]
+    run_status['lst_log_time'] = data['log_time'].iloc[-1].strftime("%d-%b %H:%M")
+
     return run_status
 
 

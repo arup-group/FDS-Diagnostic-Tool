@@ -62,11 +62,11 @@ def sim_progress(output_loc, analytics_res):
     spec = fig.add_gridspec(ncols=3, nrows=4, width_ratios=widths, height_ratios=heights)
 
     ax1 = fig.add_subplot(spec[1, :])
-    plf.timeprogress_bar_plot(data, sim_info, t_predict=analytics_res["runtime_pred"], subplot=True, ax=ax1)
+    plf.timeprogress_bar_plot(data, sim_info, t_predict=analytics_res['runtime_pred']['pred'], subplot=True, ax=ax1)
     ax2 = fig.add_subplot(spec[3, 0])
     plf.log_interval_plot(data, subplot=True, ax=ax2)
     ax3 = fig.add_subplot(spec[3, 2], sharex=ax2)
-    plf.comp_speed_plot(data, subplot=True, ax=ax3)
+    plf.comp_speed_plot(data, mAvg_spd=analytics_res['runtime_pred']['spd_info'], subplot=True, ax=ax3)
 
     fig.suptitle(f'{analytics_res["sim_status"]["stat"]}',
                  color=analytics_res["sim_status"]["color"],

@@ -446,7 +446,7 @@ def log_interval_plot(data, subplot=False, ax=None):
         plt.show()
 
 
-def comp_speed_plot(data, subplot=False, ax=None):
+def comp_speed_plot(data, mAvg_spd=False, subplot=False, ax=None):
 
     data['time_diff'] = data['log_time'].diff().dt.total_seconds()
     data['sim_time_diff'] = data['sim_time'].diff()
@@ -472,8 +472,11 @@ def comp_speed_plot(data, subplot=False, ax=None):
         y_max = data['sim_speed'].max() + 10
     ax.set_ylim(0, y_max)
 
+    if mAvg_spd:
+        ax.text(0.98, 0.96, mAvg_spd, ha='right', va='top', transform=ax.transAxes, size=11)
+
     plt.xlabel('Log time')
-    plt.ylabel('Simulation speed (sph)')
+    plt.ylabel('Simulation speed (sim s/h)')
     plt.xticks(rotation=30)
     plt.tight_layout()
 
@@ -483,7 +486,7 @@ def comp_speed_plot(data, subplot=False, ax=None):
         plt.show()
 
 
-def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=None):
+def timeprogress_bar_plot(data, sim_info, t_predict=False, subplot=False, ax=None):
 
     date_start = datetime.strptime(sim_info["date_start"], "%B %d, %Y %H:%M:%S")
 
@@ -500,14 +503,22 @@ def timeprogress_bar_plot(data, sim_info, t_predict = False, subplot=False, ax=N
     ax.text(10,1, f'Start\n{date_start.strftime("%d-%b %H:%M")}', va='center')
 
     #Plot predictons
+
     if t_predict:
+
         for i in t_predict:
-            if i['end']:
+            if i['pr_type'] is 'end':
                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
-                ax.text(i['t']+9, 1, f'Complete\n{i["pr"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+                ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+            elif i['pr_type'] is 'compl':
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#2CA02C', linewidth=2)
+                ax.text(i['t']+9, 1, f'Completed\n{i["pr_date"]}', va='center', size=11)
+            elif i['pr_type'] is 'err':
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#C44E52', linewidth=2)
+                ax.text(i['t']+9, 1, f'Last log\n{i["pr_date"]}', va='center', size=11)
             else:
                 ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#DD8452', linewidth=2)
-                ax.text(i['t']+9, 1, f'{i["pr"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+                ax.text(i['t']+9, 1, f'{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
 
 
 

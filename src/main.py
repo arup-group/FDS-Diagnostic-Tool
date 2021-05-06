@@ -1,5 +1,5 @@
 from builds import builds_control
-import analytical_models.process_models as prm
+import analytical_models.process_models as amp
 import utils
 import json
 import os
@@ -72,6 +72,7 @@ for sim in submit_data:
 
 
     # Create images (only first time)
+    #TODO images
 
     # Get runtime data
     print(f'Start runtime data parsing using {builds_control[ver]}.')
@@ -79,9 +80,8 @@ for sim in submit_data:
     files_check = utils.check_data_avaliability(sim_output_loc)
 
     #Run analytics
-    als_res = prm.prm_main(sim_output_loc)
+    als_res = amp.run_analytics(sim_output_loc)
     print('Analytical models processed.')
-    print(als_res['sim_status'])
 
 
     # Plot results
@@ -90,4 +90,4 @@ for sim in submit_data:
     print('Finish plotting.')
     print(f'*** FINISHED PROCESSING {sim} ***')
     # Call default plotting function
-print('end here')
+print('*** SCRIPT TERMINATED ***')
