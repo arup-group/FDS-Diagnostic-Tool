@@ -385,7 +385,7 @@ def hrr_plot(data_loc, subplot=False, ax=None):
     except:
         pass
 
-    ax = plt.xlim(0, data_hrr['sim_time'].max() + 10)
+    ax = plt.xlim(0, data_hrr['sim_time'].max() + 20)
     ax = plt.ylabel('Total energy (KW)')
     ax = plt.xlabel('Simulation time (s)')
     ax = plt.legend()
@@ -506,18 +506,31 @@ def timeprogress_bar_plot(data, sim_info, t_predict=False, subplot=False, ax=Non
 
     if t_predict:
 
-        for i in t_predict:
+        for i in t_predict['pred']:
             if i['pr_type'] is 'end':
-                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+                if t_predict['is_delayed']:
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+                else:
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
                 ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+
             elif i['pr_type'] is 'compl':
                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#2CA02C', linewidth=2)
                 ax.text(i['t']+9, 1, f'Completed\n{i["pr_date"]}', va='center', size=11)
+
+            elif i['pr_type'] is 'no_data':
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+                ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}', va='center', size=11)
+
             elif i['pr_type'] is 'err':
                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#C44E52', linewidth=2)
                 ax.text(i['t']+9, 1, f'Last log\n{i["pr_date"]}', va='center', size=11)
-            else:
-                ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#DD8452', linewidth=2)
+
+            elif i['pr_type'] is 'mid':
+                if t_predict['is_delayed']:
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#DD8452', linewidth=2)
+                else:
+                    ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#2CA02C', linewidth=2)
                 ax.text(i['t']+9, 1, f'{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
 
 
