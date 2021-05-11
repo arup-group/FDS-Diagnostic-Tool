@@ -143,6 +143,31 @@ class mAvg:
         return rep_dict
 
 
-    def log(self):
-        pass
+    def log(self, log_to_file = True, use_file = None):
+
+        log_filename = f'{self.model_name}_log.json'
+        log_res = {}
+        log_res['sim_time'] = self.data['sim_time'].iloc[-1]
+
+        for time_pr, value_pr, interv_pr, in zip(self.times_to_predict, self.predictions, self.conf_intervals):
+            log_res[f'T{time_pr:.0f}'] = (value_pr - self.data['log_time'].iloc[0]).total_seconds()/3600
+            log_res[f'T{time_pr:.0f}_unc'] = interv_pr
+
+        if log_to_file:
+            if os.path.isfile(os.path.join(self.output_loc, 'logs', log_filename)):
+                with open(os.path.join(self.output_loc, 'logs', log_filename)) as f:
+                    log_file = json.load(f)
+            else:
+                log_file = []
+        else:
+            log_file = use_file
+
+        log_file.append(log_res)
+
+        if log_to_file:
+            with open(os.path.join(self.output_loc, 'logs', log_filename), 'w') as f:
+                json.dump(log_file, f, indent=4)
+
+        return log_file
+
 

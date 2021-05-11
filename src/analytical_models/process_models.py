@@ -12,11 +12,13 @@ def run_analytics(output_loc):
 
     #Simulation status model
     als_res['sim_status'] = status_prediction.status_prediction_main(output_loc, als_res['cur_datetime'])
+    # pred_status = als_res['sim_status']['stat']
 
     #Runtime prediction model:
-    model = rtp.mAvg(output_loc, mavg_window=30, n_predictions=7, pred_status=als_res['sim_status']['stat'])
+    model = rtp.mAvg(output_loc, mavg_window=30, n_predictions=7, pred_status='run')
     model.predict()
     als_res['runtime_pred'] = model.report()
+    model.log()
 
 
     return als_res
