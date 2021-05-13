@@ -15,10 +15,10 @@ def run_analytics(output_loc):
     # pred_status = als_res['sim_status']['stat']
 
     #Runtime prediction model:
-    model = rtp.mAvg(output_loc, mavg_window=30, n_predictions=7, pred_status='run')
+    model = rtp.mAvg(output_loc, mavg_window=30, n_predictions=7, pred_status=als_res['sim_status']['stat'])
     model.predict()
     als_res['runtime_pred'] = model.report()
-    model.log()
+    # model.log()
 
 
     return als_res
