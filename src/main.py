@@ -46,6 +46,7 @@ for sim in submit_data:
     # Import correct module
     mesh_tools = importlib.import_module(f'{builds_control[ver]}.mesh_tools')
     hrr_tools = importlib.import_module(f'{builds_control[ver]}.hrr_tools')
+    obstr_tools = importlib.import_module(f'{builds_control[ver]}.obstruction_tools')
     runtime_data = importlib.import_module(f'{builds_control[ver]}.runtime_data')
     plots_setup = importlib.import_module(f'{builds_control[ver]}.plots_setup')
 
@@ -64,20 +65,24 @@ for sim in submit_data:
 
 
     # Get fire curve info (only first time)
-    if os.path.isfile(os.path.join(sim_output_loc, 'data', 'hrr_data.json')) == False:
+    if os.path.isfile(os.path.join(sim_output_loc, 'data', 'hrr_data.json')):
+        print('HRR data available.')
+    else:
         hrr_tools.get_hrr_data(inpt_f_loc['fds_f_loc'], sim_output_loc, hrr_curve_sampling_rate=1)
         print('HRR data processed.')
-    else:
-        print('HRR data available.')
 
 
     # Create images (only first time)
-    #TODO images
+    if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
+        print('Obstruction data available.')
+    else:
+        obstr_tools.process_obstrctions(sim_output_loc, inpt_f_loc['fds_f_loc'])
+
 
     # Get runtime data
     print(f'Start runtime data parsing using {builds_control[ver]}.')
     runtime_data.get_data(inpt_f_loc['out_f_loc'], sim_output_loc, config, mesh_data)
-    files_check = utils.check_data_avaliability(sim_output_loc)
+
 
     #Run analytics
     als_res = amp.run_analytics(sim_output_loc)

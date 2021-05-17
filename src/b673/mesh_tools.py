@@ -42,11 +42,11 @@ def get_tot_els(out_dict):
 def get_tot_volume(out_dict):
     '''Calculates total volume of model in m3'''
 
-    out_dict['tot_volume'] = 0
+    out_dict['tot_vol'] = 0
 
     for mesh in out_dict['mesh_info']:
         mesh_list = out_dict['mesh_info'][mesh]
-        out_dict['tot_volume'] += (mesh_list[4] - mesh_list[3]) * (mesh_list[6] - mesh_list[5]) * (
+        out_dict['tot_vol'] += (mesh_list[4] - mesh_list[3]) * (mesh_list[6] - mesh_list[5]) * (
                 mesh_list[8] - mesh_list[7])
 
     return out_dict
