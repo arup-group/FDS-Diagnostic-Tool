@@ -206,7 +206,7 @@ def process_obstructions(output_path, fds_filepath):
     with open(os.path.join(output_path, 'data', 'mesh_data.json'), 'r') as fp:
         mesh_data = json.load(fp)
     n = get_discr_param(mesh_data)
-    n = 1.6
+
 
     print(f'Processing obstructions with {n} discretisation parameter.')
 
