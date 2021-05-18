@@ -76,7 +76,7 @@ for sim in submit_data:
     if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
         print('Obstruction data available.')
     else:
-        obstr_tools.process_obstrctions(sim_output_loc, inpt_f_loc['fds_f_loc'])
+        obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
 
 
     # Get runtime data

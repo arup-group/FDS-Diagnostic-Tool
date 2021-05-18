@@ -2,8 +2,10 @@ import time
 import json
 import pandas as pd
 import numpy as np
+import re
 from PIL import Image, ImageOps
 import os
+import itertools
 
 def scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True):
     '''Reads an FDS input file an scrapes the location of all obsticles discetising in a uniform grid defined
@@ -18,11 +20,9 @@ def scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True):
     Returns:
         obst_pd (pandas dataframe): a dataframe containing the x,y,z location of all scrapped grid cells'''
 
-    import numpy as np
-    import re
-    import pandas as pd
 
-    mesh_pattern = r"&OBST ID='[\s\w]+', XB\s*=\s*((?:(?:[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)[\s,]*?){6})"
+
+    mesh_pattern = r"&OBST ID='[\s\w\[\]]+',\s*XB\s*=\s*((?:(?:[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)[\s,]*?){6})"
     obst_lst = list()
 
     count = 0
@@ -41,19 +41,19 @@ def scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True):
                 z_lst = np.arange(min(test[4] + fudge, test[5] + fudge), max(test[4] + fudge, test[5] + fudge),
                                   n).tolist()
 
-                obst_dict = [{'x': round(x, 1), 'y': round(y, 1), 'z': round(z, 1)} for x in x_lst for y in y_lst for z
-                             in z_lst]
-                obst_lst.append(obst_dict)
+                combined = [x_lst, y_lst, z_lst]
+                itr_comb = list(itertools.product(*combined))
+                obst_lst.append(itr_comb)
 
     flattened = [val for sublist in obst_lst for val in sublist]
-    obst_pd = pd.DataFrame(flattened).drop_duplicates()
+    obst_pd = pd.DataFrame(flattened,  columns=['x', 'y', 'z'])
+    obst_pd = obst_pd.round(1)
+    obst_pd = obst_pd.drop_duplicates()
 
     if enforce_grid == True:
         obst_pd['x'] = (obst_pd['x'] - (obst_pd['x'] * 10 % (10 * n)) / 10)
         obst_pd['y'] = (obst_pd['y'] - (obst_pd['y'] * 10 % (10 * n)) / 10)
         obst_pd['z'] = (obst_pd['z'] - (obst_pd['z'] * 10 % (10 * n)) / 10)
-
-    # obst_pd = obst_pd.drop_duplicates()
 
     return obst_pd
 
@@ -172,6 +172,7 @@ def fingerprint_single(data_dict, save_path, obst_pd, n, vp):
                     w2 = width_dict[str(w_max)] - 1
                     w2_idx = obst[obst['index_old'] == w_max].index[0]
 
+
                 obst_dstr[h, w1:w2+1] += obst.iloc[w1_idx:w2_idx, 1]
 
             except KeyError:
@@ -197,21 +198,22 @@ def get_discr_param(mesh_data):
     return max(set(grid_list), key=grid_list.count)
 
 
-def process_obstrctions(output_path, fds_filepath):
+def process_obstructions(output_path, fds_filepath):
     """Function for processing obstructions and saving imgs"""
 
     start_time = time.time()
 
-    print('Processing obstructions.')
-
     with open(os.path.join(output_path, 'data', 'mesh_data.json'), 'r') as fp:
         mesh_data = json.load(fp)
     n = get_discr_param(mesh_data)
+
+    print(f'Processing obstructions with {n} discretisation parameter.')
+
     obst_data = scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True)
     calc_obstr_volume(obst_data, n, mesh_data, output_path)
 
-    print(f'Processing imgs with {n} discretisation parameter.')
-    for vp in ['xy', 'xz', 'yz']:
+    print('Processing imgs.')
+    for vp in ['xz', 'xy', 'yz']:
         fingerprint_single(mesh_data, output_path, obst_data, n, vp=vp)
 
     print(f'Obstructions processed in {(time.time()-start_time):.2f}s.')
