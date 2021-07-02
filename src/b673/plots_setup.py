@@ -112,6 +112,12 @@ def cycle_plots(output_loc, plots_config):
     plt.savefig(os.path.join(output_loc, 'cycle_plots.png'), bbox_inches="tight")
     plt.show()
 
+def loc_plots(output_loc, plots_config, mesh_data):
+    #Loop over
+    loc_plot(data, mesh_data, output_loc, last_points)
+
+
+    pass
 
 def plot(output_loc, plots_config, analytics_res):
     sim_progress(output_loc, analytics_res)

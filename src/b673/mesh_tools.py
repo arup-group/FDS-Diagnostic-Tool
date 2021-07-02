@@ -88,6 +88,12 @@ def get_model_range(out_dict):
         out_dict['range']['dx'] = xmax - xmin
         out_dict['range']['dy'] = ymax - ymin
         out_dict['range']['dz'] = zmax - zmin
+        out_dict['range']['xmax'] = xmax
+        out_dict['range']['xmin'] = xmin
+        out_dict['range']['ymax'] = ymax
+        out_dict['range']['ymin'] = ymin
+        out_dict['range']['zmax'] = zmax
+        out_dict['range']['zmin'] = zmin
 
     return out_dict
 
