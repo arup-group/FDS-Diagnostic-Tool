@@ -4,5 +4,5 @@ tests/*
 *.pyc
 src/tests_fxns.py
 delete_tests.bat
-
+src/submit_sim_dummy.txt
 

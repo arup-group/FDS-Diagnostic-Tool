@@ -1,3 +1,2 @@
-C:\work\fds_tools\fds_diagnostics\docs\KA
 C:\work\fds_tools\fds_diagnostics\docs\NTU\sc1_r3
 C:\work\fds_tools\fds_diagnostics\docs\braehead\sc1_new

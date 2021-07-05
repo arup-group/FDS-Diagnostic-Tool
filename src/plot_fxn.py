@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import matplotlib.patches as patches
+from PIL import Image
 import os
 import re
 import numpy as np
@@ -564,3 +567,149 @@ def press_itr_plot(data, subplot=False, ax=None):
 
     return data
 
+
+def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
+
+    def calc_sizes(size_dict, spacing=0.05, hor_mar=0.05, ver_mar=0.05):
+        # Check size
+
+        dx_m = size_dict['dx']
+        dy_m = size_dict['dy']
+        dz_m = size_dict['dz']
+
+        if dx_m > dy_m:
+            width = (0.98 - 2 * hor_mar - spacing) * dx_m / (dx_m + dz_m)
+            z_height = (1 - 2 * hor_mar - spacing) * dz_m / (dx_m + dz_m)
+            height = width * dy_m / dx_m
+        else:
+            height = (1 - 2 * ver_mar - spacing) * dy_m / (dy_m + dz_m)
+            z_height = (1 - 2 * ver_mar - spacing) * dz_m / (dy_m + dz_m)
+            width = height * dx_m / dy_m
+
+        return width, height, z_height
+
+
+    # Constants
+    hor_mar = 0.05
+    ver_mar = 0.05
+    spacing = 0.05
+    alpha_pt = 0.4
+
+    size_dict = mesh_data['range']
+    mesh_info = mesh_data['mesh_info']
+
+    # Set figure
+    width, height, z_height = calc_sizes(size_dict, spacing, hor_mar, ver_mar)
+
+    xy_view = [hor_mar, ver_mar, width, height]
+    xz_view = [hor_mar, ver_mar + height + spacing, width, z_height]
+    yz_view = [hor_mar + width + spacing, ver_mar, z_height, height]
+
+    fig = plt.figure(figsize=(9, 9))
+
+    xy_view = plt.axes(xy_view)
+    xy_view.tick_params(direction='in', top=True, right=True)
+    xz_view = plt.axes(xz_view)
+    xz_view.tick_params(direction='in', labelbottom=False)
+    yz_view = plt.axes(yz_view)
+    yz_view.tick_params(direction='in', labelleft=False)
+
+    # Upload images
+    img = mpimg.imread(os.path.join(output_loc, 'imgs', 'xy.png'))
+    xy_view.imshow(img, zorder=0,
+                   extent=[size_dict['xmin'], size_dict['xmax'],
+                           size_dict['ymin'], size_dict['ymax']], cmap='gray')
+    img = mpimg.imread(os.path.join(output_loc, 'imgs', 'xz.png'))
+    xz_view.imshow(img, zorder=0,
+                   extent=[size_dict['xmin'], size_dict['xmax'],
+                           size_dict['zmin'], size_dict['zmax']], cmap='gray')
+    img = Image.open(os.path.join(output_loc, 'imgs', 'yz.png')).transpose(Image.ROTATE_90).transpose(
+        Image.FLIP_LEFT_RIGHT)
+    yz_view.imshow(img, zorder=0,
+                   extent=[size_dict['zmin'], size_dict['zmax'],
+                           size_dict['ymin'], size_dict['ymax']], cmap='gray')
+
+    # Upload points
+    r = re.compile('^m\d+$')
+    sorted_columns = list(filter(r.match, list(data.columns)))
+
+    if data_type == 'vel_err':
+        data['loc_extr'] = data['vel_err_loc']
+        data['est'] = data['vel_err']
+    elif data_type == 'press_err':
+        data['loc_extr'] = data['press_err_loc']
+        data['est'] = data['press_err']
+    else:
+
+        if which_mesh == 'max':
+            data['est'] = data[sorted_columns].max(axis=1)
+            data['mesh'] = data[sorted_columns].idxmax(axis=1)
+        else:
+            data['est'] = data[f'm{which_mesh}']
+            data['mesh'] = f'm{which_mesh}'
+
+        data['mesh'] = [''.join([x, '_loc']) for x in data['mesh']]
+        data['loc_extr'] = data.lookup(data.index, data['mesh'])
+
+    data['loc_extr'] = data['loc_extr'].apply(lambda x: x.strip("[]").replace("'", "").split(", "))
+    coords = pd.DataFrame(data['loc_extr'].tolist(), columns=['x', 'y', 'z'])
+    coords = coords.astype('float')
+
+    xy_view.scatter(coords['x'], coords['y'], s=5, alpha=alpha_pt)
+    xy_view.scatter(coords['x'][-last_points:], coords['y'][-last_points:],
+                    s=5, alpha=0.8, color='orange', label=f'Last {last_points} pts.')
+    xy_view.scatter(coords.loc[data['est'].idxmax(), 'x'],
+                    coords.loc[data['est'].idxmax(), 'y'],
+                    s=20, color='#D62728', marker='^', alpha=1, label=f'Max value')
+    xy_view.legend()
+
+    xz_view.scatter(coords['x'], coords['z'], s=5, alpha=alpha_pt)
+    xz_view.scatter(coords['x'][-last_points:], coords['z'][-last_points:],
+                    s=5, alpha=0.8, color='orange', label=f'Last {last_points} pts.')
+    xz_view.scatter(coords.loc[data['est'].idxmax(), 'x'],
+                    coords.loc[data['est'].idxmax(), 'z'],
+                    s=20, color='#D62728', marker='^', alpha=1, label=f'Max value')
+
+    yz_view.scatter(coords['z'], coords['y'], s=5, alpha=alpha_pt)
+    yz_view.scatter(coords['z'][-last_points:], coords['y'][-last_points:],
+                    s=5, alpha=0.8, color='orange', label=f'Last {last_points} pts.')
+    yz_view.scatter(coords.loc[data['est'].idxmax(), 'z'],
+                    coords.loc[data['est'].idxmax(), 'y'],
+                    s=20, color='#D62728', marker='^', alpha=1, label=f'Max value')
+
+    for k in mesh_info:
+        mesh = mesh_info[k]
+        rect_xy = patches.Rectangle((mesh[3], mesh[5]),
+                                    mesh[4] - mesh[3], mesh[6] - mesh[5],
+                                    linewidth=1, edgecolor='green', facecolor='none', alpha=0.5)
+
+        rect_xz = patches.Rectangle((mesh[3], mesh[7]),
+                                    mesh[4] - mesh[3], mesh[8] - mesh[7],
+                                    linewidth=1, edgecolor='green', facecolor='none', alpha=0.5)
+
+        rect_yz = patches.Rectangle((mesh[7], mesh[5]),
+                                    mesh[8] - mesh[7], mesh[6] - mesh[5],
+                                    linewidth=1, edgecolor='green', facecolor='none', alpha=0.5)
+
+        xy_view.add_patch(rect_xy)
+        xz_view.add_patch(rect_xz)
+        yz_view.add_patch(rect_yz)
+
+    titles = {'cfl': 'Max CFL',
+              'min_div': 'Min Divergence',
+              'max_div': 'Max Divergence',
+              'vn': 'Max VN',
+              'vel_err': 'Max Velocity Error',
+              'press_err': 'Max Pressure Error'}
+
+    if which_mesh == 'max':
+        fig.suptitle(
+            f'{titles[data_type]} Location\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+            fontsize=12, va='top')
+    else:
+        fig.suptitle(
+            f'{titles[data_type]} Location for Mesh {which_mesh}\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+            fontsize=12, va='top')
+
+    plt.savefig(os.path.join(output_loc, f'loc_{data_type}.png'), bbox_inches="tight")
+    plt.show()

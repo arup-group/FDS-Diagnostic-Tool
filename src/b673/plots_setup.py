@@ -112,15 +112,42 @@ def cycle_plots(output_loc, plots_config):
     plt.savefig(os.path.join(output_loc, 'cycle_plots.png'), bbox_inches="tight")
     plt.show()
 
-def loc_plots(output_loc, plots_config, mesh_data):
-    #Loop over
-    loc_plot(data, mesh_data, output_loc, last_points)
+def loc_plots(output_loc, plots_config):
 
+    #Load mesh data
+    with open(os.path.join(output_loc, 'data', 'mesh_data.json'), 'r') as fp:
+        mesh_data = json.load(fp)
 
-    pass
+    last_points = 10
+    which_mesh = 'max'
+
+    if plots_config['vn_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'vn.csv'))
+        plf.plot_loc(data, mesh_data, 'vn', last_points, which_mesh, output_loc)
+
+    if plots_config['max_div_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'max_div.csv'))
+        plf.plot_loc(data, mesh_data, 'max_div', last_points, which_mesh, output_loc)
+
+    if plots_config['min_div_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'min_div.csv'))
+        plf.plot_loc(data, mesh_data, 'min_div', last_points, which_mesh, output_loc)
+
+    if plots_config['cfl_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'cfl.csv'))
+        plf.plot_loc(data, mesh_data, 'cfl', last_points, which_mesh, output_loc)
+
+    if plots_config['vel_err_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'))
+        plf.plot_loc(data, mesh_data, 'vel_err', last_points, which_mesh, output_loc)
+
+    if plots_config['press_err_loc']:
+        data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'))
+        plf.plot_loc(data, mesh_data, 'press_err', last_points, which_mesh, output_loc)
 
 def plot(output_loc, plots_config, analytics_res):
     sim_progress(output_loc, analytics_res)
     mesh_plots(output_loc, plots_config)
     cycle_plots(output_loc, plots_config)
+    loc_plots(output_loc, plots_config)
 
