@@ -6,31 +6,6 @@ import datetime
 import os
 import json
 
-#TODO loc plots
-
-mock_pred = [{'t': 400,
-              'pr': '02-Apr 14:52',
-              'unc': '1',
-              'end': False},
-             {'t': 600,
-              'pr': '03-Apr 14:52',
-              'unc': '1',
-              'end': False},
-             {'t': 800,
-              'pr': '04-Apr 14:52',
-              'unc': '1',
-              'end': False},
-             {'t': 1000,
-              'pr': '05-Apr 14:52',
-              'unc': '1',
-              'end': False},
-            {'t': 1200,
-             'pr': '06-Apr 14:52',
-             'unc': '1',
-             'end': True}]
-analytics = {'status': 'Running', 'pred': mock_pred}
-
-
 
 def mesh_plots(output_loc, plots_config):
 

@@ -497,11 +497,11 @@ def timeprogress_bar_plot(data, sim_info, t_predict=False, subplot=False, ax=Non
         sns.set()
         fig, ax = plt.subplots(figsize=(15,2))
 
-    # Plots
+    # Plot bar progression
     ax.barh(1, data['sim_time'].max(), height=1, align='center', alpha=0.4)
     ax.barh(1, sim_info["sim_end"], height=1, edgecolor='#4C72B0', linewidth=1, fill=False, align='center')
 
-    #Plot start
+    #Plot start time
     ax.plot([1,1], [0.5, 1.5], color='#4C72B0', linewidth=4)
     ax.text(10,1, f'Start\n{date_start.strftime("%d-%b %H:%M")}', va='center')
 

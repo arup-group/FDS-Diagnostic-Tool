@@ -3,6 +3,8 @@ import glob
 import re
 import pandas as pd
 import json
+import logging
+import sys
 
 
 def prcs_submit_file(submit_file):
@@ -127,4 +129,20 @@ def check_data_avaliability(output_loc):
     return files_check
 
 
+def setup_logger(logger_name, log_file, level=logging.INFO):
 
+    format = logging.Formatter('%(asctime)s - %(module)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+    l = logging.getLogger(logger_name)
+    if l.hasHandlers():
+        l.handlers.clear()
+    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler.setFormatter(format)
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setFormatter(format)
+
+    l.setLevel(level)
+    l.addHandler(file_handler)
+    l.addHandler(stream_handler)
+    l.propagate = False
+
+    return l

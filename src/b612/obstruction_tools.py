@@ -1,4 +1,5 @@
 import time
+import logging
 import json
 import pandas as pd
 import numpy as np
@@ -200,7 +201,7 @@ def get_discr_param(mesh_data):
 
 def process_obstructions(output_path, fds_filepath):
     """Function for processing obstructions and saving imgs"""
-
+    logger = logging.getLogger('sim_log')
     start_time = time.time()
 
     with open(os.path.join(output_path, 'data', 'mesh_data.json'), 'r') as fp:
@@ -208,14 +209,15 @@ def process_obstructions(output_path, fds_filepath):
     n = get_discr_param(mesh_data)
 
 
-    print(f'Processing obstructions with {n} discretisation parameter.')
+    logger.info(f'Processing obstructions with {n} discretisation parameter.')
 
     obst_data = scrape_obst(fds_filepath, n, fudge=0, enforce_grid=True)
     calc_obstr_volume(obst_data, n, mesh_data, output_path)
 
-    print('Processing imgs.')
+    logger.info('Processing imgs.')
     for vp in ['xz', 'xy', 'yz']:
         fingerprint_single(mesh_data, output_path, obst_data, n, vp=vp)
 
-    print(f'Obstructions processed in {(time.time()-start_time):.2f}s.')
+    logger.info(f'Obstructions processed in {(time.time()-start_time):.2f}s.')
+
     return

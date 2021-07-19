@@ -18,7 +18,7 @@ class mAvg:
         self.mavg_window = mavg_window
         self.n_predictions = n_predictions
         self.output_loc = output_loc
-        self.model_name = f'mAvg-{mavg_window}'
+        self.model_name = f'mAvg-{mavg_window}-v0.1.0'
         self.sim_end = None
         self.data = None
         self.pred_status = None

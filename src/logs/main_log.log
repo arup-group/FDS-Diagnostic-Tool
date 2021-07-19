@@ -1,0 +1,23 @@
+11-Jul-21 19:37:10 - <module> - INFO - Script started
+11-Jul-21 19:37:55 - <module> - INFO - Script terminated
+11-Jul-21 19:53:32 - <module> - INFO - Script started
+11-Jul-21 19:54:07 - <module> - INFO - Script terminated
+12-Jul-21 19:21:43 - <module> - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+12-Jul-21 19:22:52 - <module> - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+12-Jul-21 19:36:19 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+12-Jul-21 19:39:42 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+12-Jul-21 19:40:45 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+12-Jul-21 19:42:19 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+12-Jul-21 19:43:11 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+19-Jul-21 18:36:30 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+19-Jul-21 18:36:30 - main - INFO - Start processing  braehead_sc1_new
+19-Jul-21 18:37:01 - main - INFO - Finished processing  braehead_sc1_new witn 0 warnings and 0 errors.
+19-Jul-21 18:37:01 - main - INFO - Start processing  NTU_sc1_r3
+19-Jul-21 18:37:33 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings and 0 errors.
+19-Jul-21 18:37:33 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+19-Jul-21 18:40:48 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+19-Jul-21 18:40:48 - main - INFO - Start processing  braehead_sc1_new.
+19-Jul-21 18:40:48 - main - INFO - Finished processing  braehead_sc1_new witn 0 warnings and 1 errors.
+19-Jul-21 18:40:48 - main - INFO - Start processing  NTU_sc1_r3.
+19-Jul-21 18:41:20 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings and 0 errors.
+19-Jul-21 18:41:20 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***

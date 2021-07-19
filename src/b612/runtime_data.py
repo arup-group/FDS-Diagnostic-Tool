@@ -10,6 +10,7 @@ import pandas as pd
 import time
 import json
 import os
+import logging
 
 
 def setup_analysis(config):
@@ -62,6 +63,7 @@ def setup_analysis(config):
     return sim_info, per_mesh_info, per_cycle_info
 
 def get_data(outfile_file_path, output_loc, config, mesh_data):
+    logger = logging.getLogger('sim_log')
 
     start_time = time.time()
 
@@ -149,4 +151,4 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
     data_sizes = {k : per_mesh_info['lst'][k].shape for k in per_mesh_info['lst']}
     data_sizes['cycle_info'] = per_cycle_info['lst'].shape
 
-    print(f'Time : {dt:.2f} Output: {data_sizes}')
+    logger.info(f'Runtime data processed in : {dt:.2f}s Output: {data_sizes}')
