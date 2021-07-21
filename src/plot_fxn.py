@@ -330,12 +330,12 @@ def cycle_stats_plot(data, data_type, subplot=False, ax=None):
     return data
 
 
-def timestep_bar_plot(data_loc, data_type):
-    data = pd.read_csv(os.path.join(data_loc, data_type + '.csv'))
+def timestep_bar_plot(data, output_loc):
+
     r = re.compile('^m\d+$')
     sorted_columns = list(filter(r.match, list(data.columns)))
 
-    performance = data[sorted_columns].max().sort_values()
+    performance = data[sorted_columns].max().sort_values()/3600
     y_pos = np.arange(len(performance))
     objects = list(performance.index)
 
@@ -343,9 +343,13 @@ def timestep_bar_plot(data_loc, data_type):
 
     plt.barh(y_pos, performance, align='center', alpha=0.8)
     plt.yticks(y_pos, objects)
-    plt.xlabel('Total time (s)')
+    plt.xlabel('Total time (h)')
+    fig.suptitle(f'MPI Usage\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                 fontsize=12, va='top')
+    plt.savefig(os.path.join(output_loc, f'cpu_use.png'), bbox_inches="tight")
+    plt.show()
 
-    return performance
+    return
 
 
 def lagrange_plot(data_loc):

@@ -196,6 +196,11 @@ def loc_plots(output_loc, plots_config):
         except:
             logger.exception('Error with vel error location plot.')
 
+def mpi_use_plot(output_loc):
+    data = pd.read_csv(os.path.join(output_loc, 'data', 'cpu_tot.csv'))
+    plf.timestep_bar_plot(data, output_loc)
+
+
 
 def plot(output_loc, plots_config, analytics_res):
     logger = logging.getLogger('sim_log')
@@ -204,12 +209,17 @@ def plot(output_loc, plots_config, analytics_res):
         try:
             sim_progress(output_loc, analytics_res)
         except:
-            logger.exception('Error in simulation progression plot.')
+            logger.exception('Error with simulation progression plot.')
 
     if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
         mesh_plots(output_loc, plots_config)
 
     if any([plots_config[k] for k in ['vel_err', 'press_itr', 'hrr']]):
         cycle_plots(output_loc, plots_config)
+
+    try:
+        mpi_use_plot(output_loc)
+    except:
+        logger.exception('Error with MPI usage plot.')
 
     loc_plots(output_loc, plots_config)

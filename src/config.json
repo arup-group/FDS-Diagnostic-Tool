@@ -36,7 +36,7 @@
         "cfl_loc": true,
         "vel_err_loc": true,
         "press_err_loc": true,
-        "last_loc_pts": 13
+        "last_loc_pts": 20
     },
     "util": {
         "hrr_als": true,
