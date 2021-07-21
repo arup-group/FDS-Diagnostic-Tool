@@ -29,3 +29,19 @@
 21-Jul-21 16:08:38 - main - INFO - Start processing  NTU_sc1_r3.
 21-Jul-21 16:09:10 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings, 0 errors and 0 critical errors.
 21-Jul-21 16:09:10 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 16:39:48 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 16:39:48 - main - INFO - Start processing  braehead_sc1_new.
+21-Jul-21 16:39:48 - main - INFO - Finished processing  braehead_sc1_new witn 0 warnings, 1 errors and 0 critical errors.
+21-Jul-21 16:39:48 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 16:40:49 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 16:40:49 - main - INFO - Start processing  braehead_sc1_new.
+21-Jul-21 16:41:36 - main - INFO - Finished processing  braehead_sc1_new witn 0 warnings, 0 errors and 0 critical errors.
+21-Jul-21 16:41:36 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 16:43:10 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 16:43:10 - main - INFO - Start processing  braehead_sc1_new.
+21-Jul-21 16:44:05 - main - INFO - Finished processing  braehead_sc1_new witn 0 warnings, 0 errors and 0 critical errors.
+21-Jul-21 16:44:05 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 16:44:43 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 16:44:43 - main - INFO - Start processing  paisley_FC1_VO3.
+21-Jul-21 16:47:46 - main - INFO - Finished processing  paisley_FC1_VO3 witn 1 warnings, 0 errors and 0 critical errors.
+21-Jul-21 16:47:46 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***

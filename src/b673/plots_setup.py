@@ -37,7 +37,7 @@ def mesh_plots(output_loc, plots_config):
             data = pd.read_csv(os.path.join(output_loc, 'data', 'min_div.csv'))
             plf.mesh_stats_plot(data, data_type='min_div', subplot=True, ax=ax3)
         except:
-            logger.exception('Error in min div plot.')
+            logger.exception('Error with min div plot.')
 
     if plots_config['max_div']:
         try:
@@ -45,7 +45,7 @@ def mesh_plots(output_loc, plots_config):
             data = pd.read_csv(os.path.join(output_loc, 'data', 'max_div.csv'))
             plf.mesh_stats_plot(data, data_type = 'max_div', subplot = True, ax=ax4)
         except:
-            logger.exception('Error in max div plot.')
+            logger.exception('Error with max div plot.')
 
     if plots_config['ts_time']:
         try:
@@ -53,7 +53,7 @@ def mesh_plots(output_loc, plots_config):
             data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'), parse_dates=['log_time'])
             plf.derived_cpu_step_plot(data, subplot=True, ax=ax5)
         except:
-            logger.exception('Error in time per time step plot.')
+            logger.exception('Error with time per time step plot.')
 
     if plots_config['vn']:
         try:
@@ -61,7 +61,7 @@ def mesh_plots(output_loc, plots_config):
             data = pd.read_csv(os.path.join(output_loc, 'data', 'vn.csv'))
             plf.mesh_stats_plot(data, data_type='vn', subplot=True, ax=ax6)
         except:
-            logger.exception('Error in VN plot.')
+            logger.exception('Error with VN plot.')
 
     fig.suptitle(f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}', fontsize=12, va='top')
     plt.tight_layout()
