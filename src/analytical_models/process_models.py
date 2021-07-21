@@ -24,7 +24,7 @@ def run_analytics(output_loc):
         model = rtp.mAvg(output_loc, mavg_window=30, n_predictions=7, pred_status=als_res['sim_status']['stat'])
         model.predict()
         als_res['runtime_pred'] = model.report()
-        logger.info(f'Runtime predicted with {model.model_name}')
+        logger.info(f'Runtime predicted with {model.model_name}.')
     except:
         als_res['runtime_pred'] = None
         logger.warning('Error in runtime prediction', exc_info=True)

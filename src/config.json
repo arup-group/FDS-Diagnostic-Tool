@@ -1,7 +1,7 @@
 {
     "settings": {
         "output_loc": "C:\\work\\fds_tools\\fds_diagnostics\\tests",
-        "last_loc_pts": 25
+        "last_loc_pts": 10
     },
     "log_data": {
         "ts": true,
@@ -19,22 +19,24 @@
 		"cpu_step" : true
     },
     "plots": {
+        "time_progress": true,
         "ts": true,
 		"cfl": true,
 		"ts_time": true,
-		"min_div": true,
+		"min_div": false,
 		"max_div": true,
 		"vn": true,
-        "hrr": true,
-		"vel_err": true,
-		"press_err": true,
-		"press_itr": true,
+        "hrr": false,
+		"vel_err": false,
+		"press_err": false,
+		"press_itr": false,
         "vn_loc": true,
         "max_div_loc": true,
         "min_div_loc": true,
         "cfl_loc": true,
-        "vel_err_loc": true,
-        "press_err_loc": true
+        "vel_err_loc": false,
+        "press_err_loc": true,
+        "last_loc_pts": 13
     },
     "util": {
         "hrr_als": true,

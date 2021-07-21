@@ -6,8 +6,6 @@ import os
 from shutil import copyfile
 import importlib
 
-#Results for testing only TODO - to be reomved later
-results = {}
 
 #Setup log
 main_log = utils.setup_logger('main_log', 'logs/main_log.log')
@@ -23,6 +21,7 @@ with open('config.json') as config_js:
 # Start looping for each part of the queue - critical
 for sim in submit_data:
     n_err = 0
+    n_crit = 0
     n_warn = 0
 
     try:
@@ -80,7 +79,7 @@ for sim in submit_data:
         except:
             mesh_data = None
             n_warn += 1
-            sim_log.warning("Error loading mesh data.", exc_info=True)
+            sim_log.exception("Error loading mesh data.")
 
 
         # Get fire curve info (only first time) - warning
@@ -92,7 +91,7 @@ for sim in submit_data:
                 sim_log.info('HRR data processed.')
         except:
             n_warn += 1
-            sim_log.warning("Error acquiring HRR data.", exc_info=True)
+            sim_log.exception("Error acquiring HRR data.")
 
 
         # Create images (only first time) - warning
@@ -103,7 +102,7 @@ for sim in submit_data:
                 obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
         except:
             n_warn += 1
-            sim_log.warning("Error acquiring img data.", exc_info=True)
+            sim_log.exception("Error acquiring img data.")
 
 
         # Get runtime data - critical
@@ -124,9 +123,9 @@ for sim in submit_data:
 
     except:
         n_err += 1
-        sim_log.exception(f'Error in {sim}.')
+        sim_log.critical(f'Error in {sim}.', exc_info=True)
 
     finally:
-        main_log.info(f'Finished processing  {sim} witn {n_warn} warnings and {n_err} errors.')
+        main_log.info(f'Finished processing  {sim} witn {n_warn} warnings, {n_err} errors and {n_crit} critical errors.')
 
 main_log.info('*** FDS DIAGNOSTICS CONCLUDED ***')

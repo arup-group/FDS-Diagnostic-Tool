@@ -10,6 +10,7 @@ import seaborn as sns
 import matplotlib.dates as mdates
 from datetime import timedelta, datetime
 from matplotlib.ticker import AutoMinorLocator
+import logging
 
 
 def day_rounder(date_min, type_round, h_intv):
@@ -365,6 +366,8 @@ def lagrange_plot(data_loc):
 
 
 def hrr_plot(data_loc, subplot=False, ax=None):
+    logger = logging.getLogger('sim_log')
+
     data_hrr = pd.read_csv(os.path.join(data_loc, 'hrr.csv'))
     nrg_loss = pd.read_csv(os.path.join(data_loc, 'nrg_loss.csv'))
 
@@ -386,6 +389,7 @@ def hrr_plot(data_loc, subplot=False, ax=None):
         fire_curve = pd.read_csv(os.path.join(data_loc, 'hrr_curve.csv'))
         ax = plt.plot(fire_curve['t'], fire_curve['HRR'], '--', color='red', label='HRR definition')
     except:
+        logger.warning(f'HRR curve unable to load.')
         pass
 
     ax = plt.xlim(0, data_hrr['sim_time'].max() + 20)

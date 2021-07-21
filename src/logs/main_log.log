@@ -21,3 +21,11 @@
 19-Jul-21 18:40:48 - main - INFO - Start processing  NTU_sc1_r3.
 19-Jul-21 18:41:20 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings and 0 errors.
 19-Jul-21 18:41:20 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 15:30:14 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 15:30:14 - main - INFO - Start processing  NTU_sc1_r3.
+21-Jul-21 15:31:14 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings and 0 errors.
+21-Jul-21 15:31:14 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+21-Jul-21 16:08:38 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+21-Jul-21 16:08:38 - main - INFO - Start processing  NTU_sc1_r3.
+21-Jul-21 16:09:10 - main - INFO - Finished processing  NTU_sc1_r3 witn 0 warnings, 0 errors and 0 critical errors.
+21-Jul-21 16:09:10 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
