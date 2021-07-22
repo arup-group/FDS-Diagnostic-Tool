@@ -1,6 +1,7 @@
 docs/*
 tests/*
 .idea/*
+example_sims/*
 *.pyc
 src/tests_fxns.py
 delete_tests.bat
