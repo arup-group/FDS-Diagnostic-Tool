@@ -95,14 +95,14 @@ for sim in submit_data:
 
 
         # Create images (only first time) - warning
-        try:
-            if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
-                sim_log.info('Obstruction data available.')
-            else:
-                obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
-        except:
-            n_warn += 1
-            sim_log.exception("Error acquiring img data.")
+        # try:
+        #     if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
+        #         sim_log.info('Obstruction data available.')
+        #     else:
+        #         obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
+        # except:
+        #     n_warn += 1
+        #     sim_log.exception("Error acquiring img data.")
 
 
         # Get runtime data - critical

@@ -78,6 +78,8 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
     mesh_line = None
     success_scrapping = False
 
+    first_record = True
+
 
     with open(outfile_file_path, "r") as file:
         for j, line in enumerate(file):
@@ -91,17 +93,20 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
             scr.scrape('itr_date', line, cycle_check)
 
             if 'cycles' in cycle_check:
+                if first_record:
+                    first_record =False
+                    cycle_check = {}
+                else:
+                    for i in per_mesh_info['dict']:
+                        if per_mesh_info['dict'][i] != {}:
+                            per_mesh_info['lst'][i].append(per_mesh_info['dict'][i])
+                            per_mesh_info['dict'][i] = {}
 
-                for i in per_mesh_info['dict']:
-                    if per_mesh_info['dict'][i] != {}:
-                        per_mesh_info['lst'][i].append(per_mesh_info['dict'][i])
-                        per_mesh_info['dict'][i] = {}
-
-                if all(value is not None for value in per_cycle_dict.values()):
+                    # if all(value is not None for value in per_cycle_dict.values()):
                     per_cycle_info['lst'].append(per_cycle_dict)
                     per_cycle_dict = per_cycle_info['dict'].copy()
 
-                cycle_check = {}
+                    cycle_check = {}
 
             # Get per cycle data
             cycle_fx_to_use = [key for key in per_cycle_dict.keys() if per_cycle_dict[key] is None]
