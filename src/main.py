@@ -83,26 +83,28 @@ for sim in submit_data:
 
 
         # Get fire curve info (only first time) - warning
-        try:
-            if os.path.isfile(os.path.join(sim_output_loc, 'data', 'hrr_data.json')):
-                sim_log.info('HRR data available.')
-            else:
-                hrr_tools.get_hrr_data(inpt_f_loc['fds_f_loc'], sim_output_loc, hrr_curve_sampling_rate=1)
-                sim_log.info('HRR data processed.')
-        except:
-            n_warn += 1
-            sim_log.exception("Error acquiring HRR data.")
+        if config['utils']['hrr_als']:
+            try:
+                if os.path.isfile(os.path.join(sim_output_loc, 'data', 'hrr_data.json')):
+                    sim_log.info('HRR data available.')
+                else:
+                    hrr_tools.get_hrr_data(inpt_f_loc['fds_f_loc'], sim_output_loc, hrr_curve_sampling_rate=1)
+                    sim_log.info('HRR data processed.')
+            except:
+                n_warn += 1
+                sim_log.exception("Error acquiring HRR data.")
 
 
         # Create images (only first time) - warning
-        # try:
-        #     if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
-        #         sim_log.info('Obstruction data available.')
-        #     else:
-        #         obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
-        # except:
-        #     n_warn += 1
-        #     sim_log.exception("Error acquiring img data.")
+        if config['utils']['obstruction_als']:
+            try:
+                if os.path.isfile(os.path.join(sim_output_loc, 'imgs', 'xy.png')):
+                    sim_log.info('Obstruction data available.')
+                else:
+                    obstr_tools.process_obstructions(sim_output_loc, inpt_f_loc['fds_f_loc'])
+            except:
+                n_warn += 1
+                sim_log.exception("Error acquiring img data.")
 
 
         # Get runtime data - critical

@@ -38,10 +38,11 @@
         "press_err_loc": true,
         "last_loc_pts": 20
     },
-    "util": {
+    "utils": {
         "hrr_als": true,
         "sprinkler_als": true,
-        "extract_als": true
+        "extract_als": true,
+        "obstruction_als": true
     }
 }
 

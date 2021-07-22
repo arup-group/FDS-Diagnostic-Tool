@@ -125,3 +125,23 @@
 22-Jul-21 11:16:13 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
 22-Jul-21 11:16:36 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 0 errors and 0 critical errors.
 22-Jul-21 11:16:36 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+22-Jul-21 11:54:36 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+22-Jul-21 11:54:36 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
+22-Jul-21 11:55:28 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 0 errors and 0 critical errors.
+22-Jul-21 11:55:28 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+22-Jul-21 12:37:45 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+22-Jul-21 12:37:45 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
+22-Jul-21 12:37:46 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 1 errors and 0 critical errors.
+22-Jul-21 12:37:46 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+22-Jul-21 12:40:27 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+22-Jul-21 12:40:27 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
+22-Jul-21 12:40:27 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 1 errors and 0 critical errors.
+22-Jul-21 12:40:27 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+22-Jul-21 12:40:49 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+22-Jul-21 12:40:49 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
+22-Jul-21 12:42:19 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 0 errors and 0 critical errors.
+22-Jul-21 12:42:19 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
+22-Jul-21 12:43:04 - main - INFO - *** FDS DIAGNOSTICS v0.1.0 STARTED ***
+22-Jul-21 12:43:04 - main - INFO - Start processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal.
+22-Jul-21 12:44:07 - main - INFO - Finished processing  WF_A15_02_J3_L2_unventilated_GO_shaft2_isothermal witn 0 warnings, 0 errors and 0 critical errors.
+22-Jul-21 12:44:07 - main - INFO - *** FDS DIAGNOSTICS CONCLUDED ***
