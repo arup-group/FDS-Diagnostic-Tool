@@ -596,6 +596,18 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
 
         return width, height, z_height
 
+    def calc_sizes_single(size_dict, hor_mar=0.05, ver_mar=0.05):
+        dx_m = size_dict['dx']
+        dy_m = size_dict['dy']
+
+        if dx_m > dy_m:
+            width = 1 - 2 * hor_mar
+            height = width * dy_m / dx_m
+        else:
+            height = 1 - 2 * ver_mar
+            width = height * dx_m / dy_m
+
+        return width, height
 
     # Constants
     hor_mar = 0.05
@@ -721,3 +733,42 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
 
     plt.savefig(os.path.join(output_loc, f'loc_{data_type}.png'), bbox_inches="tight")
     plt.show()
+
+    if z_height > 5*width or z_height > 5*height:
+
+        # w_single, h_single = calc_sizes_single(size_dict, hor_mar=0.1, ver_mar=0.1)
+        # xy_view_s = [0.1, 0.1, w_single, h_single]
+
+        fig, xy_view_s = plt.subplots()
+        fig.set_size_inches(12, 7)
+        # xy_view_s = plt.axes(xy_view_s)
+        xy_view_s.tick_params(direction='in', top=True, right=True)
+        img = mpimg.imread(os.path.join(output_loc, 'imgs', 'xy.png'))
+        xy_view_s.imshow(img, zorder=0,
+                       extent=[size_dict['xmin'], size_dict['xmax'],
+                               size_dict['ymin'], size_dict['ymax']], cmap='gray')
+        xy_view_s.scatter(coords['x'], coords['y'], s=12, alpha=0.4)
+        xy_view_s.scatter(coords['x'][-last_points:], coords['y'][-last_points:],
+                        s=12, alpha=0.8, color='orange', label=f'Last {last_points} pts.')
+        xy_view_s.scatter(coords.loc[data['est'].idxmax(), 'x'],
+                        coords.loc[data['est'].idxmax(), 'y'],
+                        s=32, color='#D62728', marker='^', alpha=1, label=f'Max value')
+        xy_view_s.legend()
+
+        for k in mesh_info:
+            mesh = mesh_info[k]
+            rect_xy = patches.Rectangle((mesh[3], mesh[5]),
+                                        mesh[4] - mesh[3], mesh[6] - mesh[5],
+                                        linewidth=1, edgecolor='green', facecolor='none', alpha=0.5)
+            xy_view_s.add_patch(rect_xy)
+
+        if which_mesh == 'max':
+            fig.suptitle(
+                f'XY view {titles[data_type]} Location\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                fontsize=12, va='top')
+        else:
+            fig.suptitle(
+                f'XY view {titles[data_type]} Location for Mesh {which_mesh}\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                fontsize=12, va='top')
+
+        plt.savefig(os.path.join(output_loc, f'loc_xy_{data_type}.png'), bbox_inches="tight")
