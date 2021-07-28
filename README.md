@@ -13,7 +13,7 @@ Tested for FDS versions:
 #### **How to use ?**
 *Configure output*
 1. Open `src\config.json` file.
-2. Update "output_loc" field with pathway to a common folder where diagnostic result will be output (e.g "C:\\local_work\\digital_projects\\fds_diagnostics"). <br>
+2. Update "output_loc" field with pathway to a common folder where diagnostic result will be output (e.g "C:\\\local_work\\\digital_projects\\\fds_diagnostics"). <br>
 **Note: Do not forget enclosing "" and use \\\ instead of \\.** <br>
 3. Update other config options - see documentation for more information.
 4. Open `src\submit_sim.txt` and paste the file path to each simulation root folder. <br>
