@@ -6,4 +6,5 @@ src/tests_fxns.py
 delete_tests.bat
 src/submit_sim_dummy.txt
 src/logs/main_log.log
+!src/logs/.gitkeep
 
