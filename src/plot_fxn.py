@@ -330,7 +330,7 @@ def cycle_stats_plot(data, data_type, subplot=False, ax=None):
     return data
 
 
-def timestep_bar_plot(data, output_loc):
+def timestep_bar_plot(data, output_loc, show_debug):
 
     r = re.compile('^m\d+$')
     sorted_columns = list(filter(r.match, list(data.columns)))
@@ -347,7 +347,9 @@ def timestep_bar_plot(data, output_loc):
     fig.suptitle(f'MPI Usage\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
                  fontsize=12, va='top')
     plt.savefig(os.path.join(output_loc, f'cpu_use.png'), bbox_inches="tight")
-    plt.show()
+    if show_debug:
+        plt.show()
+    plt.close(fig)
 
     return
 
@@ -576,7 +578,7 @@ def press_itr_plot(data, subplot=False, ax=None):
     return data
 
 
-def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
+def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc, show_debug):
 
     def calc_sizes(size_dict, spacing=0.05, hor_mar=0.05, ver_mar=0.05):
         # Check size
@@ -732,7 +734,9 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
             fontsize=12, va='top')
 
     plt.savefig(os.path.join(output_loc, f'loc_{data_type}.png'), bbox_inches="tight")
-    plt.show()
+    if show_debug:
+        plt.show()
+    plt.close(fig)
 
     if z_height > 5*width or z_height > 5*height:
 
@@ -772,3 +776,4 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc):
                 fontsize=12, va='top')
 
         plt.savefig(os.path.join(output_loc, f'loc_xy_{data_type}.png'), bbox_inches="tight")
+        plt.close(fig)

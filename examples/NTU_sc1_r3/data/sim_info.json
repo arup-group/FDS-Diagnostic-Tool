@@ -1,0 +1,8 @@
+{
+    "ver": "FDS6.7.3-0-g9a07c36-release",
+    "date_start": "April 01, 2021 16:52:17",
+    "sim_end": 1200.0,
+    "cores_n": 10,
+    "tot_elp_time": 926547,
+    "stop_cond": "completed"
+}

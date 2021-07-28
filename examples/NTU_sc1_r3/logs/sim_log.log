@@ -1,0 +1,13 @@
+28-Jul-21 11:46:51 - main - INFO - *** START PROCESSING  NTU_sc1_r3 ***
+28-Jul-21 11:46:51 - main - INFO - Sim config copied and loaded.
+28-Jul-21 11:46:51 - main - INFO - Mesh data processed.
+28-Jul-21 11:46:51 - main - INFO - HRR data processed.
+28-Jul-21 11:46:51 - obstruction_tools - INFO - Processing obstructions with 0.2 discretisation parameter.
+28-Jul-21 11:46:51 - obstruction_tools - INFO - Processing images.
+28-Jul-21 11:46:52 - obstruction_tools - INFO - Obstructions processed in 1.40s.
+28-Jul-21 11:46:52 - main - INFO - Start runtime data parsing using b673.
+28-Jul-21 11:46:54 - runtime_data - INFO - Runtime data processed in : 2.02s Output: {'max_div': (1885, 22), 'min_div': (1885, 22), 'vn': (1885, 22), 'cfl': (1885, 22), 'lagr': (1885, 6), 'hrr': (1885, 5), 'nrg_loss': (1885, 13), 'cycle_info': (1885, 11)}
+28-Jul-21 11:46:54 - process_models - INFO - Runtime predicted with mAvg-30-v0.1.0.
+28-Jul-21 11:46:54 - main - INFO - Analytical models processed.
+28-Jul-21 11:46:54 - main - INFO - Plotting requested graphs.
+28-Jul-21 11:47:05 - main - INFO - *** FINISHED PROCESSING NTU_sc1_r3 ***

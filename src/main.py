@@ -131,7 +131,7 @@ def main():
                 sim_log.critical(f'Error in {sim}.', exc_info=True)
 
             finally:
-                main_log.info(f'Finished processing  {sim} witn {n_warn} warnings, {n_err} errors and {n_crit} critical errors.')
+                main_log.info(f'Finished processing  {sim} witn {n_warn} warnings, {n_err} errors, and {n_crit} critical errors.')
 
         main_log.info('*** FDS DIAGNOSTICS CONCLUDED ***')
 

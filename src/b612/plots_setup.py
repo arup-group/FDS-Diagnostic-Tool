@@ -65,10 +65,12 @@ def mesh_plots(output_loc, plots_config):
     fig.suptitle(f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}', fontsize=12, va='top')
     plt.tight_layout()
     plt.savefig(os.path.join(output_loc, 'mesh_plots.png'), bbox_inches="tight")
-    plt.show()
+    if plots_config['show_plots_debug']:
+        plt.show()
+    plt.close(fig)
 
 
-def sim_progress(output_loc, analytics_res):
+def sim_progress(output_loc, analytics_res, plots_config):
 
     with open(os.path.join(output_loc, 'data', 'sim_info.json')) as f:
         sim_info = json.load(f)
@@ -100,7 +102,9 @@ def sim_progress(output_loc, analytics_res):
 
     plt.tight_layout()
     plt.savefig(os.path.join(output_loc, 'time_progress.png'), bbox_inches="tight")
-    plt.show()
+    if plots_config['show_plots_debug']:
+        plt.show()
+    plt.close(fig)
 
 
 def cycle_plots(output_loc, plots_config):
@@ -140,7 +144,9 @@ def cycle_plots(output_loc, plots_config):
                      fontsize=12, va='top')
 
     plt.savefig(os.path.join(output_loc, 'cycle_plots.png'), bbox_inches="tight")
-    plt.show()
+    if plots_config['show_plots_debug']:
+        plt.show()
+    plt.close(fig)
 
 
 def loc_plots(output_loc, plots_config):
@@ -161,44 +167,46 @@ def loc_plots(output_loc, plots_config):
     last_points = plots_config['last_loc_pts']
     which_mesh = 'max'
 
+    show_debug = plots_config['show_plots_debug']
+
     if plots_config['vn_loc']:
         try:
             data = pd.read_csv(os.path.join(output_loc, 'data', 'vn.csv'))
-            plf.plot_loc(data, mesh_data, 'vn', last_points, which_mesh, output_loc)
+            plf.plot_loc(data, mesh_data, 'vn', last_points, which_mesh, output_loc, show_debug)
         except:
             logger.exception('Error with VN location plot.')
 
     if plots_config['max_div_loc']:
         try:
             data = pd.read_csv(os.path.join(output_loc, 'data', 'max_div.csv'))
-            plf.plot_loc(data, mesh_data, 'max_div', last_points, which_mesh, output_loc)
+            plf.plot_loc(data, mesh_data, 'max_div', last_points, which_mesh, output_loc, show_debug)
         except:
             logger.exception('Error with max div location plot.')
 
     if plots_config['min_div_loc']:
         try:
             data = pd.read_csv(os.path.join(output_loc, 'data', 'min_div.csv'))
-            plf.plot_loc(data, mesh_data, 'min_div', last_points, which_mesh, output_loc)
+            plf.plot_loc(data, mesh_data, 'min_div', last_points, which_mesh, output_loc, show_debug)
         except:
             logger.exception('Error with min div location plot.')
 
     if plots_config['cfl_loc']:
         try:
             data = pd.read_csv(os.path.join(output_loc, 'data', 'cfl.csv'))
-            plf.plot_loc(data, mesh_data, 'cfl', last_points, which_mesh, output_loc)
+            plf.plot_loc(data, mesh_data, 'cfl', last_points, which_mesh, output_loc, show_debug)
         except:
             logger.exception('Error with CFL location plot.')
 
     if plots_config['vel_err_loc']:
         try:
             data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'))
-            plf.plot_loc(data, mesh_data, 'vel_err', last_points, which_mesh, output_loc)
+            plf.plot_loc(data, mesh_data, 'vel_err', last_points, which_mesh, output_loc, show_debug)
         except:
             logger.exception('Error with vel error location plot.')
 
-def mpi_use_plot(output_loc):
+def mpi_use_plot(output_loc, show_debug):
     data = pd.read_csv(os.path.join(output_loc, 'data', 'cpu_tot.csv'))
-    plf.timestep_bar_plot(data, output_loc)
+    plf.timestep_bar_plot(data, output_loc, show_debug)
 
 
 
@@ -207,7 +215,7 @@ def plot(output_loc, plots_config, analytics_res):
 
     if plots_config['time_progress']:
         try:
-            sim_progress(output_loc, analytics_res)
+            sim_progress(output_loc, analytics_res, plots_config)
         except:
             logger.exception('Error with simulation progression plot.')
 
@@ -218,7 +226,7 @@ def plot(output_loc, plots_config, analytics_res):
         cycle_plots(output_loc, plots_config)
 
     try:
-        mpi_use_plot(output_loc)
+        mpi_use_plot(output_loc, plots_config['show_plots_debug'])
     except:
         logger.exception('Error with MPI usage plot.')
 
