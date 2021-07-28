@@ -13,10 +13,13 @@ def prcs_submit_file(submit_file):
     submit_data = {}
     with open(submit_file) as f:
         for line in f:
-            line = line.rstrip()
-            path = os.path.normpath(line)
-            path_parts = path.split(os.sep)
-            submit_data['{}_{}'.format(path_parts[-2], path_parts[-1])] = path
+            try:
+                line = line.rstrip()
+                path = os.path.normpath(line)
+                path_parts = path.split(os.sep)
+                submit_data['{}_{}'.format(path_parts[-2], path_parts[-1])] = path
+            except IndexError:
+                pass
 
     return submit_data
 
