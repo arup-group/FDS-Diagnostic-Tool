@@ -1,1 +1,1 @@
-C:\local_work\digital_projects\fds_diagnostics\example_sims\NTU\sc1_r3
+\\fircls01\data\fds\WoodWharf_J1J3\A17_01_J3_L2_ventilated_GO_shaft1&2_isothermal
