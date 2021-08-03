@@ -1,7 +1,6 @@
 {
     "settings": {
-        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\tests",
-        "last_loc_pts": 10
+        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\tests"
     },
     "log_data": {
         "ts": true,
