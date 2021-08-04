@@ -1,4 +1,4 @@
-tests/*
+test_sims_output/*
 .idea/*
 example_sims/*
 *.pyc
