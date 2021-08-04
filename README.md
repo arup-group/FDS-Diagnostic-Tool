@@ -26,3 +26,6 @@ Tested for FDS versions:
 
 _Example output_ <br>
 See `fds_diagnostics\examples` for sample run of full output.
+
+_User manual_ <br>
+Detailed user manuals are provided in `fds_diagnostics\docs`.
