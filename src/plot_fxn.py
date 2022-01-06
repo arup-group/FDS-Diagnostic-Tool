@@ -76,15 +76,21 @@ def format_ax(data, ax, total_time_span):
                        'fmt': '%d-%b',
                        'rnd': 'd',
                        'gr_sp': '12 d'},
-               '10000000': {'ML_fxn': mdates.DayLocator,
+               '768': {'ML_fxn': mdates.DayLocator,
                             'itv': 4,
                             'mL': 4,
                             'fmt': '%d-%b',
                             'rnd': 'd',
-                            'gr_sp': '1 d'}
+                            'gr_sp': '1 d'},
+               '1536': {'ML_fxn': mdates.DayLocator,
+                       'itv': 8,
+                       'mL': 4,
+                       'fmt': '%d-%b',
+                       'rnd': 'd',
+                       'gr_sp': '2 d'}
                }
 
-    for tdiff in [1, 6, 24, 96, 192, 288, 384, 10000000]:
+    for tdiff in [1, 6, 24, 96, 192, 288, 384, 768, 1536]:
         if total_time_span < tdiff:
             tdiff = str(tdiff)
 
