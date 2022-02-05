@@ -7,6 +7,28 @@ import logging
 import sys
 
 
+class simInfo:
+
+
+    def __init__(self):
+        pass
+
+    def setup_logger(self):
+        pass
+
+    def gets_locations(self):
+        pass
+
+    def create_folders(self):
+
+    def loads_configurations(self):
+        pass
+
+    def gets_version(self):
+        pass
+
+
+
 def prcs_submit_file(submit_file):
     """Creates dict of running queue  file """
 
