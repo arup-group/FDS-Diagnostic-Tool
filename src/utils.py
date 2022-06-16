@@ -20,6 +20,7 @@ class simInfo:
         pass
 
     def create_folders(self):
+        pass
 
     def loads_configurations(self):
         pass
