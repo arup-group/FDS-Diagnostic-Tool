@@ -29,4 +29,31 @@ for entry in submit_data:
     except:
         sim.logger.critical(f'Error during initialisation for {entry}.', exc_info=True)
 
-print('here')
+
+
+    # Import correct module - critical
+    try:
+        mesh_tools = importlib.import_module(f'{builds_control[sim.fds_ver]}.mesh_tools')
+        hrr_tools = importlib.import_module(f'{builds_control[sim.fds_ver]}.hrr_tools')
+        obstr_tools = importlib.import_module(f'{builds_control[sim.fds_ver]}.obstruction_tools')
+        runtime_data = importlib.import_module(f'{builds_control[sim.fds_ver]}.runtime_data')
+        plots_setup = importlib.import_module(f'{builds_control[sim.fds_ver]}.plots_setup')
+    except KeyError:
+        sim.logger.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
+
+    # Process mesh data
+
+
+    # Process HRR data
+    if sim.require_hrr_data:
+        hrr_tools.get_hrr_data(
+            fds_f_path=sim.fds_f_loc,
+            save_loc=sim.output_fold,
+            hrr_curve_sampling_rate=1)
+        sim.require_hrr_data = False
+        sim.logger.info('HRR data processed.')
+
+    # Process obst data
+
+
+    # Process runtime data

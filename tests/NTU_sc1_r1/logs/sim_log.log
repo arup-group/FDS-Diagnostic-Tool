@@ -13,3 +13,24 @@ Exception: Supported FDS version is not detected.
 16-Jun-22 18:18:33 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
 16-Jun-22 18:18:33 - sim_info - INFO - Diagnostic configuration loaded.
 16-Jun-22 18:18:33 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:05:23 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+17-Jun-22 18:05:23 - sim_info - INFO - Diagnostic configuration loaded.
+17-Jun-22 18:05:23 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:08:05 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+17-Jun-22 18:08:05 - sim_info - INFO - Diagnostic configuration loaded.
+17-Jun-22 18:08:05 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:08:37 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+17-Jun-22 18:08:37 - sim_info - INFO - Diagnostic configuration loaded.
+17-Jun-22 18:08:37 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:08:37 - main_2 - CRITICAL - FDS version 6.7.3 not supported.
+Traceback (most recent call last):
+  File "C:/local_work/digital_projects/fds_diagnostics/src/main_2.py", line 36, in <module>
+    mesh_tools = importlib.import_module(f'{builds_control[sim.fds_ver]}.mesh_tools')
+KeyError: '6.7.3'
+17-Jun-22 18:16:11 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+17-Jun-22 18:16:11 - sim_info - INFO - Diagnostic configuration loaded.
+17-Jun-22 18:16:11 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:22:19 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+17-Jun-22 18:22:19 - sim_info - INFO - Diagnostic configuration loaded.
+17-Jun-22 18:22:19 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+17-Jun-22 18:22:20 - main_2 - INFO - HRR data processed.

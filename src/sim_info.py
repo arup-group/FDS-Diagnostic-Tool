@@ -146,3 +146,11 @@ class diagnosticInfo:
         self.logger.addHandler(file_handler)
         self.logger.addHandler(stream_handler)
         self.logger.propagate = False
+
+    def run_analytics(self):
+        """Starts relevant analytics based on configuration"""
+        pass
+
+    def report_summary(self):
+        """Reports summary for overview visualisations"""
+        pass
