@@ -42,6 +42,11 @@ for entry in submit_data:
         sim.logger.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
 
     # Process mesh data
+    if sim.mesh_data is None:
+        sim.mesh_data = mesh_tools.mesh_als(
+            fds_path=sim.fds_f_loc,
+            save_loc=sim.output_fold)
+        sim.logger.info('Mesh data processed.')
 
 
     # Process HRR data
@@ -57,3 +62,5 @@ for entry in submit_data:
 
 
     # Process runtime data
+
+#print('here')

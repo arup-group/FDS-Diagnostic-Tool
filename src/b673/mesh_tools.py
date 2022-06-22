@@ -1,4 +1,6 @@
 import re
+import os
+import json
 
 
 def get_mesh_info(fds_filepath, out_dict):
@@ -99,7 +101,7 @@ def get_model_range(out_dict):
 
 
 def get_grid_size(out_dict):
-    '''Calculates the grid size for each mesh'''
+    """Calculates the grid size for each mesh"""
 
     mesh_sizes = {}
 
@@ -112,13 +114,22 @@ def get_grid_size(out_dict):
     return out_dict
 
 
-def mesh_als(fds_path):
-    mesh_data = {}
+def save_mesh_data(data, save_loc):
+    """Saves mesh data"""
 
+    with open(os.path.join(save_loc, 'data', 'mesh_data.json'), 'w') as f:
+        json.dump(data, f, indent=4)
+    return
+
+
+
+def mesh_als(fds_path, save_loc):
+
+    mesh_data = {}
     mesh_data = get_mesh_info(fds_path, mesh_data)
     mesh_data = get_tot_els(mesh_data)
     mesh_data = get_grid_size(mesh_data)
     mesh_data = get_tot_volume(mesh_data)
     mesh_data = get_model_range(mesh_data)
-
+    save_mesh_data(mesh_data, save_loc)
     return mesh_data

@@ -1,36 +1,30 @@
-16-Jun-22 18:16:43 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-16-Jun-22 18:16:43 - sim_info - INFO - Diagnostic configuration copied and loaded.
-16-Jun-22 18:16:43 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-16-Jun-22 18:16:43 - main_2 - CRITICAL - Error during initialisation for NTU_sc1_r1.
-Traceback (most recent call last):
-  File "C:/local_work/digital_projects/fds_diagnostics/src/main_2.py", line 28, in <module>
-    sim.perform_checks()
-  File "C:\local_work\digital_projects\fds_diagnostics\src\sim_info.py", line 42, in perform_checks
-    self._get_fds_version()
-  File "C:\local_work\digital_projects\fds_diagnostics\src\sim_info.py", line 130, in _get_fds_version
-    raise Exception('Supported FDS version is not detected.')
-Exception: Supported FDS version is not detected.
-16-Jun-22 18:18:33 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-16-Jun-22 18:18:33 - sim_info - INFO - Diagnostic configuration loaded.
-16-Jun-22 18:18:33 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:05:23 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-17-Jun-22 18:05:23 - sim_info - INFO - Diagnostic configuration loaded.
-17-Jun-22 18:05:23 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:08:05 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-17-Jun-22 18:08:05 - sim_info - INFO - Diagnostic configuration loaded.
-17-Jun-22 18:08:05 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:08:37 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-17-Jun-22 18:08:37 - sim_info - INFO - Diagnostic configuration loaded.
-17-Jun-22 18:08:37 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:08:37 - main_2 - CRITICAL - FDS version 6.7.3 not supported.
-Traceback (most recent call last):
-  File "C:/local_work/digital_projects/fds_diagnostics/src/main_2.py", line 36, in <module>
-    mesh_tools = importlib.import_module(f'{builds_control[sim.fds_ver]}.mesh_tools')
-KeyError: '6.7.3'
-17-Jun-22 18:16:11 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-17-Jun-22 18:16:11 - sim_info - INFO - Diagnostic configuration loaded.
-17-Jun-22 18:16:11 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:22:19 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
-17-Jun-22 18:22:19 - sim_info - INFO - Diagnostic configuration loaded.
-17-Jun-22 18:22:19 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
-17-Jun-22 18:22:20 - main_2 - INFO - HRR data processed.
+22-Jun-22 18:00:06 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:00:06 - sim_info - INFO - Diagnostic configuration copied and loaded.
+22-Jun-22 18:00:06 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:00:06 - main_2 - INFO - Mesh data processed.
+22-Jun-22 18:00:06 - main_2 - INFO - HRR data processed.
+22-Jun-22 18:00:17 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:00:17 - sim_info - INFO - Diagnostic configuration loaded.
+22-Jun-22 18:00:17 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:00:17 - sim_info - INFO - Mesh data loaded.
+22-Jun-22 18:00:17 - sim_info - INFO - HRR data available.
+22-Jun-22 18:00:28 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:00:28 - sim_info - INFO - Diagnostic configuration loaded.
+22-Jun-22 18:00:28 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:00:28 - sim_info - INFO - Mesh data loaded.
+22-Jun-22 18:00:28 - sim_info - INFO - HRR data available.
+22-Jun-22 18:00:54 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:00:54 - sim_info - INFO - Diagnostic configuration loaded.
+22-Jun-22 18:00:54 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:00:54 - sim_info - INFO - Mesh data loaded.
+22-Jun-22 18:00:54 - sim_info - INFO - HRR data available.
+22-Jun-22 18:03:50 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:03:50 - sim_info - INFO - Diagnostic configuration loaded.
+22-Jun-22 18:03:50 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:03:50 - sim_info - INFO - Mesh data loaded.
+22-Jun-22 18:03:50 - sim_info - INFO - HRR data available.
+22-Jun-22 18:04:10 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+22-Jun-22 18:04:10 - sim_info - INFO - Diagnostic configuration loaded.
+22-Jun-22 18:04:10 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+22-Jun-22 18:04:10 - sim_info - INFO - Mesh data loaded.
+22-Jun-22 18:04:10 - sim_info - INFO - HRR data available.
