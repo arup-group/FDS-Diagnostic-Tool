@@ -146,6 +146,8 @@ def get_data(outfile_file_path, output_loc, config, mesh_data):
         per_mesh_info['lst'][i].to_csv(os.path.join(output_loc, 'data', f'{i}.csv'), index=False)
 
     sim_info['date_start'] = sim_info['date_start'].strftime("%B %d, %Y %H:%M:%S")
+    sim_info['lst_sim_time'] = per_cycle_info['lst']['sim_time'].iloc[-1]
+    sim_info['lst_log_time'] = per_cycle_info['lst']['log_time'].iloc[-1].strftime("%d-%b %H:%M")
     with open(os.path.join(output_loc, 'data', 'sim_info.json'), 'w') as fp:
         json.dump(sim_info, fp, indent=4)
 

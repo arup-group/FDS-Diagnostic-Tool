@@ -65,11 +65,12 @@ for entry in submit_data:
         sim.require_img_data = False
         sim_log.info('Image data processed.')
 
-
-
     # Process runtime data
-
-
-
+    sim_log.info(f'Start runtime data parsing using build {builds_control[sim.fds_ver]}.')
+    runtime_data.get_data(
+        outfile_file_path=sim.out_f_loc,
+        output_loc=sim.output_fold,
+        config=sim.config,
+        mesh_data=sim.mesh_data)
 
 #print('here')
