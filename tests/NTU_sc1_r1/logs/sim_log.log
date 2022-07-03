@@ -1,0 +1,15 @@
+03-Jul-22 15:25:46 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+03-Jul-22 15:25:46 - sim_info - INFO - Diagnostic configuration copied and loaded.
+03-Jul-22 15:25:46 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+03-Jul-22 15:25:47 - main_2 - INFO - Mesh data processed.
+03-Jul-22 15:25:47 - main_2 - INFO - HRR data processed.
+03-Jul-22 15:25:47 - obstruction_tools - INFO - Processing obstructions with 0.2 discretisation parameter.
+03-Jul-22 15:25:47 - obstruction_tools - INFO - Processing images.
+03-Jul-22 15:25:48 - obstruction_tools - INFO - Obstructions processed in 1.40s.
+03-Jul-22 15:25:48 - main_2 - INFO - Image data processed.
+03-Jul-22 15:26:04 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+03-Jul-22 15:26:04 - sim_info - INFO - Diagnostic configuration loaded.
+03-Jul-22 15:26:04 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+03-Jul-22 15:26:04 - sim_info - INFO - Mesh data loaded.
+03-Jul-22 15:26:04 - sim_info - INFO - HRR data available.
+03-Jul-22 15:26:04 - sim_info - INFO - Image data available.

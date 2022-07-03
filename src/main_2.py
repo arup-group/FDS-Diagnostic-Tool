@@ -57,9 +57,19 @@ for entry in submit_data:
         sim.require_hrr_data = False
         sim_log.info('HRR data processed.')
 
-    # Process obst data
+    # Process image data
+    if sim.require_img_data:
+        obstr_tools.process_obstructions(
+            output_path=sim.output_fold,
+            fds_filepath=sim.fds_f_loc)
+        sim.require_img_data = False
+        sim_log.info('Image data processed.')
+
 
 
     # Process runtime data
+
+
+
 
 #print('here')

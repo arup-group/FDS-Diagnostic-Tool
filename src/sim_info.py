@@ -101,7 +101,7 @@ class diagnosticInfo:
 
         if os.path.isfile(os.path.join(self.output_fold, 'imgs', 'xy.png')):
             self.require_img_data = False
-            self.logger.info('Obstruction data available.')
+            self.logger.info('Image data available.')
         elif self.config['utils']['obstruction_als']:
             self.require_img_data = True
         else:
