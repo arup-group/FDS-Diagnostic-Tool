@@ -6,6 +6,7 @@ import json
 import os
 from shutil import copyfile
 import importlib
+import logging
 
 
 
@@ -25,11 +26,10 @@ for entry in submit_data:
             sim_name=entry,
             sim_input_fold=submit_data[entry],
             config=config)
+        sim_log = logging.getLogger('sim_log') #Get sim log
         sim.perform_checks()
     except:
-        sim.logger.critical(f'Error during initialisation for {entry}.', exc_info=True)
-
-
+        sim_log.critical(f'Error during initialisation for {entry}.', exc_info=True)
 
     # Import correct module - critical
     try:
@@ -39,15 +39,14 @@ for entry in submit_data:
         runtime_data = importlib.import_module(f'{builds_control[sim.fds_ver]}.runtime_data')
         plots_setup = importlib.import_module(f'{builds_control[sim.fds_ver]}.plots_setup')
     except KeyError:
-        sim.logger.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
+        sim_log.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
 
     # Process mesh data
     if sim.mesh_data is None:
         sim.mesh_data = mesh_tools.mesh_als(
             fds_path=sim.fds_f_loc,
             save_loc=sim.output_fold)
-        sim.logger.info('Mesh data processed.')
-
+        sim_log.info('Mesh data processed.')
 
     # Process HRR data
     if sim.require_hrr_data:
@@ -56,7 +55,7 @@ for entry in submit_data:
             save_loc=sim.output_fold,
             hrr_curve_sampling_rate=1)
         sim.require_hrr_data = False
-        sim.logger.info('HRR data processed.')
+        sim_log.info('HRR data processed.')
 
     # Process obst data
 
