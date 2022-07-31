@@ -1,6 +1,6 @@
 {
     "settings": {
-        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\tests"
+        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\test_sim_output"
     },
     "log_data": {
         "ts": true,

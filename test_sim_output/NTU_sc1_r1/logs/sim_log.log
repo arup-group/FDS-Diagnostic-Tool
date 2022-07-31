@@ -1,0 +1,11 @@
+31-Jul-22 20:28:41 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:28:41 - sim_info - INFO - Diagnostic configuration copied and loaded.
+31-Jul-22 20:28:41 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:28:41 - main_2 - INFO - Mesh data processed.
+31-Jul-22 20:28:42 - main_2 - INFO - HRR data processed.
+31-Jul-22 20:28:42 - obstruction_tools - INFO - Processing obstructions with 0.2 discretisation parameter.
+31-Jul-22 20:28:42 - obstruction_tools - INFO - Processing images.
+31-Jul-22 20:28:44 - obstruction_tools - INFO - Obstructions processed in 2.56s.
+31-Jul-22 20:28:44 - main_2 - INFO - Image data processed.
+31-Jul-22 20:28:44 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:28:45 - runtime_data - INFO - Runtime data processed in : 0.88s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}
