@@ -1,3 +1,4 @@
+import analytical_models as am
 import json
 import os
 import glob
@@ -5,6 +6,7 @@ import re
 import logging
 import sys
 from shutil import copyfile
+import datetime
 
 
 
@@ -19,6 +21,7 @@ class diagnosticInfo:
         self.fds_f_loc = None
         self.output_fold = None
         self.fds_ver = None
+        self.current_time = datetime.datetime.now()
 
         # Parameters always needed for adequate functioning
         self.mesh_data = None
@@ -30,6 +33,7 @@ class diagnosticInfo:
         self.n_warn = 0
         self.n_crit = 0
         self.n_err = 0
+        self.als_results = {}
 
         self._get_output_fold_loc()
         self._get_inpt_files_loc()
@@ -149,7 +153,14 @@ class diagnosticInfo:
 
     def run_analytics(self):
         """Starts relevant analytics based on configuration"""
-        pass
+
+        #Run status prediction analytics
+        stats_pred = am.status_prediction.predictSimStatus(
+            output_loc=self.output_fold,
+            cur_time=self.current_time)
+        self.dummy_class = stats_pred
+        self.als_results['sim_status'] = stats_pred.report_status()
+
 
     def report_summary(self):
         """Reports summary for overview visualisations"""

@@ -1,0 +1,43 @@
+31-Jul-22 20:09:10 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:09:10 - sim_info - INFO - Diagnostic configuration copied and loaded.
+31-Jul-22 20:09:10 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:09:10 - main_2 - INFO - Mesh data processed.
+31-Jul-22 20:09:10 - main_2 - INFO - HRR data processed.
+31-Jul-22 20:09:10 - obstruction_tools - INFO - Processing obstructions with 0.2 discretisation parameter.
+31-Jul-22 20:09:11 - obstruction_tools - INFO - Processing images.
+31-Jul-22 20:09:13 - obstruction_tools - INFO - Obstructions processed in 2.47s.
+31-Jul-22 20:09:13 - main_2 - INFO - Image data processed.
+31-Jul-22 20:09:13 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:09:14 - runtime_data - INFO - Runtime data processed in : 0.89s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}
+31-Jul-22 20:11:21 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:11:21 - sim_info - INFO - Diagnostic configuration loaded.
+31-Jul-22 20:11:21 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:11:21 - sim_info - INFO - Mesh data loaded.
+31-Jul-22 20:11:21 - sim_info - INFO - HRR data available.
+31-Jul-22 20:11:21 - sim_info - INFO - Image data available.
+31-Jul-22 20:11:21 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:11:22 - runtime_data - INFO - Runtime data processed in : 0.93s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}
+31-Jul-22 20:13:35 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:13:35 - sim_info - INFO - Diagnostic configuration loaded.
+31-Jul-22 20:13:35 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:13:35 - sim_info - INFO - Mesh data loaded.
+31-Jul-22 20:13:35 - sim_info - INFO - HRR data available.
+31-Jul-22 20:13:35 - sim_info - INFO - Image data available.
+31-Jul-22 20:13:35 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:13:36 - runtime_data - INFO - Runtime data processed in : 0.91s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}
+31-Jul-22 20:14:19 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:14:19 - sim_info - INFO - Diagnostic configuration loaded.
+31-Jul-22 20:14:19 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:14:19 - sim_info - INFO - Mesh data loaded.
+31-Jul-22 20:14:19 - sim_info - INFO - HRR data available.
+31-Jul-22 20:14:19 - sim_info - INFO - Image data available.
+31-Jul-22 20:14:19 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:14:21 - runtime_data - INFO - Runtime data processed in : 1.19s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}
+31-Jul-22 20:18:36 - sim_info - INFO - *** START PROCESSING  NTU_sc1_r1 ***
+31-Jul-22 20:18:36 - sim_info - INFO - Diagnostic configuration loaded.
+31-Jul-22 20:18:36 - sim_info - INFO - Simulation FDS version identified as 6.7.3.
+31-Jul-22 20:18:36 - sim_info - INFO - Mesh data loaded.
+31-Jul-22 20:18:36 - sim_info - INFO - HRR data available.
+31-Jul-22 20:18:36 - sim_info - INFO - Image data available.
+31-Jul-22 20:18:36 - main_2 - INFO - Start runtime data parsing using build b673.
+31-Jul-22 20:18:37 - runtime_data - INFO - Runtime data processed in : 0.98s Output: {'max_div': (312, 22), 'min_div': (312, 22), 'vn': (312, 22), 'cfl': (312, 22), 'lagr': (312, 6), 'hrr': (312, 5), 'nrg_loss': (312, 13), 'cycle_info': (312, 11)}

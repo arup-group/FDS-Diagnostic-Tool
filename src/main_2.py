@@ -73,4 +73,7 @@ for entry in submit_data:
         config=sim.config,
         mesh_data=sim.mesh_data)
 
-#print('here')
+    # Process analytics
+    sim.run_analytics()
+
+print('here')
