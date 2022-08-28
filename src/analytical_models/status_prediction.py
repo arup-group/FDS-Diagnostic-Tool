@@ -54,7 +54,7 @@ class predictSimStatus():
             self.results['is_error'] = True
             self.results['is_delayed'] = True
 
-        elif (self.last_log_diff - self.outp_freq_mean) > self.outp_freq_conf:
+        elif (self.last_log_diff - self.outp_freq_mean) > self.outp_freq_ci:
             self.results['status'] = 'running'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = False
@@ -71,12 +71,12 @@ class predictSimStatus():
 
     def _calc_avg_output_frequency(self):
         last_entries = self.cycle_info_data['log_time'].iloc[-31:].diff().dt.total_seconds()
-        self.outp_freq_conf = 2 * last_entries.std()
+        self.outp_freq_ci = 2 * last_entries.std()
         self.outp_freq_mean = last_entries.mean()
 
     def report_status(self):
         self.results['outp_freq_mean'] = round(self.outp_freq_mean, 0)
-        self.results['outp_freq_conf'] = round(self.outp_freq_conf, 0)
+        self.results['outp_freq_ci'] = round(self.outp_freq_ci, 0)
         self.results['last_log_diff'] = round(self.last_log_diff, 0)
         self.results['last_log_time'] = self.sim_info_data['lst_log_time']
         return self.results
