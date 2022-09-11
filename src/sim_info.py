@@ -160,8 +160,17 @@ class diagnosticInfo:
             output_loc=self.output_fold,
             cur_time=self.current_time,
             is_cluster_running=self.is_cluster_running)
-        self.dummy_class = stats_pred
         self.als_results['sim_status'] = stats_pred.report_status()
+
+        #run rtp analytics
+        rtp_model = am.rtp.mAvg(
+            output_loc=self.output_fold,
+            mavg_window=30,
+            n_predictions=7,
+            sim_status=self.als_results['sim_status']['status'])
+        rtp_model.run_model()
+        self.als_results['rtp'] = rtp_model.report_results()
+        self.dummy_class = rtp_model
 
 
     def report_summary(self):
