@@ -5,12 +5,13 @@ import json
 
 class predictSimStatus():
 
-    def __init__(self, output_loc, cur_time):
+    def __init__(self, output_loc, cur_time, is_cluster_running):
 
         self.output_loc = output_loc
         self.sim_info_data = None
         self.cycle_info_data = None
         self.cur_time = cur_time
+        self.is_cluster_running = is_cluster_running
 
         self.results = {}
 
@@ -47,6 +48,13 @@ class predictSimStatus():
             self.results['is_dot_stop'] = False
             self. results['is_error'] = False
             self.results['is_delayed'] = False
+
+        elif self.is_cluster_running is False:
+            self.results['status'] = 'stopped'
+            self.results['is_dot_stop'] = False
+            self.results['is_error'] = True
+            self.results['is_delayed'] = False
+
 
         elif self.last_log_diff / 3600 > 24:
             self.results['status'] = 'stalled'

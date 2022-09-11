@@ -25,7 +25,9 @@ for entry in submit_data:
         sim = sim_info.diagnosticInfo(
             sim_name=entry,
             sim_input_fold=submit_data[entry],
-            config=config)
+            config=config,
+            is_cluster_running=True)
+
         sim_log = logging.getLogger('sim_log') #Get sim log
         sim.perform_checks()
     except:

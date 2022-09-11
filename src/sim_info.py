@@ -12,11 +12,12 @@ import datetime
 
 class diagnosticInfo:
 
-    def __init__(self, sim_name, sim_input_fold, config):
+    def __init__(self, sim_name, sim_input_fold, config, is_cluster_running):
 
         self.sim_name = sim_name
         self.sim_input_fold = sim_input_fold
         self.config = config
+        self.is_cluster_running = is_cluster_running
         self.out_f_loc = None
         self.fds_f_loc = None
         self.output_fold = None
@@ -157,7 +158,8 @@ class diagnosticInfo:
         #Run status prediction analytics
         stats_pred = am.status_prediction.predictSimStatus(
             output_loc=self.output_fold,
-            cur_time=self.current_time)
+            cur_time=self.current_time,
+            is_cluster_running=self.is_cluster_running)
         self.dummy_class = stats_pred
         self.als_results['sim_status'] = stats_pred.report_status()
 
