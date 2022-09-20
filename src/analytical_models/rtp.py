@@ -47,7 +47,7 @@ class mAvg:
 
     def _determine_status(self):
 
-        if self.sim_status is 'running':
+        if self.sim_status in ['running', 'delayed']:
             if len(self.data.index) > self.mavg_window:
                 self.model_status = 'to_run'
             else:
@@ -98,8 +98,7 @@ class mAvg:
         results = {}
         results['model_name'] = self.model_name
         results['model_status'] = self.model_status
-        results['mavg_window'] = self.mavg_window
-        results['sim_date_start'] = self.sim_date_start
+        results['mavg_window'] = float(self.mavg_window)
         results['sim_pred_end'] = []
         results['sim_pred_end_unc'] = []
         results['predicts'] = []
@@ -111,19 +110,19 @@ class mAvg:
 
             for time_pr, value_pr, interv_pr, in zip(self.times_to_predict, self.predictions, self.conf_intervals):
                 res = {}
-                res['t'] = time_pr
-                res['pr_date'] = value_pr.strftime("%d-%b %H:%M")
+                res['t'] = float(time_pr)
+                res['pr_date'] = value_pr.strftime("%d/%m/%Y %H:%M:%S")
                 res['unc'] = round_to_hour_min(interv_pr)
                 if time_pr < self.sim_time_end:
                     res['pr_type'] = 'mid'
                 else:
                     res['pr_type'] = 'end'
-                    results['sim_pred_end'] = value_pr.strftime("%d-%b %H:%M")
+                    results['sim_pred_end'] = value_pr.strftime("%d/%m/%Y %H:%M:%S")
                     results['sim_pred_end_unc'] = round_to_hour_min(interv_pr)
                 results['predicts'].append(res)
 
-            results['avg_spd'] = self.avg_spd
-            results['avg_spd_ci'] = self.avg_spd_ci
+            results['avg_spd'] = round(self.avg_spd, 1)
+            results['avg_spd_ci'] = round(self.avg_spd_ci, 1)
 
         return results
 

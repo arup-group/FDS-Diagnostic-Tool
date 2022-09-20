@@ -78,4 +78,15 @@ for entry in submit_data:
     # Process analytics
     sim.run_analytics()
 
+    #Plot
+    sim_log.info('Plotting requested graphs.')
+    plots_setup.plot(
+        output_loc=sim.output_fold,
+        plots_config=sim.config['plots'],
+        analytics_res=sim.als_results)
+
+
+#TODO Update predictions logic
+#TODO change sim_end to end_sim_time
+
 print('here')

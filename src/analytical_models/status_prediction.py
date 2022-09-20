@@ -35,44 +35,39 @@ class predictSimStatus():
             self.results['status'] = 'stopped'
             self.results['is_dot_stop'] = True
             self.results['is_error'] = False
-            self.results['is_delayed'] = False
 
         elif self.sim_info_data['stop_cond'] == 'instability':
             self.results['status'] = 'instability'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = True
-            self.results['is_delayed'] = False
 
         elif self.sim_info_data['stop_cond'] == 'completed':
             self.results['status'] = 'completed'
             self.results['is_dot_stop'] = False
             self. results['is_error'] = False
-            self.results['is_delayed'] = False
 
         elif self.is_cluster_running is False:
             self.results['status'] = 'stopped'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = True
-            self.results['is_delayed'] = False
-
 
         elif self.last_log_diff / 3600 > 24:
             self.results['status'] = 'stalled'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = True
-            self.results['is_delayed'] = True
 
         elif (self.last_log_diff - self.outp_freq_mean) > self.outp_freq_ci:
             self.results['status'] = 'running'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = False
-            self.results['is_delayed'] = True
 
         else:
-            self.results['status'] = 'running'
+            self.results['status'] = 'delayed'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = False
             self.results['is_delayed'] = False
+
+        self.results['status'] = 'instability'
 
     def _calc_last_log_time_diff(self):
         self.last_log_diff = (self.cur_time - self.cycle_info_data['log_time'].iloc[-1]).total_seconds()
@@ -85,8 +80,12 @@ class predictSimStatus():
     def report_status(self):
         self.results['outp_freq_mean'] = round(self.outp_freq_mean, 0)
         self.results['outp_freq_ci'] = round(self.outp_freq_ci, 0)
-        self.results['last_log_diff'] = round(self.last_log_diff, 0)
-        self.results['last_log_time'] = self.sim_info_data['lst_log_time']
+        self.results['lst_log_diff'] = round(self.last_log_diff, 0)
+        self.results['lst_log_time'] = self.sim_info_data['lst_log_time']
+        self.results['sim_date_start'] = self.sim_info_data['date_start']
+        self.results['end_sim_time'] = self.sim_info_data['sim_end']
+        self.results['lst_sim_time'] = self.sim_info_data['lst_sim_time']
+
         return self.results
 
     def _delete_data(self):

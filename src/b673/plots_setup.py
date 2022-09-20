@@ -78,28 +78,36 @@ def sim_progress(output_loc, analytics_res, plots_config):
     data = pd.read_csv(os.path.join(output_loc, 'data', 'cycle_info.csv'), parse_dates=['log_time'])
 
     sns.set()
-    fig = plt.figure(figsize=(15,9))
-
+    fig = plt.figure(figsize=(15, 9))
     widths = [1, 0.02, 1]
     heights = [0.01, 1, 0.005, 4]
     spec = fig.add_gridspec(ncols=3, nrows=4, width_ratios=widths, height_ratios=heights)
 
     ax1 = fig.add_subplot(spec[1, :])
-    plf.timeprogress_bar_plot(data, sim_info, t_predict=analytics_res['runtime_pred'], subplot=True, ax=ax1)
+    plf.timeprogress_bar_plot(data, sim_status=analytics_res['sim_status'],  rtp=analytics_res['rtp'], subplot=True, ax=ax1)
     ax2 = fig.add_subplot(spec[3, 0])
     plf.log_interval_plot(data, subplot=True, ax=ax2)
     ax3 = fig.add_subplot(spec[3, 2], sharex=ax2)
-    plf.comp_speed_plot(data, mAvg_spd=analytics_res['runtime_pred']['spd_info'], subplot=True, ax=ax3)
+    plf.comp_speed_plot(data, rtp=analytics_res['rtp'], subplot=True, ax=ax3)
 
-    fig.suptitle(f'{analytics_res["sim_status"]["stat_msg"]}',
-                 color=analytics_res["sim_status"]["color"],
-                 fontsize=14,
-                 va='top')
-
-    plt.gcf().text(0.5, 0.94,
-                   f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}',
-                   fontsize=12,
-                   ha='center', va='top',)
+    title_msg = {
+        'stopped': {'msg': 'Simulation stopped by user', 'color': '#2CA02C'},
+        'stalled': {'msg': 'Simulation stalled', 'color': '#C44E52'},
+        'completed': {'msg': 'Simulation completed', 'color': '#2CA02C'},
+        'instability': {'msg': 'Simulation experienced numerical instability', 'color': '#C44E52'},
+        'delayed': {'msg': 'Simulation delayed', 'color': '#DD8452'},
+        'running': {'msg': 'Simulation running', 'color': '#2CA02C'}}
+    fig.suptitle(
+        t=title_msg[analytics_res["sim_status"]["status"]]["msg"],
+        color=title_msg[analytics_res["sim_status"]["status"]]["color"],
+        fontsize=14,
+        va='top')
+    plt.gcf().text(
+        0.5, 0.94,
+        f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}',
+        fontsize=12,
+        ha='center',
+        va='top',)
 
     plt.tight_layout()
     plt.savefig(os.path.join(output_loc, 'time_progress.png'), bbox_inches="tight")
@@ -229,10 +237,10 @@ def plot(output_loc, plots_config, analytics_res):
         except:
             logger.exception('Error in simulation progression plot.')
 
-    if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
-        mesh_plots(output_loc, plots_config)
-
-    if any([plots_config[k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
-        cycle_plots(output_loc, plots_config)
-
-    loc_plots(output_loc, plots_config)
+    # if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
+    #     mesh_plots(output_loc, plots_config)
+    #
+    # if any([plots_config[k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
+    #     cycle_plots(output_loc, plots_config)
+    #
+    # loc_plots(output_loc, plots_config)

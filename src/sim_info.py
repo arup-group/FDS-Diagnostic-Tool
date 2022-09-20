@@ -172,6 +172,10 @@ class diagnosticInfo:
         self.als_results['rtp'] = rtp_model.report_results()
         self.dummy_class = rtp_model
 
+        #TODO Detele after debugging
+        with open(os.path.join(self.output_fold, 'data', 'als_results.json'), 'w') as fp:
+            json.dump(self.als_results, fp, indent=4)
+
 
     def report_summary(self):
         """Reports summary for overview visualisations"""
