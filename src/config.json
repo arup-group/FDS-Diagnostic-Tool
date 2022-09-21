@@ -36,7 +36,7 @@
         "vel_err_loc": true,
         "press_err_loc": true,
         "last_loc_pts": 20,
-        "show_plots_debug": false
+        "show_plots_debug": true
     },
     "utils": {
         "hrr_als": true,

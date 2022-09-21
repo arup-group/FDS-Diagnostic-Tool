@@ -30,6 +30,7 @@ class diagnosticInfo:
         # Configurable parameters
         self.require_hrr_data = None
         self.require_img_data = None
+        self.require_plots = {'mesh': None, 'cycle': None, 'loc': None}
 
         self.n_warn = 0
         self.n_crit = 0
@@ -48,6 +49,7 @@ class diagnosticInfo:
         self._check_mesh_data()
         self._check_hrr_data()
         self._check_img_data()
+        self._check_plots_data()
 
     def _get_inpt_files_loc(self):
         '''Gets the location of the fds and out files'''
@@ -122,6 +124,22 @@ class diagnosticInfo:
             self.require_hrr_data = True
         else:
             self.require_hrr_data = False
+
+    def _check_plots_data(self):
+        """Checks which plots to perform"""
+
+        if any([self.config['plots'][k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
+            self.require_plots['mesh'] = True
+        else:
+            self.require_plots['mesh'] = False
+        if any([self.config['plots'][k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
+            self.require_plots['cycle'] = True
+        else:
+            self.require_plots['cycle'] = False
+        if any([self.config['plots'][k] for k in ['vn_loc', 'max_div_loc', 'min_div_loc', 'cfl_loc', 'vel_err_loc', 'press_err_loc']]):
+            self.require_plots['loc'] = True
+        else:
+            self.require_plots['loc'] = False
 
     def _get_fds_version(self):
         ver_ptn = r'(?:[Vv]ersion|[Rr]evision)[\s:A-Za-z]+(\d+\.\d+\.\d+)'

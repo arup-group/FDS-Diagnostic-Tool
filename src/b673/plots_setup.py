@@ -237,10 +237,10 @@ def plot(output_loc, plots_config, analytics_res):
         except:
             logger.exception('Error in simulation progression plot.')
 
-    # if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
-    #     mesh_plots(output_loc, plots_config)
-    #
-    # if any([plots_config[k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
-    #     cycle_plots(output_loc, plots_config)
-    #
-    # loc_plots(output_loc, plots_config)
+    if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
+        mesh_plots(output_loc, plots_config)
+
+    if any([plots_config[k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
+        cycle_plots(output_loc, plots_config)
+
+    loc_plots(output_loc, plots_config)

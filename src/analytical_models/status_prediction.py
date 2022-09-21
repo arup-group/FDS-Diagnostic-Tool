@@ -67,7 +67,6 @@ class predictSimStatus():
             self.results['is_error'] = False
             self.results['is_delayed'] = False
 
-        self.results['status'] = 'instability'
 
     def _calc_last_log_time_diff(self):
         self.last_log_diff = (self.cur_time - self.cycle_info_data['log_time'].iloc[-1]).total_seconds()

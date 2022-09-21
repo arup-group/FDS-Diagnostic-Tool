@@ -85,6 +85,8 @@ for entry in submit_data:
         plots_config=sim.config['plots'],
         analytics_res=sim.als_results)
 
+    #Check each type of plot separately
+
 
 #TODO Update predictions logic
 #TODO change sim_end to end_sim_time
