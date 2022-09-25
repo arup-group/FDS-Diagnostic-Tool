@@ -90,6 +90,7 @@ def sim_progress(output_loc, analytics_res, plots_config):
     ax3 = fig.add_subplot(spec[3, 2], sharex=ax2)
     plf.comp_speed_plot(data, rtp=analytics_res['rtp'], subplot=True, ax=ax3)
 
+    #TODO Handle warning if no status returned
     title_msg = {
         'stopped': {'msg': 'Simulation stopped by user', 'color': '#2CA02C'},
         'stalled': {'msg': 'Simulation stalled', 'color': '#C44E52'},
@@ -228,19 +229,14 @@ def loc_plots(output_loc, plots_config):
             logger.exception('Error with pressure error location plot.')
 
 
-def plot(output_loc, plots_config, analytics_res):
+def plot(output_loc, plots_config, analytics_res, require_plots):
     logger = logging.getLogger('sim_log')
 
-    if plots_config['time_progress']:
-        try:
-            sim_progress(output_loc, analytics_res, plots_config)
-        except:
-            logger.exception('Error in simulation progression plot.')
-
-    if any([plots_config[k] for k in ['min_div', 'max_div', 'vn', 'cfl', 'ts', 'ts_time']]):
+    if require_plots['time_progress']:
+        sim_progress(output_loc, analytics_res, plots_config)
+    if require_plots['mesh']:
         mesh_plots(output_loc, plots_config)
-
-    if any([plots_config[k] for k in ['vel_err', 'press_err', 'press_itr', 'hrr']]):
+    if require_plots['cycle']:
         cycle_plots(output_loc, plots_config)
-
-    loc_plots(output_loc, plots_config)
+    if require_plots['loc']:
+        loc_plots(output_loc, plots_config)

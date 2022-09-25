@@ -43,14 +43,14 @@ for entry in submit_data:
     except KeyError:
         sim_log.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
 
-    # Process mesh data
+    # Process mesh data (warning)
     if sim.mesh_data is None:
         sim.mesh_data = mesh_tools.mesh_als(
             fds_path=sim.fds_f_loc,
             save_loc=sim.output_fold)
         sim_log.info('Mesh data processed.')
 
-    # Process HRR data
+    # Process HRR data (warning)
     if sim.require_hrr_data:
         hrr_tools.get_hrr_data(
             fds_f_path=sim.fds_f_loc,
@@ -59,7 +59,7 @@ for entry in submit_data:
         sim.require_hrr_data = False
         sim_log.info('HRR data processed.')
 
-    # Process image data
+    # Process image data (warning)
     if sim.require_img_data:
         obstr_tools.process_obstructions(
             output_path=sim.output_fold,
@@ -67,7 +67,7 @@ for entry in submit_data:
         sim.require_img_data = False
         sim_log.info('Image data processed.')
 
-    # Process runtime data
+    # Process runtime data (critical)
     sim_log.info(f'Start runtime data parsing using build {builds_control[sim.fds_ver]}.')
     runtime_data.get_data(
         outfile_file_path=sim.out_f_loc,
@@ -75,20 +75,19 @@ for entry in submit_data:
         config=sim.config,
         mesh_data=sim.mesh_data)
 
-    # Process analytics
+    # Process analytics (error)
     sim.run_analytics()
 
-    #Plot
+    #Plot (error and warnings when analytics info is not avaliable)
     sim_log.info('Plotting requested graphs.')
     plots_setup.plot(
         output_loc=sim.output_fold,
         plots_config=sim.config['plots'],
-        analytics_res=sim.als_results)
+        analytics_res=sim.als_results,
+        require_plots=sim.require_plots)
 
-    #Check each type of plot separately
 
 
-#TODO Update predictions logic
 #TODO change sim_end to end_sim_time
 
 print('here')

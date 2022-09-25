@@ -30,7 +30,7 @@ class diagnosticInfo:
         # Configurable parameters
         self.require_hrr_data = None
         self.require_img_data = None
-        self.require_plots = {'mesh': None, 'cycle': None, 'loc': None}
+        self.require_plots = {'mesh': None, 'cycle': None, 'loc': None, 'time_progress': None}
 
         self.n_warn = 0
         self.n_crit = 0
@@ -93,7 +93,6 @@ class diagnosticInfo:
                 self.logger.info('Diagnostic configuration copied and loaded.')
 
     def _check_mesh_data(self):
-
         """Checks if mesh data is present and load it"""
 
         if os.path.isfile(os.path.join(self.output_fold, 'data', 'mesh_data.json')):
@@ -140,6 +139,10 @@ class diagnosticInfo:
             self.require_plots['loc'] = True
         else:
             self.require_plots['loc'] = False
+        if self.config['plots']['time_progress']:
+            self.require_plots['time_progress'] = True
+        else:
+            self.require_plots['time_progress'] = False
 
     def _get_fds_version(self):
         ver_ptn = r'(?:[Vv]ersion|[Rr]evision)[\s:A-Za-z]+(\d+\.\d+\.\d+)'
