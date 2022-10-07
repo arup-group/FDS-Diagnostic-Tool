@@ -32,18 +32,15 @@ class diagnosticInfo:
         self.require_img_data = None
         self.require_plots = {'mesh': None, 'cycle': None, 'loc': None, 'time_progress': None}
 
-        self.n_warn = 0
-        self.n_crit = 0
-        self.n_err = 0
         self.als_results = {}
 
         self._get_output_fold_loc()
-        self._get_inpt_files_loc()
         self._create_folder_structure()
         self._setup_logger()
-        self.logger.info(f'*** START PROCESSING  {self.sim_name} ***')
+
 
     def perform_checks(self):
+        self._get_inpt_files_loc()
         self._setup_config_files()
         self._get_fds_version()
         self._check_mesh_data()
@@ -173,29 +170,42 @@ class diagnosticInfo:
         self.logger.addHandler(stream_handler)
         self.logger.propagate = False
 
-    def run_analytics(self):
+    def run_analytics(self, errors_count):
         """Starts relevant analytics based on configuration"""
+        sim_log = logging.getLogger('sim_log')
 
         #Run status prediction analytics
-        stats_pred = am.status_prediction.predictSimStatus(
-            output_loc=self.output_fold,
-            cur_time=self.current_time,
-            is_cluster_running=self.is_cluster_running)
-        self.als_results['sim_status'] = stats_pred.report_status()
+        try:
+            stats_pred = am.status_prediction.predictSimStatus(
+                output_loc=self.output_fold,
+                cur_time=self.current_time,
+                is_cluster_running=self.is_cluster_running)
+            self.als_results['sim_status'] = stats_pred.report_status()
+        except:
+            errors_count[1] += 1
+            sim_log.exception('Error in status prediction analytics.')
+            self.als_results['sim_status'] = None
 
         #run rtp analytics
-        rtp_model = am.rtp.mAvg(
-            output_loc=self.output_fold,
-            mavg_window=30,
-            n_predictions=7,
-            sim_status=self.als_results['sim_status']['status'])
-        rtp_model.run_model()
-        self.als_results['rtp'] = rtp_model.report_results()
-        self.dummy_class = rtp_model
+        try:
+            rtp_model = am.rtp.mAvg(
+                output_loc=self.output_fold,
+                mavg_window=30,
+                n_predictions=7,
+                sim_status=self.als_results['sim_status']['status'])
+            rtp_model.run_model()
+            self.als_results['rtp'] = rtp_model.report_results()
+            self.dummy_class = rtp_model
+        except:
+            errors_count[1] += 1
+            sim_log.exception('Error in runtime prediction analytics.')
+            self.als_results['rtp'] = None
 
         #TODO Detele after debugging
         with open(os.path.join(self.output_fold, 'data', 'als_results.json'), 'w') as fp:
             json.dump(self.als_results, fp, indent=4)
+
+        sim_log.info('Analytical models processed.')
 
 
     def report_summary(self):
