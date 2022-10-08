@@ -10,8 +10,8 @@ import logging
 
 
 #TODO SETUP MASTER LOG
-#main_log = utils.setup_logger('main_log', 'logs/main_log.log')
-#main_log.info('*** FDS DIAGNOSTICS v0.1.0 Beta STARTED ***')
+main_log = utils.setup_logger('main_log', 'logs/main_log.log')
+main_log.info('*** FDS DIAGNOSTICS v0.2.0 Beta STARTED ***')
 
 # Process submit queue
 submit_data = utils.prcs_submit_file('submit_sim.txt')
@@ -31,16 +31,18 @@ for entry in submit_data:
         sim_log = logging.getLogger('sim_log') #Get sim log
         sim.perform_checks()
         sim_log.info(f'*** START PROCESSING  {sim.sim_name} ***')
+        main_log.info(f'Start processing  {sim.sim_name}.')
     except:
         errors_count[0] += 1
         try:
             sim_log.critical(f'Error during initialisation for {entry}.', exc_info=True)
-            sim.log.info(f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
-            #TODO report to main log
-        except:
-            pass
-            #TODO report tp main log
+            sim.log.info(f'Finished processing  {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
 
+        except:
+            main_log.exception(f'Error during initialisation for {entry}.')
+
+        main_log.info(
+            f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
         continue
 
     # Import correct module - critical
@@ -55,7 +57,8 @@ for entry in submit_data:
         sim_log.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
         sim_log.info(
             f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
-        # TODO report to main log
+        main_log.info(
+            f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
         continue
 
     # Process mesh data (warning - return none for mesh data)
@@ -111,7 +114,8 @@ for entry in submit_data:
         sim_log.critical('Error processing runtime data.', exc_info=True)
         sim.log.info(
             f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
-        # TODO report to main log
+        main_log.info(
+            f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
         continue
 
     # Process analytics (error - pass errors records)
@@ -128,6 +132,10 @@ for entry in submit_data:
 
     sim_log.info(
         f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+    main_log.info(
+        f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+
+main_log.info(f'*** Diagnostics of all simulations completed. ***')
 
 #TODO change sim_end to end_sim_time
 
