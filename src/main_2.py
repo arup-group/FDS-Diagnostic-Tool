@@ -20,6 +20,10 @@ submit_data = utils.prcs_submit_file('submit_sim.txt')
 with open('config.json') as config_js:
     config = json.load(config_js)
 
+sim_summaries = []
+
+#TODO based on log define start entry
+
 for entry in submit_data:
     errors_count = [0, 0, 0]
     try:
@@ -27,7 +31,7 @@ for entry in submit_data:
             sim_name=entry,
             sim_input_fold=submit_data[entry],
             config=config,
-            is_cluster_running=True)
+            is_cluster_running=True) # TODO Update this
         sim_log = logging.getLogger('sim_log') #Get sim log
         sim.perform_checks()
         sim_log.info(f'*** START PROCESSING  {sim.sim_name} ***')
@@ -35,9 +39,9 @@ for entry in submit_data:
     except:
         errors_count[0] += 1
         try:
+            sim.error_count = errors_count
             sim_log.critical(f'Error during initialisation for {entry}.', exc_info=True)
-            sim.log.info(f'Finished processing  {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
-
+            sim.log.info(f'Finished processing  {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
         except:
             main_log.exception(f'Error during initialisation for {entry}.')
 
@@ -53,12 +57,12 @@ for entry in submit_data:
         runtime_data = importlib.import_module(f'{builds_control[sim.fds_ver]}.runtime_data')
         plots_setup = importlib.import_module(f'{builds_control[sim.fds_ver]}.plots_setup')
     except KeyError:
-        errors_count[0] += 1
+        sim.error_count[0] += 1
         sim_log.critical(f'FDS version {sim.fds_ver} not supported.', exc_info=True)
         sim_log.info(
-            f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+            f'Finished processing  with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
         main_log.info(
-            f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+            f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
         continue
 
     # Process mesh data (warning - return none for mesh data)
@@ -69,7 +73,7 @@ for entry in submit_data:
                 save_loc=sim.output_fold)
             sim_log.info('Mesh data processed.')
         except:
-            sim.errors_count[1] += 1
+            sim.error_count[1] += 1
             sim_log.exception('Error loading mesh data.')
             mesh_data = None
 
@@ -84,7 +88,7 @@ for entry in submit_data:
             sim.require_hrr_data = False
             sim_log.info('HRR data processed.')
         except:
-            sim.errors_count[1] += 1
+            sim.error_count[1] += 1
             sim_log.exception('Error processing hrr data.')
 
 
@@ -97,7 +101,7 @@ for entry in submit_data:
             sim.require_img_data = False
             sim_log.info('Image data processed.')
         except:
-            sim.errors_count[1] += 1
+            sim.error_count[1] += 1
             sim_log.exception('Error processing obstruction.')
 
 
@@ -110,16 +114,16 @@ for entry in submit_data:
             config=sim.config,
             mesh_data=sim.mesh_data)
     except:
-        sim.errors_count[0] += 1
+        sim.error_count[0] += 1
         sim_log.critical('Error processing runtime data.', exc_info=True)
         sim.log.info(
-            f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+            f'Finished processing  with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
         main_log.info(
-            f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+            f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
         continue
 
     # Process analytics (error - pass errors records)
-    sim.run_analytics(errors_count)
+    sim.run_analytics()
 
     #Plot (error and warnings when analytics info is not avaliable)
     sim_log.info('Plotting requested graphs.')
@@ -129,14 +133,20 @@ for entry in submit_data:
             analytics_res=sim.als_results,
             require_plots=sim.require_plots)
 
+    # Report
+    sim_summaries.append(sim.report_summary())
+
 
     sim_log.info(
-        f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+        f'Finished processing  with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
     main_log.info(
-        f'Finished processing {sim.sim_name} with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
+        f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
+
+    print('BREAK HERE')
 
 main_log.info(f'*** Diagnostics of all simulations completed. ***')
 
 #TODO change sim_end to end_sim_time
+#TODO copy src file and cluster file if relevant
 
 print('END OF PROGRAM')

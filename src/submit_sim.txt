@@ -1,1 +1,2 @@
-C:\local_work\digital_projects\fds_diagnostics\example_sims\NTU\sc1_r1
+C:\local_work\digital_projects\fds_diagnostics\example_sims\CQD\CQD_PL2_SC2
+C:\local_work\digital_projects\fds_diagnostics\example_sims\NTU\sc1_r3

@@ -7,6 +7,7 @@ import logging
 import sys
 from shutil import copyfile
 import datetime
+import random
 
 
 
@@ -26,6 +27,8 @@ class diagnosticInfo:
 
         # Parameters always needed for adequate functioning
         self.mesh_data = None
+        self.error_count = [0, 0, 0]
+        self.user_ID = 'YP'
 
         # Configurable parameters
         self.require_hrr_data = None
@@ -170,7 +173,7 @@ class diagnosticInfo:
         self.logger.addHandler(stream_handler)
         self.logger.propagate = False
 
-    def run_analytics(self, errors_count):
+    def run_analytics(self):
         """Starts relevant analytics based on configuration"""
         sim_log = logging.getLogger('sim_log')
 
@@ -182,10 +185,9 @@ class diagnosticInfo:
                 is_cluster_running=self.is_cluster_running)
             self.als_results['sim_status'] = stats_pred.report_status()
         except:
-            errors_count[1] += 1
+            self.error_count[1] += 1
             sim_log.exception('Error in status prediction analytics.')
             self.als_results['sim_status'] = None
-
         #run rtp analytics
         try:
             rtp_model = am.rtp.mAvg(
@@ -197,7 +199,7 @@ class diagnosticInfo:
             self.als_results['rtp'] = rtp_model.report_results()
             self.dummy_class = rtp_model
         except:
-            errors_count[1] += 1
+            self.error_count[1] += 1
             sim_log.exception('Error in runtime prediction analytics.')
             self.als_results['rtp'] = None
 
@@ -210,4 +212,13 @@ class diagnosticInfo:
 
     def report_summary(self):
         """Reports summary for overview visualisations"""
-        pass
+        sim_report = {}
+        sim_report['sim_status'] = self.als_results['sim_status']
+        sim_report['rtp'] = self.als_results['rtp']
+        sim_report['sim_name'] = self.sim_name
+        sim_report['cls_ID'] = random.randint(10000, 200000)
+        sim_report['user_ID'] = self.user_ID
+        sim_report['error_count'] = self.error_count
+
+        return sim_report
+
