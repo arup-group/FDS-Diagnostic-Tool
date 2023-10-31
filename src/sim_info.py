@@ -218,7 +218,7 @@ class diagnosticInfo:
         sim_report['sim_name'] = self.sim_name
         sim_report['cls_ID'] = random.randint(10000, 200000)
         sim_report['user_ID'] = self.user_ID
-        sim_report['error_count'] = self.error_count
+        sim_report['diagnostic_error_count'] = self.error_count
 
         return sim_report
 
