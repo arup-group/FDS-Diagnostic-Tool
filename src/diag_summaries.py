@@ -47,6 +47,7 @@ class diagnosticsSummary():
             ax_info = fig.add_subplot(spec[2*i, 0])
 
             diagnosticsSummary._display_status(data, ax=ax_info)
+            diagnosticsSummary._display_progress(data, ax=ax_info)
             diagnosticsSummary._display_speed(data, ax=ax_info)
             ax_info.set_axis_off()
 
@@ -113,14 +114,18 @@ class diagnosticsSummary():
                 weight='demibold')
 
     @staticmethod
+    def _display_progress(data, ax):
+        progress = round(data['sim_status']['lst_sim_time'])
+        ax.text(0.1, 0, f'{progress} s', transform=ax.transAxes, ha='left', size=11)
+
+    @staticmethod
     def _display_speed(data, ax):
 
-        if data['rtp']['avg_spd'] == [] or data['rtp']['avg_spd'] is None:
+        if data['rtp']['model_status'] == 'no_run':
             speed = '- s/h'
         else:
             speed = f"{data['rtp']['avg_spd']}$\\uparrow$s/h"
-        ax.text(0.1, 0,  speed, transform=ax.transAxes, ha='left', size=11)
-
+        ax.text(0.17, 0,  speed, transform=ax.transAxes, ha='left', size=11)
 
     @staticmethod
     def _display_start_time(data, ax):
@@ -130,6 +135,14 @@ class diagnosticsSummary():
                 va='center',
                 transform=ax.transAxes,
                 size=10)
+
+    @staticmethod
+    def _display_last_time_time(data, ax):
+        if data['sim_status'] in ['running', 'delayed']:
+            return
+
+        last_log = datetime.datetime.strptime(data['sim_status']['lst_log_time'], "%d/%m/%Y %H:%M:%S")
+
 
 
 
