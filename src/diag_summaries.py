@@ -31,7 +31,7 @@ class diagnosticsSummary():
 
         # Allocate figure size
         sns.set()
-        fig = plt.figure(constrained_layout=True, figsize=(10, 0.8 * len(self.sanitized_entries) + 3))
+        fig = plt.figure(constrained_layout=True, figsize=(10, 1.7 * len(self.sanitized_entries)))
         # fig = plt.figure(constrained_layout=True)
         [grid_height_ratios.extend(height_ratio) for _ in range(len(self.sanitized_entries))]
         spec = fig.add_gridspec(
@@ -58,7 +58,8 @@ class diagnosticsSummary():
             ax_bar.barh(1, data['sim_status']['end_sim_time'], height=1, edgecolor='#4C72B0', linewidth=1, fill=False,
                     align='center')
             ax_bar.set_xticks(np.linspace(0, data['sim_status']['end_sim_time'], 13))
-            ax_bar.set_ylim([0.45, 1.55])
+            ax_bar.set_ylim([0.48, 1.52])
+            ax_bar.set_xlim([0, 14.3/13*data['sim_status']['end_sim_time']])
             ax_bar.grid(b=True, which='major', linewidth=1.6)
             ax_bar.set_yticks([1])
 
@@ -71,10 +72,10 @@ class diagnosticsSummary():
             ax_bar.set_xlabel('Simulation progress (s)', size=11)
 
             diagnosticsSummary._display_start_time(data, ax=ax_bar)
+            diagnosticsSummary._display_last_time_time(data, ax=ax_bar)
 
         plt.savefig(r"C:\local_work\digital_projects\fds_diagnostics\test_sims_output\fig_test.png",
-                    dpi=150,
-                    bbox_inches='tight')
+                    dpi=150)
 
     @staticmethod
     def _process_sim_name(data):
@@ -131,17 +132,30 @@ class diagnosticsSummary():
     def _display_start_time(data, ax):
 
         start_date = datetime.datetime.strptime(data['sim_status']['sim_date_start'], "%d/%m/%Y %H:%M:%S")
-        ax.text(0.01, 0.5, f'Started:\n{start_date.strftime("%d/%m%n%H:%M")}',
+        ax.text(0.01, 0.5, f'Started\n{start_date.strftime("%d/%m%n%H:%M")}',
                 va='center',
                 transform=ax.transAxes,
                 size=10)
 
     @staticmethod
     def _display_last_time_time(data, ax):
-        if data['sim_status'] in ['running', 'delayed']:
+        if data['sim_status']['status'] in ['running', 'delayed']:
             return
 
-        last_log = datetime.datetime.strptime(data['sim_status']['lst_log_time'], "%d/%m/%Y %H:%M:%S")
+        lst_log_time = datetime.datetime.strptime(data['sim_status']['lst_log_time'], "%d/%m/%Y %H:%M:%S")
+
+        if data['sim_status']['status'] == 'completed':
+            print('here')
+            ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
+                linestyle='solid', color='#2CA02C', linewidth=2)
+            ax.text(data['sim_status']['lst_sim_time'] + 9, 1,
+                    f'Completed\n{lst_log_time.strftime("%d/%m%n%H:%M")}', va='center', size=10)
+
+        elif data['sim_status']['status'] in ['stalled', 'instability']:
+            ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
+                    linestyle='solid', color='#C44E52', linewidth=2)
+            ax.text(data['sim_status']['lst_sim_time'] + 9, 1,
+            f'Last log\n{lst_log_time.strftime("%d/%m%n%H:%M")}', va='center', size=10)
 
 
 
