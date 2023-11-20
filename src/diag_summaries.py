@@ -45,12 +45,10 @@ class diagnosticsSummary():
             data = self.sanitized_entries[entry]
 
             ax_info = fig.add_subplot(spec[2*i, 0])
-
             diagnosticsSummary._display_status(data, ax=ax_info)
             diagnosticsSummary._display_progress(data, ax=ax_info)
             diagnosticsSummary._display_speed(data, ax=ax_info)
             ax_info.set_axis_off()
-
 
             ax_bar = fig.add_subplot(spec[2*i+1, 0])
 
@@ -58,7 +56,7 @@ class diagnosticsSummary():
             ax_bar.barh(1, data['sim_status']['end_sim_time'], height=1, edgecolor='#4C72B0', linewidth=1, fill=False,
                     align='center')
             ax_bar.set_xticks(np.linspace(0, data['sim_status']['end_sim_time'], 13))
-            ax_bar.set_ylim([0.48, 1.52])
+            ax_bar.set_ylim([0.42, 1.58])
             ax_bar.set_xlim([0, 14.3/13*data['sim_status']['end_sim_time']])
             ax_bar.grid(b=True, which='major', linewidth=1.6)
             ax_bar.set_yticks([1])
@@ -74,6 +72,7 @@ class diagnosticsSummary():
             diagnosticsSummary._display_start_time(data, ax=ax_bar)
             diagnosticsSummary._display_last_time_time(data, ax=ax_bar)
 
+        fig.suptitle(f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}\n', fontsize=12, va='top')
         plt.savefig(r"C:\local_work\digital_projects\fds_diagnostics\test_sims_output\fig_test.png",
                     dpi=150)
 
@@ -156,9 +155,6 @@ class diagnosticsSummary():
                     linestyle='solid', color='#C44E52', linewidth=2)
             ax.text(data['sim_status']['lst_sim_time'] + 9, 1,
             f'Last log\n{lst_log_time.strftime("%d/%m%n%H:%M")}', va='center', size=10)
-
-
-
 
 
     def _save_summary_table(self):
