@@ -6,6 +6,9 @@ import datetime
 
 class diagnosticsSummary():
 
+    #TODO - create centralised control for diagnostics
+    #TODO - average direction
+
     def __init__(self, input_entries):
 
         self.summary_timestamp = None
@@ -26,12 +29,12 @@ class diagnosticsSummary():
 
         #layout_parameters
         width_ratio = [1]
-        height_ratio = [0.2, 1]
+        height_ratio = [0.25, 0.5]
         grid_height_ratios = []
 
         # Allocate figure size
         sns.set()
-        fig = plt.figure(constrained_layout=True, figsize=(10, 1.7 * len(self.sanitized_entries)))
+        fig = plt.figure(constrained_layout=True, figsize=(14, 1.9 * len(self.sanitized_entries)))
         # fig = plt.figure(constrained_layout=True)
         [grid_height_ratios.extend(height_ratio) for _ in range(len(self.sanitized_entries))]
         spec = fig.add_gridspec(
@@ -56,8 +59,8 @@ class diagnosticsSummary():
             ax_bar.barh(1, data['sim_status']['end_sim_time'], height=1, edgecolor='#4C72B0', linewidth=1, fill=False,
                     align='center')
             ax_bar.set_xticks(np.linspace(0, data['sim_status']['end_sim_time'], 13))
-            ax_bar.set_ylim([0.42, 1.58])
-            ax_bar.set_xlim([0, 14.3/13*data['sim_status']['end_sim_time']])
+            ax_bar.set_ylim([0.43, 1.57])
+            ax_bar.set_xlim([0, 14/13*data['sim_status']['end_sim_time']])
             ax_bar.grid(b=True, which='major', linewidth=1.6)
             ax_bar.set_yticks([1])
 
@@ -70,9 +73,10 @@ class diagnosticsSummary():
             ax_bar.set_xlabel('Simulation progress (s)', size=11)
 
             diagnosticsSummary._display_start_time(data, ax=ax_bar)
-            diagnosticsSummary._display_last_time_time(data, ax=ax_bar)
+            diagnosticsSummary._display_last_time(data, ax=ax_bar)
+            diagnosticsSummary._display_predictions(data, ax=ax_bar)
 
-        fig.suptitle(f'Last Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}\n', fontsize=12, va='top')
+        fig.suptitle(f'FDS Diagnostic System 0.1.0\nLast Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}\n', fontsize=12, va='top',linespacing=1.4)
         plt.savefig(r"C:\local_work\digital_projects\fds_diagnostics\test_sims_output\fig_test.png",
                     dpi=150)
 
@@ -116,7 +120,7 @@ class diagnosticsSummary():
     @staticmethod
     def _display_progress(data, ax):
         progress = round(data['sim_status']['lst_sim_time'])
-        ax.text(0.1, 0, f'{progress} s', transform=ax.transAxes, ha='left', size=11)
+        ax.text(0.07, 0, f'{progress} s', transform=ax.transAxes, ha='left', size=11)
 
     @staticmethod
     def _display_speed(data, ax):
@@ -125,19 +129,19 @@ class diagnosticsSummary():
             speed = '- s/h'
         else:
             speed = f"{data['rtp']['avg_spd']}$\\uparrow$s/h"
-        ax.text(0.17, 0,  speed, transform=ax.transAxes, ha='left', size=11)
+        ax.text(0.115, 0,  speed, transform=ax.transAxes, ha='left', size=11)
 
     @staticmethod
     def _display_start_time(data, ax):
 
         start_date = datetime.datetime.strptime(data['sim_status']['sim_date_start'], "%d/%m/%Y %H:%M:%S")
-        ax.text(0.01, 0.5, f'Started\n{start_date.strftime("%d/%m%n%H:%M")}',
+        ax.text(0.01, 0.5, f'Started\n{start_date.strftime("%d/%m %H:%M")}',
                 va='center',
                 transform=ax.transAxes,
                 size=10)
 
     @staticmethod
-    def _display_last_time_time(data, ax):
+    def _display_last_time(data, ax):
         if data['sim_status']['status'] in ['running', 'delayed']:
             return
 
@@ -147,15 +151,38 @@ class diagnosticsSummary():
             print('here')
             ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
                 linestyle='solid', color='#2CA02C', linewidth=2)
-            ax.text(data['sim_status']['lst_sim_time'] + 9, 1,
-                    f'Completed\n{lst_log_time.strftime("%d/%m%n%H:%M")}', va='center', size=10)
+            ax.text(data['sim_status']['lst_sim_time'] + 0.008*data['sim_status']['end_sim_time'], 1,
+                    f'Completed\n{lst_log_time.strftime("%d/%m %H:%M")}', va='center', size=10)
 
         elif data['sim_status']['status'] in ['stalled', 'instability']:
             ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
                     linestyle='solid', color='#C44E52', linewidth=2)
-            ax.text(data['sim_status']['lst_sim_time'] + 9, 1,
-            f'Last log\n{lst_log_time.strftime("%d/%m%n%H:%M")}', va='center', size=10)
+            ax.text(data['sim_status']['lst_sim_time'] + 0.008*data['sim_status']['end_sim_time'], 1,
+            f'Last log\n{lst_log_time.strftime("%d/%m %H:%M")}', va='center', size=10)
 
+    @staticmethod
+    def _display_predictions(data, ax):
 
-    def _save_summary_table(self):
+        if data['sim_status']['status'] not in ['running', 'delayed']:
+            return
+
+        if data['rtp']['model_status'] == 'no_data':
+            ax.text(0.5*ax.get_xlim()[1], 1, 'Insufficient data\nfor accurate runtime prediction',
+                    ha='center', va='center', size=10)
+            return
+
+        for i in data['rtp']['predicts']:
+            pr_date = datetime.datetime.strptime(i['pr_date'], "%d/%m/%Y %H:%M:%S")
+            pr_date = pr_date.strftime("%d/%m %H:%M")
+            if i['pr_type'] == 'mid':
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
+                ax.text(i['t'] + 0.008*data['sim_status']['end_sim_time'], 1, f'{pr_date}\n($\pm${i["unc"]}h)', va='center', size=10)
+            elif i['pr_type'] == 'end':
+                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
+                ax.text(i['t'] + 0.008*data['sim_status']['end_sim_time'], 1, f'{pr_date}\n($\pm${i["unc"]}h)', va='center', size=10)
+
+    def _save_summary_tabular(self):
+        pass
+
+    def _save_summary_json(self):
         pass
