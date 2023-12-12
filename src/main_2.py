@@ -13,12 +13,12 @@ import logging
 main_log = utils.setup_logger('main_log', 'logs/main_log.log')
 main_log.info('*** FDS DIAGNOSTICS v0.2.0 Beta STARTED ***')
 
-# Process submit queue
-submit_data = utils.prcs_submit_file('submit_sim.txt')
-
 # Load master config file
 with open('config.json') as config_js:
     config = json.load(config_js)
+
+# Process submit queue
+submit_data = utils.prcs_submit_file(config)
 
 sim_summaries = []
 
@@ -28,11 +28,13 @@ for entry in submit_data:
     errors_count = [0, 0, 0]
     try:
         sim = sim_info.diagnosticInfo(
-            sim_name=entry,
-            sim_input_fold=submit_data[entry],
+            sim_name=submit_data[entry]['sim_name'],
+            sim_input_fold=submit_data[entry]['input_folder'],
             config=config,
-            is_cluster_running=True) # TODO Update this
-        sim_log = logging.getLogger('sim_log') #Get sim log
+            is_cluster_running=submit_data[entry]['is_cluster_running'],
+            cls_info=submit_data[entry]['cls_info'])
+
+        sim_log = logging.getLogger('sim_log')
         sim.perform_checks()
         sim_log.info(f'*** START PROCESSING  {sim.sim_name} ***')
         main_log.info(f'Start processing  {sim.sim_name}.')
@@ -136,13 +138,10 @@ for entry in submit_data:
     # Report
     sim_summaries.append(sim.report_summary())
 
-
     sim_log.info(
         f'Finished processing  with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
     main_log.info(
         f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
-
-    print('BREAK HERE')
 
 main_log.info(f'*** Diagnostics of all simulations completed. ***')
 

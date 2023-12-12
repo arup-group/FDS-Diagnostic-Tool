@@ -29,21 +29,30 @@ class simInfo:
         pass
 
 
-
-def prcs_submit_file(submit_file):
+def prcs_submit_file(config):
     """Creates dict of running queue  file """
 
     submit_data = {}
-    with open(submit_file) as f:
-        for line in f:
-            try:
-                line = line.rstrip()
-                line = line.replace('"', '')
-                path = os.path.normpath(line)
-                path_parts = path.split(os.sep)
-                submit_data['{}_{}'.format(path_parts[-2], path_parts[-1])] = path
-            except IndexError:
-                pass
+    if config['settings']['manual_input']:
+        with open('submit_sim.txt') as f:
+            for i, line in enumerate(f):
+                try:
+                    line = line.rstrip().replace('"', '')
+                    path = os.path.normpath(line)
+                    path_parts = path.split(os.sep)
+                    entry = f'{path_parts[-2]}_{path_parts[-1]}'
+                    submit_data[entry] = {
+                        'input_folder': path,
+                        'sim_name': entry,
+                        'is_cluster_running': True,
+                        'cls_info': {
+                            'user_ID': os.getlogin(),
+                            'cls_ID': f'{i+1:03d}',
+                            'machine': config['settings']['machine_ID']}}
+                except IndexError:
+                    pass
+    else:
+        pass
 
     return submit_data
 

@@ -10,15 +10,15 @@ import datetime
 import random
 
 
-
 class diagnosticInfo:
 
-    def __init__(self, sim_name, sim_input_fold, config, is_cluster_running):
+    def __init__(self, sim_name, sim_input_fold, config, is_cluster_running, cls_info):
 
         self.sim_name = sim_name
         self.sim_input_fold = sim_input_fold
         self.config = config
         self.is_cluster_running = is_cluster_running
+        self.cls_info = cls_info
         self.out_f_loc = None
         self.fds_f_loc = None
         self.output_fold = None
@@ -28,7 +28,6 @@ class diagnosticInfo:
         # Parameters always needed for adequate functioning
         self.mesh_data = None
         self.error_count = [0, 0, 0]
-        self.user_ID = 'YP'
 
         # Configurable parameters
         self.require_hrr_data = None
@@ -203,11 +202,14 @@ class diagnosticInfo:
             sim_log.exception('Error in runtime prediction analytics.')
             self.als_results['rtp'] = None
 
-        #TODO Detele after debugging
         with open(os.path.join(self.output_fold, 'data', 'als_results.json'), 'w') as fp:
             json.dump(self.als_results, fp, indent=4)
 
         sim_log.info('Analytical models processed.')
+
+    def _save_cls_info(self):
+        with open(os.path.join(self.output_fold, 'data', 'cls_info.json'), 'w') as fp:
+            json.dump(self.cls_info, fp, indent=4)
 
 
     def report_summary(self):
@@ -216,9 +218,12 @@ class diagnosticInfo:
         sim_report['sim_status'] = self.als_results['sim_status']
         sim_report['rtp'] = self.als_results['rtp']
         sim_report['sim_name'] = self.sim_name
-        sim_report['cls_ID'] = random.randint(10000, 200000)
-        sim_report['user_ID'] = self.user_ID
+        sim_report['cls_ID'] = self.cls_info['cls_ID']
+        sim_report['user_ID'] = self.cls_info['user_ID']
         sim_report['diagnostic_error_count'] = self.error_count
+
+        #Save machine infoemation
+        self._save_cls_info()
 
         return sim_report
 

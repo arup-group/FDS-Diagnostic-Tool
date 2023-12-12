@@ -1,6 +1,8 @@
 {
     "settings": {
-        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\test_sims_output"
+        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\test_sims_output",
+        "manual_input": true,
+        "machine_ID": "fircls01"
     },
     "log_data": {
         "ts": true,
