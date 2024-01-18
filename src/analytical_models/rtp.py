@@ -55,8 +55,6 @@ class mAvg:
         else:
             self.model_status = 'no_run'
 
-        self.model_status = 'to_run' # TODO DELETE THIS AFTER DEBUGGING
-
 
     def _get_times_to_predict(self):
         """The method calculates which times to predict"""

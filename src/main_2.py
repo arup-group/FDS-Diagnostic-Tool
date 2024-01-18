@@ -140,6 +140,15 @@ for entry in submit_data:
             analytics_res=sim.als_results,
             require_plots=sim.require_plots)
 
+    # Copy source data (warning)
+    if config['settings']['copy_source_f']:
+        sim_log.info('Copying source files')
+        try:
+            sim.copy_source_files()
+        except:
+            sim.error_count[1] += 1
+            sim_log.exception('Error copying source data.')
+
     # Report
     sim_summaries.append(sim.report_summary())
 

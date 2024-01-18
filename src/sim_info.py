@@ -73,7 +73,7 @@ class diagnosticInfo:
     def _create_folder_structure(self):
         """"Creates appropriate subfolders"""
 
-        subfolders = ['logs', 'data', 'imgs', 'inf']
+        subfolders = ['logs', 'data', 'imgs', 'inf', 'src']
         for subf in subfolders:
             os.makedirs(os.path.join(self.output_fold, subf), exist_ok=True)
 
@@ -172,6 +172,22 @@ class diagnosticInfo:
         self.logger.addHandler(file_handler)
         self.logger.addHandler(stream_handler)
         self.logger.propagate = False
+
+    def copy_source_files(self):
+        """Coppies source files if allowed"""
+
+        sim_log = logging.getLogger('sim_log')
+
+        # Copy fds input file once
+        if len(glob.glob(os.path.join(self.output_fold, 'src', '*.fds'))) == 0:
+            filename = os.path.basename(self.fds_f_loc)
+            copyfile(self.fds_f_loc, os.path.join(self.output_fold, 'src', filename))
+            sim_log.info('FDS input file copied.')
+
+        # Copy out file
+        filename = os.path.basename(self.out_f_loc)
+        copyfile(self.out_f_loc, os.path.join(self.output_fold, 'src', filename))
+        sim_log.info('*.out file copied.')
 
     def run_analytics(self):
         """Starts relevant analytics based on configuration"""

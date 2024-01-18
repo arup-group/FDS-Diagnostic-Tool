@@ -56,7 +56,7 @@ class predictSimStatus():
             self.results['is_dot_stop'] = False
             self.results['is_error'] = True
 
-        elif (self.last_log_diff - self.outp_freq_mean) > self.outp_freq_ci:
+        elif (self.last_log_diff - self.outp_freq_mean) < self.outp_freq_ci:
             self.results['status'] = 'running'
             self.results['is_dot_stop'] = False
             self.results['is_error'] = False
