@@ -1,4 +1,5 @@
 from builds import builds_control
+from diag_summaries import diagnosticsSummary
 import analytical_models.process_models as amp
 import sim_info
 import utils
@@ -147,6 +148,11 @@ for entry in submit_data:
     main_log.info(
         f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
 
+main_log.info(f'Reporting summaries')
+diag = diagnosticsSummary(
+    input_entries=sim_summaries,
+    save_loc=config["settings"]["output_loc"])
+diag.process_summaries()
 main_log.info(f'*** Diagnostics of all simulations completed. ***')
 
 #TODO change sim_end to end_sim_time

@@ -3,16 +3,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import datetime
+import os
+import json
 
 class diagnosticsSummary():
 
     #TODO - create centralised control for diagnostics
     #TODO - average direction
 
-    def __init__(self, input_entries):
+    def __init__(self, input_entries, save_loc):
 
-        self.summary_timestamp = None
+        self.summary_timestamp = datetime.datetime.now().strftime("%d-%b-%Y %H:%M")
         self.sanitized_entries = {}
+        self.save_loc = save_loc
         self._sanitize_entries(input_entries)
 
 
@@ -76,9 +79,8 @@ class diagnosticsSummary():
             diagnosticsSummary._display_last_time(data, ax=ax_bar)
             diagnosticsSummary._display_predictions(data, ax=ax_bar)
 
-        fig.suptitle(f'FDS Diagnostic System 0.1.0\nLast Updated: {datetime.datetime.now().strftime("%d-%b-%Y %H:%M")}\n', fontsize=12, va='top',linespacing=1.4)
-        plt.savefig(r"C:\local_work\digital_projects\fds_diagnostics\test_sims_output\fig_test.png",
-                    dpi=150)
+        fig.suptitle(f'FDS Diagnostic System 0.1.0\nLast Updated: {self.summary_timestamp}\n', fontsize=12, va='top',linespacing=1.4)
+        plt.savefig(os.path.join(self.save_loc, "summary.png"), dpi=150)
 
     @staticmethod
     def _process_sim_name(data):
@@ -126,9 +128,11 @@ class diagnosticsSummary():
     def _display_speed(data, ax):
 
         if data['rtp']['model_status'] == 'no_run':
-            speed = '- s/h'
+            speed = '--- s/h'
+        elif data['sim_status']['status'] == 'completed':
+            speed = '--- s/h'
         else:
-            speed = f"{data['rtp']['avg_spd']}$\\uparrow$s/h"
+            speed = f"{data['rtp']['avg_spd']} s/h"
         ax.text(0.115, 0,  speed, transform=ax.transAxes, ha='left', size=11)
 
     @staticmethod
@@ -185,4 +189,10 @@ class diagnosticsSummary():
         pass
 
     def _save_summary_json(self):
-        pass
+        with open(os.path.join(self.save_loc, "summary.json"), 'w', encoding='utf-8') as f:
+            json.dump(self.sanitized_entries, f, ensure_ascii=False, indent=4)
+
+    def process_summaries(self):
+        self._plot_summary_graph()
+        self._save_summary_tabular()
+        self._save_summary_json()
