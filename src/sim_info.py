@@ -12,8 +12,9 @@ import random
 
 class diagnosticInfo:
 
-    def __init__(self, sim_name, sim_input_fold, config, is_cluster_running, cls_info):
+    def __init__(self, output_folder_name, sim_name, sim_input_fold, config, is_cluster_running, cls_info):
 
+        self.output_folder_name = output_folder_name
         self.sim_name = sim_name
         self.sim_input_fold = sim_input_fold
         self.config = config
@@ -67,7 +68,7 @@ class diagnosticInfo:
 
     def _get_output_fold_loc(self):
         '''Gets output folder for simulation run'''
-        self.output_fold = os.path.join(self.config['settings']['output_loc'], self.sim_name)
+        self.output_fold = os.path.join(self.config['settings']['output_loc'], self.output_folder_name)
 
     def _create_folder_structure(self):
         """"Creates appropriate subfolders"""
@@ -207,7 +208,7 @@ class diagnosticInfo:
 
         sim_log.info('Analytical models processed.')
 
-    def _save_cls_info(self):
+    def save_cls_info(self):
         with open(os.path.join(self.output_fold, 'data', 'cls_info.json'), 'w') as fp:
             json.dump(self.cls_info, fp, indent=4)
 
@@ -221,9 +222,6 @@ class diagnosticInfo:
         sim_report['cls_ID'] = self.cls_info['cls_ID']
         sim_report['user_ID'] = self.cls_info['user_ID']
         sim_report['diagnostic_error_count'] = self.error_count
-
-        #Save machine infoemation
-        self._save_cls_info()
 
         return sim_report
 

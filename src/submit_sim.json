@@ -1,0 +1,46 @@
+{
+    "2S_SS_H_MEMI_4M3S_Balanced_1MW_1": {
+        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_1",
+        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_1",
+        "is_cluster_running": true,
+        "cls_info": {
+            "user_ID": "tomp",
+            "cls_ID": 7,
+            "nodes": "node01/0*15",
+            "server": "fircls01"
+        }
+    },
+    "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3": {
+        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3",
+        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3",
+        "is_cluster_running": true,
+        "cls_info": {
+            "user_ID": "tomp",
+            "cls_ID": 8,
+            "nodes": "node01/1*15",
+            "server": "fircls01"
+        }
+    },
+    "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6": {
+        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6",
+        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6",
+        "is_cluster_running": true,
+        "cls_info": {
+            "user_ID": "tomp",
+            "cls_ID": 10,
+            "nodes": "node02/0*15",
+            "server": "fircls01"
+        }
+    },
+    "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed": {
+        "input_folder": "/data/fds/BK_Stack/50_Fenchurch_AOV_Fixed",
+        "sim_name": "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed",
+        "is_cluster_running": true,
+        "cls_info": {
+            "user_ID": "benjamin",
+            "cls_ID": 28,
+            "nodes": "node03/0*12",
+            "server": "fircls01"
+        }
+    }
+}

@@ -28,6 +28,7 @@ for entry in submit_data:
     errors_count = [0, 0, 0]
     try:
         sim = sim_info.diagnosticInfo(
+            output_folder_name=entry,
             sim_name=submit_data[entry]['sim_name'],
             sim_input_fold=submit_data[entry]['input_folder'],
             config=config,
@@ -50,6 +51,9 @@ for entry in submit_data:
         main_log.info(
             f'Finished processing  with {errors_count[0]} critical error, {errors_count[1]} errors, and {errors_count[2]} warnings.')
         continue
+
+    # Save cls infor
+    sim.save_cls_info()
 
     # Import correct module - critical
     try:

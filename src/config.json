@@ -1,8 +1,8 @@
 {
     "settings": {
-        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\test_sims_output",
-        "manual_input": true,
-        "machine_ID": "fircls01"
+        "output_loc": "C:\\Users\\Yavor.Panev\\OneDrive - Arup\\FDS_Diagnostics",
+        "sub_file_loc": "submit_sim.json",
+        "default_server": "fircls01"
     },
     "log_data": {
         "ts": true,
