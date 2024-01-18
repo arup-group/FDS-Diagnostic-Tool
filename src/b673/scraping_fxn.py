@@ -169,7 +169,7 @@ def press_itr(input_str, out_dict, **kwargs):
 
 
 def vel_err(input_str, out_dict, mesh_info=None, **kwargs):
-    pattern = r'Velocity\sError:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-Z\s]+\s+(\d+)[a-z\s]+\((?:\s+)?(\d+,?\s+\d+,?\s+\d+)'
+    pattern = r'Velocity\sError:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-Z\s]+\s+(\d+)[a-z\s]+\((?:\s+)?(\d+,?\s*\d+,?\s*\d+)'
     result = re.search(pattern, input_str)
 
     pattern_split = r'[\s,]+'
@@ -189,7 +189,7 @@ def vel_err(input_str, out_dict, mesh_info=None, **kwargs):
     return out_dict
 
 def press_err(input_str, out_dict, mesh_info=None, **kwargs):
-    pattern = r'Pressure\sError:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-Z\s]+\s+(\d+)[a-z\s]+\((?:\s+)?(\d+,?\s+\d+,?\s+\d+)'
+    pattern = r'Pressure\sError:\s+((?:[-+]?[0-9]*\.?[0-9]+)(?:[eE][-+]?[0-9]+)?)[a-zA-Z\s]+\s+(\d+)[a-z\s]+\((?:\s+)?(\d+,?\s*\d+,?\s*\d+)'
     result = re.search(pattern, input_str)
 
     pattern_split = r'[\s,]+'
