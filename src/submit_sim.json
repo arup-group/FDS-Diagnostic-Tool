@@ -35,7 +35,7 @@
     "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed": {
         "input_folder": "/data/fds/BK_Stack/50_Fenchurch_AOV_Fixed",
         "sim_name": "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed",
-        "is_cluster_running": true,
+        "is_cluster_running": false,
         "cls_info": {
             "user_ID": "benjamin",
             "cls_ID": 28,
