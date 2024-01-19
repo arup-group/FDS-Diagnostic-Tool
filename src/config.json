@@ -1,7 +1,6 @@
 {
     "settings": {
-        "output_loc": "C:\\local_work\\digital_projects\\fds_diagnostics\\tests",
-        "last_loc_pts": 10
+        "output_loc": "C:\\Users\\Yavor.Panev\\Arup\\Greg Bailly - Kuwait Airport CFD\\06_FDS_Model_Diagnostics"
     },
     "log_data": {
         "ts": true,

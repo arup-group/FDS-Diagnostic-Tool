@@ -141,3 +141,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#TODO parse CHID
+#TODO update HRR parser to time_max_HRR

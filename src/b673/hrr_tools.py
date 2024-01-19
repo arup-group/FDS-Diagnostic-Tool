@@ -126,7 +126,7 @@ def scrape_hrr_data(fds_f_path, hrr_curve_sampling_rate=1):
 
     # Assemble final fire curve dictionary
     design_fire['max_HRR'] = round(hrr_curve['HRR'].max(), 0)
-    design_fire['max_HRR_t'] = hrr_curve.loc[hrr_curve['HRR'].idxmax(), 't']
+    design_fire['time_max_HRR'] = hrr_curve.loc[hrr_curve['HRR'].idxmax(), 't']
     design_fire['loc'] = np.mean(surf_centr, axis=0)
     design_fire['hrrpua'] = round(design_fire['max_HRR'] / design_fire['area'], 0)
     design_fire['area'] = round(design_fire['area'], 2)
@@ -149,21 +149,21 @@ def save_hrr_data(design_fire, save_loc):
 def detect_growth_rate(design_fire):
     """Detect standard growth rate"""
 
-    # treshold for autodetection of growth rate. Default set to 10% of CIBSE t2 predictions
+    # Treshold for autodetection of growth rate. Default set to 10% of CIBSE t2 predictions
     div_treshold = 0.1
 
     t2_data = pd.DataFrame.from_dict({'slow': [0.0029], 'medium': [0.0117], 'fast': [0.0469], 'ultrafast': [0.1876]},
                                      orient='index', columns=['alpha'])
 
-    t2_data['hrr_est'] = t2_data['alpha'] * (design_fire['max_HRR_t']) ** 2
+    t2_data['hrr_est'] = t2_data['alpha'] * (design_fire['time_max_HRR']) ** 2
     t2_data['resd'] = t2_data['hrr_est'] - design_fire['max_HRR']
 
     if t2_data['resd'].abs().min() < div_treshold * design_fire['max_HRR']:
         design_fire['gr_rate'] = t2_data['resd'].abs().idxmin()
-        design_fire['gr_resd'] = round(t2_data.loc[t2_data['resd'].abs().idxmin(), 'resd'], 1)
+        design_fire['gr_rate_err'] = round(t2_data.loc[t2_data['resd'].abs().idxmin(), 'resd'], 1)
     else:
         design_fire['gr_rate'] = 'undef'
-        design_fire['gr_resd'] = round(t2_data.loc[t2_data['resd'].abs().idxmin(), 'resd'], 1)
+        design_fire['gr_rate_err'] = round(t2_data.loc[t2_data['resd'].abs().idxmin(), 'resd'], 1)
 
     return design_fire
 

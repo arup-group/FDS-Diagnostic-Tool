@@ -76,15 +76,21 @@ def format_ax(data, ax, total_time_span):
                        'fmt': '%d-%b',
                        'rnd': 'd',
                        'gr_sp': '12 d'},
-               '10000000': {'ML_fxn': mdates.DayLocator,
+               '768': {'ML_fxn': mdates.DayLocator,
                             'itv': 4,
                             'mL': 4,
                             'fmt': '%d-%b',
                             'rnd': 'd',
-                            'gr_sp': '1 d'}
+                            'gr_sp': '1 d'},
+               '1536': {'ML_fxn': mdates.DayLocator,
+                       'itv': 8,
+                       'mL': 4,
+                       'fmt': '%d-%b',
+                       'rnd': 'd',
+                       'gr_sp': '2 d'}
                }
 
-    for tdiff in [1, 6, 24, 96, 192, 288, 384, 10000000]:
+    for tdiff in [1, 6, 24, 96, 192, 288, 384, 768, 1536]:
         if total_time_span < tdiff:
             tdiff = str(tdiff)
 
@@ -214,6 +220,8 @@ def mesh_stats_plot(data, data_type, subplot=False, ax=None):
 
 
 def cycle_stats_pm_plot(data, data_type, subplot=False, ax=None):
+    logger = logging.getLogger('sim_log')
+
     # Function starts here
     plot_type = {'vel_err': ['Velocity error (m/s)', 'Simulation time (s)'],
                  'press_err': ['Pressure error', 'Simulation time (s)']}
@@ -221,6 +229,12 @@ def cycle_stats_pm_plot(data, data_type, subplot=False, ax=None):
 
     data['est'] = data[data_type]
     data['mesh'] = data[f'{data_type}_m']
+
+    if data['est'].isnull().any():
+        logger.warning(f'NaN values in {data_type} data. Removing them before plotting.')
+        data = data.dropna(subset=['est'])
+        data = data.reset_index(drop=True)
+
 
     plot_data = {}
 
@@ -611,6 +625,8 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc, sh
 
         return width, height
 
+    logger = logging.getLogger('sim_log')
+
     # Constants
     hor_mar = 0.05
     ver_mar = 0.05
@@ -672,6 +688,13 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc, sh
 
         data['mesh'] = [''.join([x, '_loc']) for x in data['mesh']]
         data['loc_extr'] = data.lookup(data.index, data['mesh'])
+
+    #Remove nan values
+    if data['est'].isnull().any():
+        logger.warning(f'NaN values in {data_type} data for location plot. Removing them before plotting.')
+        data = data.dropna(subset=['est'])
+        data = data.reset_index(drop=True)
+
 
     data['loc_extr'] = data['loc_extr'].apply(lambda x: x.strip("[]").replace("'", "").split(", "))
     coords = pd.DataFrame(data['loc_extr'].tolist(), columns=['x', 'y', 'z'])
@@ -768,11 +791,11 @@ def plot_loc(data, mesh_data, data_type, last_points, which_mesh, output_loc, sh
 
         if which_mesh == 'max':
             fig.suptitle(
-                f'XY view {titles[data_type]} Location\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                f'XY View {titles[data_type]} Location\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
                 fontsize=12, va='top')
         else:
             fig.suptitle(
-                f'XY view {titles[data_type]} Location for Mesh {which_mesh}\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
+                f'XY View {titles[data_type]} Location for Mesh {which_mesh}\nLast Updated: {datetime.now().strftime("%d-%b-%Y %H:%M")}',
                 fontsize=12, va='top')
 
         plt.savefig(os.path.join(output_loc, f'loc_xy_{data_type}.png'), bbox_inches="tight")

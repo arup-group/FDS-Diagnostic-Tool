@@ -19,6 +19,15 @@ def ver(input_str, out_dict):
 
     return out_dict
 
+def chid(input_str, out_dict):
+    pattern = r'ID\s[Ss]tring\s+:\s+(.+)'
+    result = re.search(pattern, input_str)
+
+    if result is not None:
+        out_dict['chid'] = result.group(1)
+
+    return out_dict
+
 def stop_cond(input_str, out_dict):
 
     if 'completed successfully' in input_str:
@@ -352,7 +361,8 @@ def cpu_step(input_str, out_dict, outcome, n_mesh, **kwargs):
 
 basic_param = {
     'ver': ver,
-    'stop_cond' : stop_cond,
+    'chid': chid,
+    'stop_cond': stop_cond,
     'sim_end': sim_end,
     'date_start': date_start,
     'cores_n': cores_n,

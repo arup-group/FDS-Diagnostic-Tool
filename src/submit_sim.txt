@@ -1,1 +1,2 @@
-C:\local_work\digital_projects\fds_diagnostics\example_sims\NTU\sc1_r3
+\\fircls01\data\fds\GB_kuwait\FS1C_NP_L01_V1_6_b
+\\fircls01\data\fds\GB_kuwait\FS2B_NP_L01_V1_8

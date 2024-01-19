@@ -15,6 +15,7 @@ def prcs_submit_file(submit_file):
         for line in f:
             try:
                 line = line.rstrip()
+                line = line.replace('"', '')
                 path = os.path.normpath(line)
                 path_parts = path.split(os.sep)
                 submit_data['{}_{}'.format(path_parts[-2], path_parts[-1])] = path

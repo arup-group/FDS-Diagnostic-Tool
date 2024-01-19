@@ -33,7 +33,7 @@ def setup_analysis(config):
     per_cycle_info['fx'] = []
 
     # Proj info is core and no further configurations are proposed for this stage
-    sim_info = dict.fromkeys(['ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time', 'stop_cond'])
+    sim_info = dict.fromkeys(['chid', 'ver', 'date_start', 'sim_end', 'cores_n', 'tot_elp_time', 'stop_cond'])
 
     # Add per cycle constants
 
