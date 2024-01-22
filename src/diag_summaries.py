@@ -79,7 +79,7 @@ class diagnosticsSummary():
             diagnosticsSummary._display_last_time(data, ax=ax_bar)
             diagnosticsSummary._display_predictions(data, ax=ax_bar)
 
-        fig.suptitle(f'FDS Diagnostic System 0.1.0\nLast Updated: {self.summary_timestamp}\n', fontsize=12, va='top',linespacing=1.4)
+        fig.suptitle(f'FDS Diagnostic System 0.2.0\nLast Updated: {self.summary_timestamp}\n', fontsize=12, va='top',linespacing=1.4)
         plt.savefig(os.path.join(self.save_loc, "summary.png"), dpi=150)
 
     @staticmethod

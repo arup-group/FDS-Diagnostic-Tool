@@ -225,6 +225,7 @@ class diagnosticInfo:
         sim_log.info('Analytical models processed.')
 
     def save_cls_info(self):
+        self.cls_info["location"] = self.sim_input_fold
         with open(os.path.join(self.output_fold, 'data', 'cls_info.json'), 'w') as fp:
             json.dump(self.cls_info, fp, indent=4)
 

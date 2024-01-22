@@ -32,14 +32,14 @@
             "server": "fircls01"
         }
     },
-    "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed": {
-        "input_folder": "/data/fds/BK_Stack/50_Fenchurch_AOV_Fixed",
-        "sim_name": "50_Fenchurch_Street_No_FS_TMPA04_AOV_Fixed",
-        "is_cluster_running": false,
+    "50_Fenchurch_Street_No_FS.fds": {
+        "input_folder": "//data/fds/50_Fenchurch_Street/FS1_S2",
+        "sim_name": "50_Fenchurch_Street_No_FS.fds",
+        "is_cluster_running": true,
         "cls_info": {
-            "user_ID": "benjamin",
-            "cls_ID": 28,
-            "nodes": "node03/0*12",
+            "user_ID": "andrewm",
+            "cls_ID": 29,
+            "nodes": "node02/1*12",
             "server": "fircls01"
         }
     }
