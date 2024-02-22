@@ -14,25 +14,26 @@ def round_to_hour_min(time_interv):
     return f'{hours:.0f}:{int(minutes):02d}'
 
 class mAvg:
-    def __init__(self, output_loc, mavg_window, n_predictions, pred_status):
+    def __init__(self, output_loc, mavg_window, n_predictions, sim_status):
         self.mavg_window = mavg_window
         self.n_predictions = n_predictions
         self.output_loc = output_loc
+        self.sim_status = sim_status
         self.model_name = f'mAvg-{mavg_window}-v0.1.0'
-        self.sim_end = None
+
+        self.sim_time_start = None
+        self.sim_time_end = None
         self.data = None
-        self.pred_status = None
-        self.is_delayed = False
         self.times_to_predict = None
         self.predictions = None
         self.conf_intervals = None
         self.avg_spd = None
         self.avg_spd_ci = None
 
-        self.load_data()
-        self.check_status(pred_status)
+        self._load_data()
+        self._determine_status()
 
-    def load_data(self):
+    def _load_data(self):
         """Loads appropriate data for the model"""
 
         self.data = pd.read_csv(os.path.join(self.output_loc, 'data', 'cycle_info.csv'),
@@ -41,106 +42,89 @@ class mAvg:
 
         with open(os.path.join(self.output_loc, 'data', 'sim_info.json')) as f:
             sim_info = json.load(f)
-        self.sim_end = sim_info['sim_end']
+        self.sim_time_end = sim_info['sim_end']
+        self.sim_date_start = sim_info['date_start']
 
-    def check_status(self, pred_status):
+    def _determine_status(self):
 
-        if pred_status in ['err', 'compl']:
-            self.pred_status = pred_status
-            self.is_delayed = False
-            return
-
-        if len(self.data.index) < self.mavg_window:
-            self.pred_status = 'no_data'
-            self.is_delayed = False
-            return
-
-        if pred_status == 'delayed':
-            self.pred_status = 'run'
-            self.is_delayed = True
+        if self.sim_status in ['running', 'delayed']:
+            if len(self.data.index) > self.mavg_window:
+                self.model_status = 'to_run'
+            else:
+                self.model_status = 'no_data'
         else:
-            self.pred_status = 'run'
-            self.is_delayed = False
-            return
+            self.model_status = 'no_run'
 
 
-    def get_times_to_predict(self):
+    def _get_times_to_predict(self):
         """The method calculates which times to predict"""
 
-        time_range = np.linspace(0, self.sim_end, self.n_predictions)[1:]
+        time_range = np.linspace(0, self.sim_time_end, self.n_predictions)[1:]
         self.times_to_predict = time_range[time_range > self.data['sim_time'].iloc[-1]].astype(int)
 
-    def calc_spd(self):
-        """Calculates speeds"""
+    def _calc_spd(self):
+        """Calculates simmulation sppeeds"""
 
         self.data['time_diff'] = self.data['log_time'].diff().dt.total_seconds()
         self.data['sim_time_diff'] = self.data['sim_time'].diff()
         self.data['sim_speed'] = self.data['sim_time_diff'] / self.data['time_diff'] * 3600  # sims/h
 
-        if self.pred_status == 'no_data':
+        if self.model_status == 'no_data':
             dsimt = self.data['sim_time'].iloc[-1] - self.data['sim_time'].iloc[0]
             dt = (self.data['log_time'].iloc[-1] - self.data['log_time'].iloc[0]).total_seconds()
             self.avg_spd = dsimt / dt * 3600
             self.avg_spd_ci = 2 * self.data['sim_speed'].iloc[-self.mavg_window:].std()
 
-        else:
+        elif self.model_status == 'to_run':
             dsimt = self.data['sim_time'].iloc[-1] - self.data['sim_time'].iloc[-self.mavg_window]
             dt = (self.data['log_time'].iloc[-1] - self.data['log_time'].iloc[-self.mavg_window]).total_seconds()
             self.avg_spd = dsimt / dt * 3600
             self.avg_spd_ci = 2 * self.data['sim_speed'].iloc[-self.mavg_window:].std()
 
-    def estimate_predicted_times(self):
+    def _estimate_predicted_times(self):
 
         t_deltas = (self.times_to_predict - self.data['sim_time'].iloc[-1]) / self.avg_spd
         self.predictions = [self.data['log_time'].iloc[-1] + timedelta(hours=k) for k in t_deltas]
         self.conf_intervals = t_deltas - (self.times_to_predict - self.data['sim_time'].iloc[-1]) / (self.avg_spd - self.avg_spd_ci)
 
-    def predict(self):
-        if self.pred_status in ['run', 'no_data']:
-            self.calc_spd()
-            self.get_times_to_predict()
-            self.estimate_predicted_times()
+    def run_model(self):
+        if self.model_status in ['to_run', 'no_data']:
+            self._calc_spd()
+            self._get_times_to_predict()
+            self._estimate_predicted_times()
 
-    def report(self):
+    def report_results(self):
 
-        rep_dict = {}
-        rep_dict['m_name'] = self.model_name
+        results = {}
+        results['model_name'] = self.model_name
+        results['model_status'] = self.model_status
+        results['mavg_window'] = float(self.mavg_window)
+        results['sim_pred_end'] = []
+        results['sim_pred_end_unc'] = []
+        results['predicts'] = []
+        results['avg_spd'] = []
+        results['avg_spd_ci'] = []
 
-        if self.pred_status == 'run':
-            rep_dict['pred'] = []
+
+        if self.model_status in ['to_run', 'no_data']:
+
             for time_pr, value_pr, interv_pr, in zip(self.times_to_predict, self.predictions, self.conf_intervals):
                 res = {}
-                res['t'] = time_pr
-                res['pr_date'] = value_pr.strftime("%d-%b %H:%M")
+                res['t'] = float(time_pr)
+                res['pr_date'] = value_pr.strftime("%d/%m/%Y %H:%M:%S")
                 res['unc'] = round_to_hour_min(interv_pr)
-                if time_pr < self.sim_end:
+                if time_pr < self.sim_time_end:
                     res['pr_type'] = 'mid'
                 else:
                     res['pr_type'] = 'end'
+                    results['sim_pred_end'] = value_pr.strftime("%d/%m/%Y %H:%M:%S")
+                    results['sim_pred_end_unc'] = round_to_hour_min(interv_pr)
+                results['predicts'].append(res)
 
-                rep_dict['pred'].append(res)
-            rep_dict['spd_info'] = f'MA speed: {self.avg_spd:.1f}\u00B1{self.avg_spd_ci:.1f} sim s/h'
-            rep_dict['is_delayed'] = self.is_delayed
+            results['avg_spd'] = round(self.avg_spd, 1)
+            results['avg_spd_ci'] = round(self.avg_spd_ci, 1)
 
-        elif self.pred_status == 'no_data':
-            rep_dict['spd_info'] =f'MA speed: {self.avg_spd:.1f}\u00B1{self.avg_spd_ci:.1f} sim s/h\nLog entries less than moving {self.mavg_window} avg window!'
-            rep_dict['pred'] = [{'t': self.sim_end,
-                                  'pr_date': 'Insufficient\ndata',
-                                  'pr_type': 'no_data'}]
-
-        elif self.pred_status =='compl':
-            rep_dict['pred'] = [{'t': self.data['sim_time'].iloc[-1],
-                                 'pr_date': self.data['log_time'].iloc[-1].strftime("%d-%b %H:%M"),
-                                 'pr_type': 'compl'}]
-            rep_dict['spd_info'] = ''
-
-        elif self.pred_status == 'err':
-            rep_dict['pred'] = [{'t': self.data['sim_time'].iloc[-1],
-                                 'pr_date': self.data['log_time'].iloc[-1].strftime("%d-%b %H:%M"),
-                                 'pr_type': 'err'}]
-            rep_dict['spd_info'] = ''
-
-        return rep_dict
+        return results
 
 
     def log(self, log_to_file = True, use_file = None):

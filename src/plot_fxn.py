@@ -473,7 +473,7 @@ def log_interval_plot(data, subplot=False, ax=None):
         plt.show()
 
 
-def comp_speed_plot(data, mAvg_spd=False, subplot=False, ax=None):
+def comp_speed_plot(data, rtp=None, subplot=False, ax=None):
 
     data['time_diff'] = data['log_time'].diff().dt.total_seconds()
     data['sim_time_diff'] = data['sim_time'].diff()
@@ -499,8 +499,21 @@ def comp_speed_plot(data, mAvg_spd=False, subplot=False, ax=None):
         y_max = data['sim_speed'].max() + 10
     ax.set_ylim(0, y_max)
 
-    if mAvg_spd:
-        ax.text(0.98, 0.96, mAvg_spd, ha='right', va='top', transform=ax.transAxes, size=11)
+    if rtp is not None:
+        if rtp['model_status'] == 'no_data':
+            ax.text(0.98, 0.96,
+                    f'MA speed: {rtp["avg_spd"]:.1f}$\pm${rtp["avg_spd_ci"]:.1f} sim s/h\nAvaliable data less than {rtp["mavg_window"]} MA window.',
+                    ha='right',
+                    va='top',
+                    transform=ax.transAxes,
+                    size=11)
+        elif rtp['model_status'] == 'to_run':
+            ax.text(0.98, 0.96,
+                    f'MA speed: {rtp["avg_spd"]:.1f}$\pm${rtp["avg_spd_ci"]:.1f} sim s/h',
+                    ha='right',
+                    va='top',
+                    transform=ax.transAxes,
+                    size=11)
 
     plt.xlabel('Log time')
     plt.ylabel('Simulation speed (sim s/h)')
@@ -513,58 +526,106 @@ def comp_speed_plot(data, mAvg_spd=False, subplot=False, ax=None):
         plt.show()
 
 
-def timeprogress_bar_plot(data, sim_info, t_predict=False, subplot=False, ax=None):
+def timeprogress_bar_plot(data, sim_status, rtp=False, subplot=False, ax=None):
 
-    date_start = datetime.strptime(sim_info["date_start"], "%B %d, %Y %H:%M:%S")
+    #Get dates
+    sim_date_start = datetime.strptime(sim_status["sim_date_start"], "%d/%m/%Y %H:%M:%S")
+    lst_log_time = datetime.strptime(sim_status["lst_log_time"], "%d/%m/%Y %H:%M:%S")
 
-    if subplot == False:
+    if subplot is False:
         sns.set()
         fig, ax = plt.subplots(figsize=(15,2))
 
     # Plot bar progression
     ax.barh(1, data['sim_time'].max(), height=1, align='center', alpha=0.4)
-    ax.barh(1, sim_info["sim_end"], height=1, edgecolor='#4C72B0', linewidth=1, fill=False, align='center')
+    ax.barh(1, sim_status['end_sim_time'], height=1, edgecolor='#4C72B0', linewidth=1, fill=False, align='center')
 
     #Plot start time
-    ax.plot([1,1], [0.5, 1.5], color='#4C72B0', linewidth=4)
-    ax.text(10,1, f'Start\n{date_start.strftime("%d-%b %H:%M")}', va='center')
+    ax.plot([1, 1], [0.5, 1.5], color='#4C72B0', linewidth=4)
+    ax.text(10, 1, f'Start\n{sim_date_start.strftime("%d-%b %H:%M")}', va='center')
 
     #Plot predictons
+    if rtp is not None:
 
-    if t_predict:
+        if sim_status['status'] == 'stopped':
+            ax.plot([sim_status['lst_sim_time'], sim_status['lst_sim_time']],
+                    [0.5, 1.5],
+                    linestyle='solid', color='#2CA02C', linewidth=2)
+            ax.text(sim_status['lst_sim_time'] + 9, 1,
+                    f'Stopped\n{lst_log_time.strftime("%d-%b %H:%M")}',
+                    va='center', size=11)
 
-        for i in t_predict['pred']:
-            if i['pr_type'] is 'end':
-                if t_predict['is_delayed']:
-                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
-                else:
-                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
-                ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+        elif sim_status['status'] == 'completed':
+            ax.plot([sim_status['lst_sim_time'], sim_status['lst_sim_time']],
+                    [0.5, 1.5],
+                    linestyle='solid', color='#2CA02C', linewidth=2)
+            ax.text(sim_status['lst_sim_time'] + 9, 1,
+                    f'Completed\n{lst_log_time.strftime("%d-%b %H:%M")}',
+                    va='center', size=11)
 
-            elif i['pr_type'] is 'compl':
-                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#2CA02C', linewidth=2)
-                ax.text(i['t']+9, 1, f'Completed\n{i["pr_date"]}', va='center', size=11)
+        elif sim_status['status'] in ['stalled', 'instability']:
+            ax.plot([sim_status['lst_sim_time'], sim_status['lst_sim_time']],
+                    [0.5, 1.5],
+                    linestyle='solid', color='#C44E52', linewidth=2)
+            ax.text(sim_status['lst_sim_time'] + 9, 1,
+                    f'Last log\n{lst_log_time.strftime("%d-%b %H:%M")}',
+                    va='center', size=11)
 
-            elif i['pr_type'] is 'no_data':
-                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
-                ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}', va='center', size=11)
-
-            elif i['pr_type'] is 'err':
-                ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#C44E52', linewidth=2)
-                ax.text(i['t']+9, 1, f'Last log\n{i["pr_date"]}', va='center', size=11)
-
-            elif i['pr_type'] is 'mid':
-                if t_predict['is_delayed']:
+        elif sim_status['status'] == 'delayed' or rtp['model_status'] == 'no_data':
+            for i in rtp['predicts']:
+                pr_date = datetime.strptime(i['pr_date'], "%d/%m/%Y %H:%M:%S")
+                pr_date = pr_date.strftime("%d-%b %H:%M")
+                if i['pr_type'] == 'mid':
                     ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#DD8452', linewidth=2)
-                else:
-                    ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#2CA02C', linewidth=2)
-                ax.text(i['t']+9, 1, f'{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+                    ax.text(i['t'] + 9, 1, f'{pr_date}\n($\pm${i["unc"]}h)', va='center', size=11)
+                elif i['pr_type'] == 'end':
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#DD8452', linewidth=2)
+                    ax.text(i['t'] + 9, 1, f'Complete\n{pr_date}\n($\pm${i["unc"]}h)', va='center', size=11)
+
+        elif sim_status['status'] == 'running':
+            for i in rtp['predicts']:
+                pr_date = datetime.strptime(i['pr_date'], "%d/%m/%Y %H:%M:%S")
+                pr_date = pr_date.strftime("%d-%b %H:%M")
+                if i['pr_type'] == 'mid':
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
+                    ax.text(i['t'] + 9, 1, f'{pr_date}\n($\pm${i["unc"]}h)', va='center', size=11)
+                elif i['pr_type'] == 'end':
+                    ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
+                    ax.text(i['t'] + 9, 1, f'Complete\n{pr_date}\n($\pm${i["unc"]}h)', va='center', size=11)
 
 
+    # if t_predict:
+    #
+    #     for i in t_predict['pred']:
+    #         if i['pr_type'] is 'end':
+    #             if t_predict['is_delayed']:
+    #                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+    #             else:
+    #                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#2CA02C', linewidth=2)
+    #             ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
+    #
+    #         elif i['pr_type'] is 'compl':
+    #             ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#2CA02C', linewidth=2)
+    #             ax.text(i['t']+9, 1, f'Completed\n{i["pr_date"]}', va='center', size=11)
+    #
+    #         elif i['pr_type'] is 'no_data':
+    #             ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed',  color='#DD8452', linewidth=2)
+    #             ax.text(i['t']+9, 1, f'Complete\n{i["pr_date"]}', va='center', size=11)
+    #
+    #         elif i['pr_type'] is 'err':
+    #             ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='solid',  color='#C44E52', linewidth=2)
+    #             ax.text(i['t']+9, 1, f'Last log\n{i["pr_date"]}', va='center', size=11)
+    #
+    #         elif i['pr_type'] is 'mid':
+    #             if t_predict['is_delayed']:
+    #                 ax.plot([i['t'], i['t']], [0.5, 1.5], linestyle='dashed', color='#DD8452', linewidth=2)
+    #             else:
+    #                 ax.plot([i['t'], i['t']], [0.5, 1.5],linestyle='dashed',  color='#2CA02C', linewidth=2)
+    #             ax.text(i['t']+9, 1, f'{i["pr_date"]}\n($\pm${i["unc"]}h)', va='center', size=11)
 
 
-    ax.set_xlim([0, sim_info["sim_end"]+100])
-    ax.set_xticks(np.arange(0, sim_info["sim_end"] + 100, 100))
+    ax.set_xlim([0, sim_status['end_sim_time']+100])
+    ax.set_xticks(np.arange(0, sim_status['end_sim_time'] + 100, 100))
     ax.set_ylim([0.45, 1.55])
     ax.set_xlabel('Simulation time progress (s)')
     ax.set_yticks([])

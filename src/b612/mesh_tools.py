@@ -1,5 +1,6 @@
 import re
-import b612.analysis_fxn as anf
+import os
+import json
 
 def get_mesh_info(fds_filepath, out_dict):
     mesh_pattern = r'&MESH.+IJK\s*=\s*((?:(?:[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)[\s,]*?){3}).+XB\s*=\s*((?:(?:[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)[\s,]*?){6})'
@@ -113,7 +114,15 @@ def get_grid_size(out_dict):
     return out_dict
 
 
-def mesh_als(fds_path):
+def save_mesh_data(data, save_loc):
+    """Saves mesh data"""
+
+    with open(os.path.join(save_loc, 'data', 'mesh_data.json'), 'w') as f:
+        json.dump(data, f, indent=4)
+    return
+
+
+def mesh_als(fds_path, save_loc):
     mesh_data = {}
 
     mesh_data = get_mesh_info(fds_path, mesh_data)
@@ -121,5 +130,6 @@ def mesh_als(fds_path):
     mesh_data = get_grid_size(mesh_data)
     mesh_data = get_tot_volume(mesh_data)
     mesh_data = get_model_range(mesh_data)
+    save_mesh_data(mesh_data, save_loc)
 
     return mesh_data

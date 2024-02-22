@@ -7,20 +7,39 @@ import logging
 import sys
 
 
-def prcs_submit_file(submit_file):
+def prcs_submit_file(config):
     """Creates dict of running queue  file """
 
     submit_data = {}
-    with open(submit_file) as f:
-        for line in f:
-            try:
-                line = line.rstrip()
-                line = line.replace('"', '')
-                path = os.path.normpath(line)
-                path_parts = path.split(os.sep)
-                submit_data['{}_{}'.format(path_parts[-2], path_parts[-1])] = path
-            except IndexError:
-                pass
+
+    if ".txt" in config['settings']['sub_file_loc']:
+        with open(config['settings']['sub_file_loc']) as f:
+            for i, line in enumerate(f):
+                try:
+                    line = line.rstrip().replace('"', '')
+                    path = os.path.normpath(line)
+                    path_parts = path.split(os.sep)
+                    diag_folder_name = f'{path_parts[-2]}_{path_parts[-1]}'
+                    submit_data[diag_folder_name] = {
+                        'input_folder': path,
+                        'sim_name': diag_folder_name,
+                        'is_cluster_running': True,
+                        'cls_info': {
+                            'user_ID': os.getlogin(),
+                            'cls_ID': f'{i+1:03d}',
+                            'nodes': None,
+                            'server': config['settings']['default_server']}}
+                except IndexError:
+                    pass
+    elif ".json" in config['settings']['sub_file_loc']:
+        with open(config['settings']['sub_file_loc']) as f:
+            submit_file = json.load(f)
+        for entry in submit_file:
+            diag_folder_name = f'{submit_file[entry]["cls_info"]["cls_ID"]:04d}_{submit_file[entry]["sim_name"]}'
+            submit_data[diag_folder_name] = submit_file[entry]
+            submit_data[diag_folder_name]["input_folder"] = "".join([f"//{submit_file[entry]['cls_info']['server']}", submit_file[entry]["input_folder"]])
+    else:
+        raise Exception("Unsupported format for submission file. It must be  *.txt or *.json.")
 
     return submit_data
 
