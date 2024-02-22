@@ -184,6 +184,14 @@ class diagnosticInfo:
             copyfile(self.fds_f_loc, os.path.join(self.output_fold, 'src', filename))
             sim_log.info('FDS input file copied.')
 
+        # Copy shell submission file  file once
+        if len(glob.glob(os.path.join(self.output_fold, 'src', '*.qsub.sh'))) == 0:
+            input_folder = os.path.dirname(self.fds_f_loc)
+            for filepath in glob.glob(os.path.join(input_folder, '*.qsub.sh')):
+                filename = os.path.basename(filepath)
+                copyfile(filepath, os.path.join(self.output_fold, 'src', filename))
+            sim_log.info('Shell submission file copied.')
+
         # Copy out file
         filename = os.path.basename(self.out_f_loc)
         copyfile(self.out_f_loc, os.path.join(self.output_fold, 'src', filename))

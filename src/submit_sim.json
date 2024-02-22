@@ -1,45 +1,78 @@
 {
-    "2S_SS_H_MEMI_4M3S_Balanced_1MW_1": {
-        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_1",
-        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_1",
+    "2S_SS_H_NES_XM3S_1MW_FP_1": {
+        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_NES_XM3S_1MW_FP_1",
+        "sim_name": "2S_SS_H_NES_XM3S_1MW_FP_1",
         "is_cluster_running": true,
         "cls_info": {
             "user_ID": "tomp",
-            "cls_ID": 7,
-            "nodes": "node01/0*15",
-            "server": "fircls01"
-        }
-    },
-    "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3": {
-        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3",
-        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_3",
-        "is_cluster_running": true,
-        "cls_info": {
-            "user_ID": "tomp",
-            "cls_ID": 8,
-            "nodes": "node01/1*15",
-            "server": "fircls01"
-        }
-    },
-    "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6": {
-        "input_folder": "/data/fds/2S_SS_H/2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6",
-        "sim_name": "2S_SS_H_MEMI_4M3S_Balanced_1MW_FP_6",
-        "is_cluster_running": true,
-        "cls_info": {
-            "user_ID": "tomp",
-            "cls_ID": 10,
+            "cls_ID": 61,
             "nodes": "node02/0*15",
             "server": "fircls01"
         }
     },
-    "50_Fenchurch_Street_No_FS.fds": {
-        "input_folder": "//data/fds/50_Fenchurch_Street/FS1_S2",
-        "sim_name": "50_Fenchurch_Street_No_FS.fds",
+    "017_01_B1_kiosk_4-68MW_downstands_inlet_alteration": {
+        "input_folder": "/data/fds/MS_WOSC/017_01_B1_kiosk_4-68MW_downstands_inlet_alteration",
+        "sim_name": "017_01_B1_kiosk_4-68MW_downstands_inlet_alteration",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "momoi",
+            "cls_ID": 66,
+            "nodes": "node03/0*15",
+            "server": "fircls01"
+        }
+    },
+    "017_02_B1_kiosk_2-50MW_downstands_inlet_alteration": {
+        "input_folder": "/data/fds/MS_WOSC/017_02_B1_kiosk_2-50MW_downstands_inlet_alteration",
+        "sim_name": "017_02_B1_kiosk_2-50MW_downstands_inlet_alteration",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "momoi",
+            "cls_ID": 72,
+            "nodes": "node03/1*15",
+            "server": "fircls01"
+        }
+    },
+    "S9_3_8MW_O-C_NW_ON": {
+        "input_folder": "/data/fds/FF_CW/S9_3_8MW_O-C_NW_ON",
+        "sim_name": "S9_3_8MW_O-C_NW_ON",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "benjamin",
+            "cls_ID": 113,
+            "nodes": "node06/0*11",
+            "server": "fircls01"
+        }
+    },
+    "S5_3_8MW_O-O_NW_OFF": {
+        "input_folder": "//data/fds/FF_CW/S5_3_8MW_O-O_NW_OFF",
+        "sim_name": "S5_3_8MW_O-O_NW_OFF",
         "is_cluster_running": true,
         "cls_info": {
-            "user_ID": "andrewm",
-            "cls_ID": 29,
-            "nodes": "node02/1*12",
+            "user_ID": "joshua",
+            "cls_ID": 119,
+            "nodes": "node01/0*11",
+            "server": "fircls01"
+        }
+    },
+    "S6_3_8MW_O-C_NW_OFF": {
+        "input_folder": "//data/fds/FF_CW/S6_3_8MW_O-C_NW_OFF",
+        "sim_name": "S6_3_8MW_O-C_NW_OFF",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "joshua",
+            "cls_ID": 120,
+            "nodes": "node04/0*11",
+            "server": "fircls01"
+        }
+    },
+    "S10_1_8MW_O-O_NW_ON": {
+        "input_folder": "//data/fds/FF_CW/S10_1_8MW_O-O_NW_ON",
+        "sim_name": "S10_1_8MW_O-O_NW_ON",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "joshua",
+            "cls_ID": 121,
+            "nodes": "node05/0*11",
             "server": "fircls01"
         }
     }
