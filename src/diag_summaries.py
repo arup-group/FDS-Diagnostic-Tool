@@ -152,7 +152,6 @@ class diagnosticsSummary():
         lst_log_time = datetime.datetime.strptime(data['sim_status']['lst_log_time'], "%d/%m/%Y %H:%M:%S")
 
         if data['sim_status']['status'] == 'completed':
-            print('here')
             ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
                 linestyle='solid', color='#2CA02C', linewidth=2)
             ax.text(data['sim_status']['lst_sim_time'] + 0.008*data['sim_status']['end_sim_time'], 1,
