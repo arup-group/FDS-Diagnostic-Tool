@@ -197,6 +197,14 @@ class diagnosticInfo:
         copyfile(self.out_f_loc, os.path.join(self.output_fold, 'src', filename))
         sim_log.info('*.out file copied.')
 
+        # Copy csv files
+        input_folder = os.path.dirname(self.fds_f_loc)
+        for filepath in glob.glob(os.path.join(input_folder, '*.csv')):
+            filename = os.path.basename(filepath)
+            copyfile(filepath, os.path.join(self.output_fold, 'src', filename))
+        sim_log.info('*.csv files copied.')
+
+
     def run_analytics(self):
         """Starts relevant analytics based on configuration"""
         sim_log = logging.getLogger('sim_log')
