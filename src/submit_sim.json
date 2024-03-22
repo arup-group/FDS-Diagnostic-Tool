@@ -1,12 +1,34 @@
 {
-    "S5_3_8MW_O-O_NW_OFF": {
-        "input_folder": "//data/fds/FF_CW/S5_3_8MW_O-O_NW_OFF_Mesh",
-        "sim_name": "S5_3_8MW_O-O_NW_OFF",
+    "SC2_07_E50_I50_ADJ_E70_I70": {
+        "input_folder": "/data/fds/MS_CQD/plot_2/SC2_07_E50_I50_ADJ_E70_I70",
+        "sim_name": "SC2_07_E50_I50_ADJ_E70_I70",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "momoi",
+            "cls_ID": 1005,
+            "nodes": "node03/0*11",
+            "server": "fircls01"
+        }
+    },
+    "SC2_04_E50_ADJ_E70_I70": {
+        "input_folder": "/data/fds/MS_CQD/plot_1/SC2_04_E50_ADJ_E70_I70",
+        "sim_name": "SC2_04_E50_ADJ_E70_I70",
         "is_cluster_running": true,
         "cls_info": {
-            "user_ID": "joshua",
-            "cls_ID": 1001,
-            "nodes": "node02/0*11",
+            "user_ID": "momoi",
+            "cls_ID": 1033,
+            "nodes": "node05/0*14",
+            "server": "fircls01"
+        }
+    },
+    "1S_H_V10_MENIS_6M3S_1MW": {
+        "input_folder": "/data/fds/1S_H/1S_H_V10_MENIS_6M3S_1MW",
+        "sim_name": "1S_H_V10_MENIS_6M3S_1MW",
+        "is_cluster_running": false,
+        "cls_info": {
+            "user_ID": "tomp",
+            "cls_ID": 1037,
+            "nodes": "node02/0*12",
             "server": "fircls01"
         }
     }

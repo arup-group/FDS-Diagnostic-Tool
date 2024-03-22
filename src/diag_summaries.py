@@ -157,6 +157,12 @@ class diagnosticsSummary():
             ax.text(data['sim_status']['lst_sim_time'] + 0.008*data['sim_status']['end_sim_time'], 1,
                     f'Completed\n{lst_log_time.strftime("%d/%m %H:%M")}', va='center', size=10)
 
+        elif data['sim_status']['status'] == 'stopped':
+            ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
+                    linestyle='solid', color='#2CA02C', linewidth=2)
+            ax.text(data['sim_status']['lst_sim_time'] + 0.008 * data['sim_status']['end_sim_time'], 1,
+                    f'Last log\n{lst_log_time.strftime("%d/%m %H:%M")}', va='center', size=10)
+
         elif data['sim_status']['status'] in ['stalled', 'instability']:
             ax.plot([data['sim_status']['lst_sim_time'], data['sim_status']['lst_sim_time']], [0.4, 1.5],
                     linestyle='solid', color='#C44E52', linewidth=2)
