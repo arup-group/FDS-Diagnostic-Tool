@@ -1,7 +1,7 @@
 {
     "settings": {
-        "output_loc": "C:\\Users\\Yavor.Panev\\OneDrive - Arup\\UKIMEA_FDS_Diagnostics",
-        "sub_file_loc": "submit_sim.json",
+        "output_loc": "C:\\Users\\Yavor.Panev\\OneDrive - Arup\\FDS_Diagnostics\\test_run",
+        "sub_file_loc": "C:\\local_work\\digital_projects\\fds_diagnostic_analytics\\feature_engineering\\test_json.json",
         "default_server": "fircls01",
         "copy_source_f": true
     },

@@ -1,15 +1,4 @@
 {
-    "SC2_07_E50_I50_ADJ_E70_I70": {
-        "input_folder": "/data/fds/MS_CQD/plot_2/SC2_07_E50_I50_ADJ_E70_I70",
-        "sim_name": "SC2_07_E50_I50_ADJ_E70_I70",
-        "is_cluster_running": false,
-        "cls_info": {
-            "user_ID": "momoi",
-            "cls_ID": 1005,
-            "nodes": "node03/0*11",
-            "server": "fircls01"
-        }
-    },
     "SC2_04_E50_ADJ_E70_I70": {
         "input_folder": "/data/fds/MS_CQD/plot_1/SC2_04_E50_ADJ_E70_I70",
         "sim_name": "SC2_04_E50_ADJ_E70_I70",

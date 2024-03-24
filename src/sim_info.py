@@ -53,7 +53,6 @@ class diagnosticInfo:
 
     def _get_inpt_files_loc(self):
         '''Gets the location of the fds and out files'''
-
         fds_files = glob.glob(os.path.join(self.sim_input_fold, '*.fds'))
         if len(fds_files) == 1:
             self.fds_f_loc = fds_files[0]

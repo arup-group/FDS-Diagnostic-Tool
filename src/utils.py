@@ -37,7 +37,7 @@ def prcs_submit_file(config):
         for entry in submit_file:
             diag_folder_name = f'{submit_file[entry]["cls_info"]["cls_ID"]:04d}_{submit_file[entry]["sim_name"]}'
             submit_data[diag_folder_name] = submit_file[entry]
-            submit_data[diag_folder_name]["input_folder"] = "".join([f"//{submit_file[entry]['cls_info']['server']}", submit_file[entry]["input_folder"]])
+            submit_data[diag_folder_name]["input_folder"] = submit_file[entry]["input_folder"]
     else:
         raise Exception("Unsupported format for submission file. It must be  *.txt or *.json.")
 
