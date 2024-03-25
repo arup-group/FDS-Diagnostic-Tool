@@ -9,6 +9,7 @@ from shutil import copyfile
 import importlib
 import logging
 
+#TODO UPDATE B612 model so it does not crash simulation
 
 def main():
     main_log = utils.setup_logger('main_log', 'logs/main_log.log')
@@ -153,8 +154,13 @@ def main():
 
         sim_log.info(
             f'Finished processing  with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
-        main_log.info(
-            f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
+        if any(sim.error_count) == 0:
+            main_log.info(
+                f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
+        else:
+            main_log.warning(
+                f'Finished processing {sim.sim_name} with {sim.error_count[0]} critical error, {sim.error_count[1]} errors, and {sim.error_count[2]} warnings.')
+        print('\n')
 
     main_log.info(f'Reporting summaries')
     diag = diagnosticsSummary(
